@@ -5,12 +5,13 @@ import Register from './authentfication/register'
 import Login from './authentfication/login'
 
 import RegisterPat from './authentfication/registerpat'
+import Home from './pages/Home'
 
 function App() {
 
   return (
  
-   <RegisterPat />
+   <Home />
      
   )
 }
