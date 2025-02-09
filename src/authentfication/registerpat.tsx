@@ -62,7 +62,7 @@ export default function RegisterPat() {
             color: 'black',
           }}
         >
-          WELCOME TO MED-PLATEFORME
+          CREATE A PATIENT ACCOUNT
         </h1>
       </div>
 
@@ -74,10 +74,7 @@ export default function RegisterPat() {
           src="https://i.pinimg.com/550x/7c/ea/0a/7cea0ad2b9054fb76972b3594d4e1261.jpg"
           className="mx-auto h-10 w-auto mb-6"
         />
-        {/* Titre du formulaire */}
-        <h2 className="mt-2 text-center text-2xl font-bold tracking-tight text-red-900">
-          Create a Patient Account
-        </h2>
+        
 
         {/* Formulaire d'inscription */}
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">
