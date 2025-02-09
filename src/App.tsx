@@ -4,11 +4,13 @@ import './App.css'
 import Register from './authentfication/register'
 import Login from './authentfication/login'
 
+import RegisterPat from './authentfication/registerpat'
+
 function App() {
 
   return (
  
-   <Login />
+   <RegisterPat />
      
   )
 }
