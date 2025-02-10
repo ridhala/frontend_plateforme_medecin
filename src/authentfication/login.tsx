@@ -1,4 +1,6 @@
+// Login.tsx
 import React from 'react';
+import { Link } from 'react-router-dom'; // Importer Link depuis react-router-dom
 
 export default function Login() {
   return (
@@ -62,10 +64,14 @@ export default function Login() {
               <label htmlFor="password" className="block text-sm font-medium text-gray-900">
                 Password
               </label>
+              {/* Lien "Mot de passe oublié ?" */}
               <div className="text-sm">
-                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                <Link
+                  to="/forgot-password" // Redirection vers la page ForgotPassword
+                  className="font-semibold text-indigo-600 hover:text-indigo-500"
+                >
                   Forgot password?
-                </a>
+                </Link>
               </div>
             </div>
             <div className="mt-2">
@@ -94,9 +100,9 @@ export default function Login() {
         {/* Lien d'inscription */}
         <p className="mt-6 text-center text-sm text-gray-500">
           Not a member?{' '}
-          <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+          <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
             Register now
-          </a>
+          </Link>
         </p>
       </div>
     </div>
