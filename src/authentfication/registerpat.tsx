@@ -48,7 +48,7 @@ export default function RegisterPat() {
       className="flex min-h-screen flex-col items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage:
-          'url(https://img.freepik.com/premium-vector/medical-background-with-doctor-s-lab-white-coat-stethoscope_259139-1358.jpg?w=1380)',
+          'url(https://img.freepik.com/free-photo/world-mental-health-day-green-ribbon-stethoscope-blue-background_1150-28355.jpg?t=st=1739143725~exp=1739147325~hmac=556f8c3dcf6405ab7b654b48d4072d973e116c0914e7ab6c9c67b06fdcd2fd39&w=1060)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -62,7 +62,7 @@ export default function RegisterPat() {
             color: 'black',
           }}
         >
-          CREATE A PATIENT ACCOUNT
+          WELCOME TO MED-PLATEFORME
         </h1>
       </div>
 
@@ -74,7 +74,10 @@ export default function RegisterPat() {
           src="https://i.pinimg.com/550x/7c/ea/0a/7cea0ad2b9054fb76972b3594d4e1261.jpg"
           className="mx-auto h-10 w-auto mb-6"
         />
-        
+        {/* Titre du formulaire */}
+        <h2 className="mt-2 text-center text-2xl font-bold tracking-tight text-red-900">
+          Create a Patient Account
+        </h2>
 
         {/* Formulaire d'inscription */}
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">

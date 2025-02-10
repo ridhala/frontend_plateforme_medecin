@@ -6,12 +6,13 @@ import Login from './authentfication/login'
 
 import RegisterPat from './authentfication/registerpat'
 import Home from './pages/Home'
+import ForgotPassword from './authentfication/forgotPassword'
 
 function App() {
 
   return (
  
-   <Home />
+   <ForgotPassword/>
      
   )
 }

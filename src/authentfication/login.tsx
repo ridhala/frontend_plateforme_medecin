@@ -6,20 +6,21 @@ export default function Login() {
       className="flex min-h-screen flex-col items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage: 'url(https://static.vecteezy.com/system/resources/previews/020/679/215/non_2x/technology-medical-background-medical-icons-modern-wallpaper-geometric-hexagon-vector.jpg)',
-        backgroundSize: 'cover', // Ajuste l'image pour qu'elle couvre toute la page
-        backgroundPosition: 'center', // Centre l'image horizontalement et verticalement
-        backgroundRepeat: 'no-repeat', // Empêche la répétition de l'image
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
       }}
     >
       {/* Conteneur pour le titre */}
       <div className="w-full text-center mb-8">
         <h1
-          className="text-4xl md:text-5xl font-bold tracking-wide hover:text-blue-500 transition-colors duration-300 ease-in-out"
+          className="text-5xl md:text-7xl font-bold tracking-wide hover:text-sky-400 transition-colors duration-300 ease-in-out"
           style={{
             color: 'black',
+            WebkitTextStroke: '1px black',
           }}
         >
-          WELCOME TO MED-PLATEFORME
+          WELCOME TO MEDPLATFORM
         </h1>
       </div>
 
