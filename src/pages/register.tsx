@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
 // Définir l'interface pour les données du formulaire
 interface DoctorFormData {
-  id_medecin: string; // Identifiant unique du médecin
   CIN_medecin: string; // Numéro CIN (chaîne de caractères)
   nom: string; // Nom du médecin
   prenom: string; // Prénom du médecin
   numero_licence: string; // Numéro de licence (chaîne de caractères)
   specialite: string; // Spécialité du médecin
+  email: string;
   telephone_personnel: string; // Téléphone personnel (chaîne de caractères)
   adresse_cabinet: string; // Adresse du cabinet
   telephone_cabinet: string; // Téléphone du cabinet (chaîne de caractères)
@@ -18,12 +18,13 @@ interface DoctorFormData {
 function Register() {
   // Initialiser l'état du formulaire avec des valeurs par défaut
   const [formData, setFormData] = useState<DoctorFormData>({
-    id_medecin: '',
+  
     CIN_medecin: '',
     nom: '',
     prenom: '',
     numero_licence: '',
     specialite: '',
+    email:'',
     telephone_personnel: '',
     adresse_cabinet: '',
     telephone_cabinet: '',
@@ -39,19 +40,22 @@ function Register() {
       [name]: value,
     }));
   };
+const envoyerform =()=>{}
+
+
 
   // Gérer le changement de fichier pour la photo de profil
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFormData((prevData) => ({
         ...prevData,
-        photo_profil: e.target.files[0],
+        photo_profil: null,
       }));
     }
   };
 
   // Gérer la soumission du formulaire
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async  (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form Data:', formData);
     // Ajouter votre logique d'enregistrement ici
@@ -86,28 +90,12 @@ function Register() {
         {/* Titre du formulaire */}
         <h2 className="mt-2 text-center text-2xl font-bold tracking-tight text-red-900">
           Sign up to your account
+          
         </h2>
 
         {/* Formulaire d'inscription */}
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">
-          {/* ID Médecin */}
-          <div>
-            <label htmlFor="id_medecin" className="block text-sm font-medium text-gray-900">
-              ID Médecin
-            </label>
-            <div className="mt-2">
-              <input
-                id="id_medecin"
-                name="id_medecin"
-                type="text"
-                required
-                autoComplete="off"
-                value={formData.id_medecin}
-                onChange={handleChange}
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
-              />
-            </div>
-          </div>
+         
 
           {/* CIN Médecin */}
           <div>
@@ -203,6 +191,26 @@ function Register() {
               />
             </div>
           </div>
+
+ {/* email */}
+ <div>
+            <label htmlFor="specialite" className="block text-sm font-medium text-gray-900">
+              email
+            </label>
+            <div className="mt-2">
+              <input
+                id="email"
+                name="email"
+                type="text"
+                required
+                autoComplete="off"
+                value={formData.email}
+                onChange={handleChange}
+                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
+
 
           {/* Téléphone Personnel */}
           <div>
@@ -301,6 +309,7 @@ function Register() {
           <div>
             <button
               type="submit"
+              onClick={handleSubmit}
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Register
