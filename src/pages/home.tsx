@@ -1,7 +1,7 @@
 // pages/Home.tsx
 import React from 'react';
-import Sidebar from '../components/Sidebar'; // Import du composant Sidebar
-import DashboardContent from '../components/DashboardContent'; // Import du composant DashboardContent
+import Sidebar from '../components/home/Sidebar'; // Import du composant Sidebar
+import DashboardContent from '../components/home/DashboardContent'; // Import du composant DashboardContent
 
 function Home() {
   return (

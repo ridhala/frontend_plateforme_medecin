@@ -1,10 +1,9 @@
 // components/LoginContainer.tsx
 import React, { useState } from 'react';
-import InputField from './InputField'; // Import du composant InputField
-import { LoginFormProps } from '../types/logintype'; // Import des types
-import { login } from '../services/authService'; // Import de la fonction de service
+import InputField from '././InputField'; // Import du composant InputField
+import { LoginFormProps } from '../../types/logintype'; // Import des types
 import { Link } from 'react-router-dom';
-
+import { authlogin } from '../../services/authService';
 interface LoginContainerProps {
   onLoginSuccess: () => void; // Prop appelée après une connexion réussie
 }
@@ -23,7 +22,7 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await login(formData); // Appel au backend via le service
+      const response = await authlogin(formData); // Appel au backend via le service
       console.log('Authentification réussie:', response);
       onLoginSuccess(); // Redirige vers la page Home ou autre
     } catch (error) {

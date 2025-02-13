@@ -1,8 +1,8 @@
 // components/RegisterContainer.tsx
 import React, { useState } from 'react';
-import InputField from './InputField'; // Import the InputField component
-import { registerDoctor } from '../services/doctorService'; // Import the service for doctor registration
-import { DoctorFormData } from '../types/doctorregistertype'; // Import the DoctorFormData type
+import InputField from '../InputField'; // Import the InputField component
+import { registerDoctor } from '../../services/doctorService'; // Import the service for doctor registration
+import { DoctorFormData } from '../../types/doctorregistertype'; // Import the DoctorFormData type
 
 interface RegisterContainerProps {
   onRegisterSuccess: () => void; // Prop for handling successful registration

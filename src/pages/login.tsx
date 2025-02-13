@@ -1,7 +1,7 @@
 // pages/Login.tsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Importez useNavigate pour la redirection
-import LoginContainer from '../components/LoginContainer'; // Import du composant LoginContainer
+import LoginContainer from '../components/login/LoginContainer'; // Import du composant LoginContainer
 
 function Login() {
   const navigate = useNavigate(); // Hook pour naviguer entre les pages
