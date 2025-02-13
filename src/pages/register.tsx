@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 // Définir l'interface pour les données du formulaire
 interface DoctorFormData {
   CIN_medecin: string; // Numéro CIN (chaîne de caractères)
@@ -40,7 +39,6 @@ function Register() {
       [name]: value,
     }));
   };
-const envoyerform =()=>{}
 
 
 

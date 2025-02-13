@@ -1,8 +1,9 @@
 // components/LoginContainer.tsx
 import React, { useState } from 'react';
-import InputField from '../components/InputField'; // Import du composant InputField
+import InputField from './InputField'; // Import du composant InputField
 import { LoginFormProps } from '../types/logintype'; // Import des types
 import { login } from '../services/authService'; // Import de la fonction de service
+import { Link } from 'react-router-dom';
 
 interface LoginContainerProps {
   onLoginSuccess: () => void; // Prop appelée après une connexion réussie
@@ -16,7 +17,7 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData: any) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
