@@ -1,9 +1,9 @@
 // pages/Accueil.tsx
 import React from 'react';
 import { Link } from 'react-router-dom'; // Importer Link pour naviguer vers d'autres pages
-import HeroSection from '../components/HeroSection'; // Section principale avec image et description
-import AboutUs from '../components/AboutUs'; // Section "À propos de nous"
-import Features from '../components/Features'; // Section des fonctionnalités
+import HeroSection from '../components/accueilpage/HeroSection'; // Section principale avec image et description
+import AboutUs from '../components/accueilpage/AboutUs'; // Section "À propos de nous"
+import Features from '../components/accueilpage/Features'; // Section des fonctionnalités
 
 function Accueil() {
   return (

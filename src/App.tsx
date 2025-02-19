@@ -10,24 +10,7 @@ import ForgotPassword from './pages/forgotPassword'; // Page de récupération d
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Route pour la page d'accueil (page initiale) */}
-        <Route path="/" element={<Accueil />} /> {/* La page Accueil est définie comme la page racine */}
-        
-        {/* Route pour la page de connexion */}
-        <Route path="/login" element={<Login />} />
-        
-        {/* Route pour la page d'inscription médecin */}
-        <Route path="/register" element={<Register />} />
-        
-        {/* Route pour la page de récupération de mot de passe */}
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        
-        {/* Route par défaut (redirige vers la page d'accueil si aucune route n'est spécifiée) */}
-        <Route path="*" element={<Navigate to="/" replace />} /> {/* Redirection vers la page d'accueil */}
-      </Routes>
-    </Router>
+    <Accueil/>
   );
 }
 
