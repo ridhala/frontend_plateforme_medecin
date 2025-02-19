@@ -1,6 +1,6 @@
 // components/RegisterContainer.tsx
 import React, { useState } from 'react';
-import InputField from '../InputField'; // Import the InputField component
+import InputField from '../login/InputField'; // Import the InputField component
 import { registerDoctor } from '../../services/doctorService'; // Import the service for doctor registration
 import { DoctorFormData } from '../../types/doctorregistertype'; // Import the DoctorFormData type
 

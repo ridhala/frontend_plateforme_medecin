@@ -2,7 +2,7 @@
 import React from 'react';
 import StatisticsSection from './StatisticsSection'; // Import du composant pour les statistiques
 import RecentPatientsTable from './RecentPatientsTable'; // Import du composant pour les patients récents
-import QuickActions from '../QuickActions';
+import QuickActions from './QuickActions';
 
 export default function DashboardContent() {
   return (
