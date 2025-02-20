@@ -1,21 +1,12 @@
 // pages/Accueil.tsx
 import React from 'react';
 import { Link } from 'react-router-dom'; // Importer Link pour naviguer vers d'autres pages
-import HeroSection from '../components/accueilpage/HeroSection'; // Section principale avec image et description
-import AboutUs from '../components/accueilpage/AboutUs'; // Section "À propos de nous"
-import Features from '../components/accueilpage/Features'; // Section des fonctionnalités
+
 
 function Accueil() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      {/* Section Héro */}
-      <HeroSection />
-
-      {/* Section À propos de nous */}
-      <AboutUs />
-
-      {/* Section Fonctionnalités */}
-      <Features />
+    
 
       {/* Bouton Connexion centré en bas de la page */}
       <div className="mt-auto flex justify-center items-center py-6 bg-white shadow-lg">
