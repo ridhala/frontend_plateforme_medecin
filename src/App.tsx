@@ -7,7 +7,8 @@ import Login from './pages/login'; // Login page
 import Register from './pages/register'; // Register page
 import ForgotPassword from './pages/forgotPassword'; // Forgot password page
 import Accueil from './pages/Accueil';
-
+import RegisterPat from './pages/registerpat';
+////////////////////////////////////////////////////////////////////////////////////////////
 function App() {
   return (
     <Router>
@@ -19,6 +20,8 @@ function App() {
 
         {/* Route for the login page */}
         <Route path="/login" element={<Login />} />
+        {/* Route for the register Patient page */}
+        <Route path="/registerpat" element={<RegisterPat />} />
 
         {/* Route for the register page */}
         <Route path="/register" element={<Register />} />
@@ -27,9 +30,9 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<Register />} />
  
-<Route path='/acceuil' element={<Accueil />}/>
+        <Route path='/Acceuil' element={<Accueil />}/>
         {/* Fallback route for unknown paths (redirects to home) */}
-        <Route path="/" element={<Navigate to="/register" />} />
+        <Route path="/" element={<Navigate to="/Acceuil" />} />
       </Routes>
     </Router>
     
