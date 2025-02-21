@@ -14,12 +14,11 @@ function Accueil() {
               alt="Logo"
               className="h-10 w-10 mr-2"
             />
-            <span className="text-xl font-bold text-gray-700">MonDocteur</span>
+            <span className="text-xl font-bold text-gray-700">MedPlateforme</span>
           </div>
 
           {/* Menu */}
           <nav className="hidden md:flex space-x-8 text-gray-700 font-semibold">
-            {/* Navigation interne à la même page */}
             <a href="#patient" className="hover:text-indigo-600">
               Espace Patient
             </a>
@@ -64,80 +63,46 @@ function Accueil() {
       </header>
 
       {/* Section Hero */}
-<section
-  className="relative bg-cover bg-center flex flex-col justify-center items-center text-white py-16 px-4"
-  style={{
-    backgroundImage:
-      'url(https://img.freepik.com/free-photo/various-medical-equipment-blue-background-top-view_23-2148934239.jpg)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    minHeight: '80vh',
-  }}
->
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-blue-900 bg-opacity-40"></div>
-  
-  {/* Contenu */}
-  <div className="relative z-10 max-w-5xl text-center">
-    <h1 className="text-4xl md:text-6xl font-bold mb-4 text-blue-100">
-      Bienvenue sur MedPlateforme
-    </h1>
-    <p className="text-lg md:text-xl mb-6 text-blue-50 leading-relaxed">
-      Votre solution médicale innovante pour simplifier la gestion des
-      rendez-vous, des consultations en ligne et du suivi des dossiers
-      patients.
-    </p>
-
-    {/* Images médicales supplémentaires */}
-    <div className="flex flex-wrap justify-center gap-4 mb-8">
-      <img
-        src="https://img.freepik.com/free-photo/doctor-holding-medical-folder-looking-camera-smiling_1258-198.jpg"
-        alt="Doctor"
-        className="w-40 h-40 object-cover rounded-lg shadow-lg border-2 border-white"
-      />
-      <img
-        src="https://img.freepik.com/free-photo/stethoscope-with-heart-shape-paper-blue_23-2148298117.jpg"
-        alt="Stethoscope Heart"
-        className="w-40 h-40 object-cover rounded-lg shadow-lg border-2 border-white"
-      />
-      <img
-        src="https://img.freepik.com/free-photo/close-up-hand-holding-blue-ribbon_23-2148882225.jpg"
-        alt="Blue Ribbon"
-        className="w-40 h-40 object-cover rounded-lg shadow-lg border-2 border-white"
-      />
-    </div>
-
-    {/* Article Wikipédia (extrait) */}
-    <div className="bg-white bg-opacity-90 text-blue-900 p-6 rounded-md mx-auto mb-6 max-w-3xl shadow-md">
-      <h2 className="text-xl font-semibold mb-2">
-        Un extrait d’article Wikipédia sur la santé :
-      </h2>
-      <p className="text-sm leading-relaxed">
-        « La santé est un état de complet bien-être physique, mental et social,
-        et ne consiste pas seulement en une absence de maladie ou d’infirmité. »
-        — <a
-            href="https://fr.wikipedia.org/wiki/Sant%C3%A9"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline text-indigo-600"
-          >
-            Source
-          </a>
-      </p>
-    </div>
-
-    {/* Bouton d'inscription */}
-    <div>
-      <Link
-        to="/register"
-        className="inline-block px-6 py-3 rounded-md text-white font-semibold bg-indigo-600 hover:bg-indigo-700 transition-colors"
+      <section
+        className="relative flex flex-col justify-center items-center text-white py-16 px-4"
+        style={{
+          background:
+            'linear-gradient(to right, rgba(50, 150, 250, 0.8), rgba(30, 200, 200, 0.8)), url(https://img.freepik.com/free-photo/various-medical-equipment-blue-background-top-view_23-2148934239.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '80vh',
+        }}
       >
-        S'inscrire maintenant
-      </Link>
-    </div>
-  </div>
-</section>
+        {/* Contenu principal */}
+        <div className="relative z-10 max-w-3xl text-center">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white drop-shadow-lg">
+            Vous pouvez tout apprendre sur la santé !
+          </h1>
+          <p className="text-lg md:text-xl mb-8 text-white leading-relaxed">
+            Sur <span className="font-bold">MedPlateforme</span>, vous avez
+            accès à un univers complet pour gérer vos rendez-vous, suivre vos
+            dossiers et consulter des articles médicaux. Pour tous, pour
+            toujours.
+          </p>
 
+          {/* Boutons comme sur Khan Academy */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+           
+            <Link
+              to="/RegisterPat"
+              className="bg-white hover:bg-gray-200 text-green-600 px-6 py-3 rounded-md font-semibold transition-colors"
+            >
+              Patients, commencez ici
+            </Link>
+            <Link
+              to="/register"
+              className="bg-white hover:bg-gray-200 text-green-600 px-6 py-3 rounded-md font-semibold transition-colors"
+            >
+              Médecins, commencez ici
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Section Espace Patient */}
       <section id="patient" className="py-16 px-4 bg-white">
@@ -174,7 +139,7 @@ function Accueil() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-8">À Propos</h2>
           <p className="text-gray-700 leading-relaxed mb-8">
-            MonDocteur est une solution innovante conçue pour simplifier la
+            MedPlateforme est une solution innovante conçue pour simplifier la
             gestion des données médicales. Notre équipe de développeurs et de
             professionnels de santé travaille sans relâche pour offrir une
             expérience utilisateur fluide et sécurisée.
@@ -206,9 +171,9 @@ function Accueil() {
             Fonctionnalités
           </h2>
           <p className="text-gray-700 leading-relaxed mb-12">
-            Gérez tous vos besoins médicaux en un seul endroit. MonDocteur vous
-            offre une gamme de fonctionnalités conçues pour faciliter la vie des
-            médecins et des patients.
+            Gérez tous vos besoins médicaux en un seul endroit. MedPlateforme
+            vous offre une gamme de fonctionnalités conçues pour faciliter la
+            vie des médecins et des patients.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Carte 1 */}
@@ -288,10 +253,7 @@ function Accueil() {
       </section>
 
       {/* Section Espace Médecin */}
-      <section
-        id="medecin"
-        className="py-16 px-4 bg-white"
-      >
+      <section id="medecin" className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center md:space-x-8">
           {/* Grande Icône ou Image */}
           <div className="md:w-1/2 flex justify-center mb-8 md:mb-0">
@@ -334,7 +296,7 @@ function Accueil() {
       <footer className="bg-indigo-600 text-white py-8 mt-auto">
         <div className="container mx-auto text-center">
           <p className="mb-4">
-            © 2025 MonDocteur - Tous droits réservés.
+            © 2025 MedPlateforme - Tous droits réservés.
           </p>
           <Link
             to="/login"
