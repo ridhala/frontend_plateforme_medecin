@@ -1,51 +1,56 @@
-// pages/Login.tsx
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Importez useNavigate pour la redirection
-import LoginContainer from '../components/login/LoginContainer'; // Import du composant LoginContainer
+import { Link, useNavigate } from 'react-router-dom';
+import LoginContainer from '../components/login/LoginContainer';
 
 function Login() {
-  const navigate = useNavigate(); // Hook pour naviguer entre les pages
+  const navigate = useNavigate();
 
-  // Fonction appelée après une connexion réussie
   const handleLoginSuccess = () => {
     console.log('Login successful!');
-    navigate('/home'); // Redirige vers la page Home après une connexion réussie
+    navigate('/home');
   };
 
   return (
-    <div
-      className="flex min-h-screen flex-col items-center justify-center bg-cover bg-center"
+    <section
+      className="relative bg-no-repeat bg-cover bg-center text-white"
       style={{
-        backgroundImage: 'url(https://static.vecteezy.com/system/resources/previews/020/679/215/non_2x/technology-medical-background-medical-icons-modern-wallpaper-geometric-hexagon-vector.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        backgroundImage:
+          'linear-gradient(to right, rgba(0, 44, 79, 0.7), rgba(0, 102, 128, 0.7)), url(https://www.shutterstock.com/image-photo/green-medical-background-nurse-stethoscope-260nw-338695505.jpg)',
+        minHeight: '100vh', // La zone s'étend sur toute la hauteur de la fenêtre
       }}
     >
-      {/* Conteneur pour le titre */}
-      <div className="w-full text-center mb-8">
-        <h1
-          className="text-5xl md:text-7xl font-bold tracking-wide hover:text-sky-400 transition-colors duration-300 ease-in-out"
-          style={{
-            color: 'black',
-            WebkitTextStroke: '1px black',
-          }}
-        >
-          WELCOME TO MEDPLATFORM
-        </h1>
+      <div className="flex justify-center items-center min-h-screen w-full">
+        <div className="relative w-full max-w-4xl h-[480px] bg-white bg-opacity-60 backdrop-blur-lg rounded-lg shadow-lg flex overflow-hidden">
+          
+          {/* Left side login form, now shifted to the right */}
+          <div className="w-1/2 p-12 bg-gray-200 flex flex-col items-center justify-center relative z-10 ml-auto">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Connexion</h2>
+            <LoginContainer onLoginSuccess={handleLoginSuccess} />
+            <p className="mt-4 text-sm text-gray-700 text-center">
+              Mot de passe oublié ?{' '}
+              <a href="#" className="text-red-600 hover:text-red-700">Cliquez ici</a>
+            </p>
+          </div>
+
+          {/* Right side sign up section */}
+          <div className="w-1/2 p-12 bg-gradient-to-r from-red-400 to-red-600 text-white flex flex-col items-center justify-center relative">
+            <h1 className="text-5xl font-extrabold mb-6">
+              Welcome to <span className="text-gray-200">MedPlat</span>
+            </h1>
+            <p className="text-lg mb-6 text-center">
+              Inscrivez-vous et commencez à gérer vos rendez-vous médicaux en toute simplicité.
+            </p>
+            <Link
+              to="/register"
+              className="bg-white text-red-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+            >
+              S'inscrire
+            </Link>
+          </div>
+        </div>
       </div>
-
-      {/* Conteneur principal centré avec LoginContainer */}
-      <LoginContainer onLoginSuccess={handleLoginSuccess} />
-
-      {/* Lien d'inscription */}
-      <p className="mt-6 text-center text-sm text-gray-500">
-        Not a member?{' '}
-        <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
-          Register now
-        </Link>
-      </p>
-    </div>
+      
+    </section>
   );
 }
 

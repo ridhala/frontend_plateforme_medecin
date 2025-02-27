@@ -60,10 +60,11 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
       formDataToSend.append("photo_profil", formData.photo_profil);
     }
 
-    try {console.log(formDataToSend);
+    try {
+      console.log(formDataToSend);
       await registerDoctor(formDataToSend);
       console.log(" Inscription réussie:", formData);
-       setFormData({
+      setFormData({
         cin_medecin: "",
         nom: "",
         prenom: "",
@@ -77,8 +78,6 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
         photo_profil: null,
       });
       onRegisterSuccess();
-     
-      
     } catch (error) {
       console.error(" Échec de l'inscription:", error);
       alert("Une erreur est survenue lors de l'inscription.");
@@ -86,13 +85,13 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-blue-100">
-      <div className="flex bg-white-150 p-8 rounded-xl shadow-xl w-full max-w-4xl border-t-4 border-indigo-600">
+    <div > {/* Light gray background */}
+      <div className="flex bg-white p-8 rounded-xl shadow-xl w-full max-w-4xl border-t-4 border-red-600">
         {/* Registration Form Section */}
         <div className="w-2/3">
           {/* Title with Doctor Icon */}
           <h2 className="text-2xl font-bold text-center text-gray-900 flex items-center justify-center gap-3 mb-6">
-            <FaUserMd className="text-indigo-600 text-3xl" />
+            <FaUserMd className="text-red-600 text-3xl" />
             Create a Doctor Account
           </h2>
 
@@ -195,7 +194,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-red-600 hover:bg-red-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               Register
             </button>
@@ -227,7 +226,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
           />
         </div>
       </div>
