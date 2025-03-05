@@ -1,17 +1,14 @@
-// pages/Home.tsx
-import React from 'react';
-import Sidebar from '../components/home/Sidebar'; // Import du composant Sidebar
-import DashboardContent from '../components/home/DashboardContent'; // Import du composant DashboardContent
+import React, { useState } from 'react';
+import Sidebar from '../components/home/Sidebar';
+import DashboardContent from '../components/home/DashboardContent';
 
-function Home() {
+export default function Home() {
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
   return (
     <div className="flex h-screen bg-slate-100">
-      {/* Sidebar */}
-      <Sidebar />
-      {/* Contenu principal */}
-      <DashboardContent />
+      <Sidebar setActiveSection={setActiveSection} />
+      <DashboardContent activeSection={activeSection} />
     </div>
   );
 }
-
-export default Home;

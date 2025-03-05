@@ -60,11 +60,10 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
       formDataToSend.append("photo_profil", formData.photo_profil);
     }
 
-    try {
-      console.log(formDataToSend);
+    try {console.log(formDataToSend);
       await registerDoctor(formDataToSend);
       console.log(" Inscription réussie:", formData);
-      setFormData({
+       setFormData({
         cin_medecin: "",
         nom: "",
         prenom: "",
@@ -78,7 +77,11 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
         photo_profil: null,
       });
       onRegisterSuccess();
+     
+      
     } catch (error) {
+      console.error('Échec de l\'inscription:', error);
+      alert('Une erreur est survenue lors de l\'inscription.');
       console.error(" Échec de l'inscription:", error);
       alert("Une erreur est survenue lors de l'inscription.");
     }
