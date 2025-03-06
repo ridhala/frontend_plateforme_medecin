@@ -44,8 +44,8 @@ export default function Sidebar({ setActiveSection }: SidebarProps) {
       </nav>
       <img
         alt="Your Company"
-        className="mx-auto h-20 w-auto mb-10 mt-10"
-        src="/ic-ne-de-médecin-88636477.jpg"
+        className="mx-auto h-30 w-auto mb-20 mt-10"
+        src="https://marketplace.canva.com/EAGFJn_CyD4/1/0/1600w/canva-green-and-white-modern-medical-logo--HXaczhPPfU.jpg"
       />
     </div>
   );
