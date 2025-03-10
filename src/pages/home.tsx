@@ -6,7 +6,7 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
   return (
-    <div className="flex h-screen bg-slate-100">
+    <div className="flex h-screen bg-gray-100">
       <Sidebar setActiveSection={setActiveSection} />
       <DashboardContent activeSection={activeSection} />
     </div>

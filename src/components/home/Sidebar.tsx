@@ -13,40 +13,34 @@ export default function Sidebar({ setActiveSection }: SidebarProps) {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg flex-shrink-0 w-80 h-full">
-      <h1 className="text-2xl font-bold text-teal-700 mb-6">MedDashboard</h1>
-      <nav className="space-y-4">
+    <div className="bg-blue-800 text-white w-64 p-6 flex flex-col h-full">
+      <h1 className="text-2xl font-bold mb-8">MEDPLAT</h1>
+      <nav className="space-y-4 flex-grow">
         {menuItems.map((item, index) => (
           <button
             key={index}
             onClick={() => setActiveSection(item.title)}
-            className="block text-gray-700 hover:text-teal-600 transition-colors w-full text-left"
+            className="flex items-center space-x-3 text-white hover:bg-blue-700 p-2 rounded-lg w-full"
           >
-            <span className="flex items-center space-x-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d={item.icon}
-                />
-              </svg>
-              <span>{item.title}</span>
-            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d={item.icon}
+              />
+            </svg>
+            <span>{item.title}</span>
           </button>
         ))}
       </nav>
-      <img
-        alt="Your Company"
-        className="mx-auto h-30 w-auto mb-20 mt-10"
-        src="https://marketplace.canva.com/EAGFJn_CyD4/1/0/1600w/canva-green-and-white-modern-medical-logo--HXaczhPPfU.jpg"
-      />
+      <button className="mt-auto text-white hover:bg-blue-700 p-2 rounded-lg">Logout</button>
     </div>
   );
 }
