@@ -18,7 +18,9 @@ export default function PatientsList() {
     { id: 3, name: "nouri rahmeni", age: 38, lastVisit: "2024-08-05", status: "Inactive" },
     { id: 3, name: "Achref ben jannet", age: 38, lastVisit: "2024-08-05", status: "Inactive" },
     { id: 3, name: "Sihem mostfa", age: 38, lastVisit: "2024-08-05", status: "Inactive" },
+    { id: 3, name: "Ala ahmed", age: 31, lastVisit: "2024-08-06", status: "Inactive" },
   ];
+  
 
   return (
     <div className="space-y-6">
