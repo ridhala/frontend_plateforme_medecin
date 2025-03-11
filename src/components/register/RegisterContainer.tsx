@@ -63,7 +63,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
     }
 
     try {
-      console.log(formDataToSend);
+      console.log(formData);
       await registerDoctor(formDataToSend);
       console.log("Inscription réussie:", formData);
 
@@ -212,8 +212,8 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
 
             {/* Submit Button */}
             <button
- onClick={handleSubmit}     
-          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              type="submit"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Register
             </button>
