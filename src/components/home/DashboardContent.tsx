@@ -4,6 +4,7 @@ import PatientsList from './PatientsList';
 import AppointmentsList from './AppointmentsList';
 import ConsultationsList from './ConsultationsList';
 import QuickActions from './QuickActions';
+import Profil from './Profil';
 
 interface DashboardProps {
   activeSection: string | null;
@@ -21,16 +22,23 @@ export default function DashboardContent({ activeSection }: DashboardProps) {
             className="p-2 rounded-lg border border-gray-300"
           />
           <div className="flex items-center space-x-2">
-            <span>Rayen Dlimi</span>
-            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-          </div>
+  <span>Dalanda Chtioui</span>
+  <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-400">
+    <img
+      src="https://www.cliniquecic.ch/data/dataimages/Upload/thumbnails/zoom_PapaNata.jpg"
+      alt="Profile"
+      className="w-full h-full object-cover"
+    />
+  </div>
+</div>
+
         </div>
       </div>
 
       {/* ✅ Haut : Statistiques et graphiques */}
       <div className="mb-6">
         <StatisticsSection activeSection={activeSection} />
-        <QuickActions/>
+        
       </div>
 
      {/* ✅ Bas : Affichage dynamique des listes (patients, rendez-vous, consultations) */}
@@ -53,7 +61,8 @@ export default function DashboardContent({ activeSection }: DashboardProps) {
         {activeSection === "Profil" && (
           <div className="bg-white p-6 rounded-lg shadow-lg w-full">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Profil</h2>
-            <p>Profil content goes here.</p>
+            <Profil/>
+           
           </div>
         )}
         {!activeSection && (
