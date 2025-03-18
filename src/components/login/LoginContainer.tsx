@@ -1,16 +1,16 @@
 // components/LoginContainer.tsx
 import React, { useState } from 'react';
 import InputField from '././InputField'; // Import du composant InputField
-import { LoginFormProps } from '../../types/logintype'; // Import des types
+import { LoginForm} from '../../types/logintype'; // Import des types
 import { Link } from 'react-router-dom';
-import { authlogin } from '../../services/authService';
+import { login } from '../../services/loginService'
 interface LoginContainerProps {
   onLoginSuccess: () => void; // Prop appelée après une connexion réussie
 }
 
 function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
-  const [formData, setFormData] = useState<LoginFormProps>({
-    cin_medecin: '',
+  const [formData, setFormData] = useState<LoginForm>({
+    cin: '',
     password: '',
   });
 
@@ -18,21 +18,39 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
     const { name, value } = e.target;
     setFormData((prevData: any) => ({ ...prevData, [name]: value }));
   };
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await authlogin(formData); // Appel au backend via le service
+      const response = await login(formData); // Appel du service de login
       console.log('Authentification réussie:', response);
-      onLoginSuccess(); // Redirige vers la page Home ou autre
+
+      // Stocker les tokens dans le localStorage
+      localStorage.setItem('accessToken', response.accessToken);
+      localStorage.setItem('refreshToken', response.refreshToken);
+
+      // Redirection après une connexion réussie
+      onLoginSuccess();
     } catch (error) {
       console.error('Échec de l\'authentification:', error);
-      alert('Identifiants incorrects.');
+
+      // Afficher un message d'erreur
+      if (error instanceof Error) {
+        setErrorMessage(`Échec de l'authentification: ${error.message}`);
+      } else {
+        setErrorMessage('Une erreur inconnue est survenue lors de la connexion.');
+      }
     }
   };
 
   return (
     <div className="sm:mx-auto sm:w-full sm:max-w-sm bg-white/80 p-8 rounded-lg shadow-lg">
+        {errorMessage && (
+            <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-400 text-red-700 rounded-md">
+              <p>{errorMessage}</p>
+            </div>
+          )}
       {/* Titre du formulaire */}
       <h2 className="mt-2 text-center text-2xl font-bold tracking-tight text-red-900">
         Sign in to your account
@@ -42,10 +60,10 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
       <form onSubmit={handleSubmit} className="space-y-6 mt-6">
         {/* Champ CIN Médecin */}
         <InputField
-          label="CIN de médecin"
+          label="cin"
           type="text"
-          name="cin_medecin"
-          value={formData.cin_medecin}
+          name="cin"
+          value={formData.cin}
           onChange={handleChange}
           required
         />

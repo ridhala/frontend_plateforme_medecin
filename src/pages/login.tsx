@@ -2,11 +2,14 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LoginContainer from '../components/login/LoginContainer';
 
+
+
+
 function Login() {
   const navigate = useNavigate();
 
   const handleLoginSuccess = () => {
-    console.log('Login successful!');
+    console.log('Login successful!',);
     navigate('/home');
   };
 
@@ -25,7 +28,11 @@ function Login() {
           {/* Left side login form, now shifted to the right */}
           <div className="w-1/2 p-12 bg-gray-200 flex flex-col items-center justify-center relative z-10 ml-auto">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">Connexion</h2>
+
+
             <LoginContainer onLoginSuccess={handleLoginSuccess} />
+
+            
             <p className="mt-4 text-sm text-gray-700 text-center">
               Mot de passe oublié ?{' '}
               <a href="#" className="text-red-600 hover:text-red-700">Cliquez ici</a>

@@ -33,9 +33,9 @@ export default function RegisterPat() {
     try{
       console.log("Inscription réussie:", formData);
 
-    if(await registerPatient(formData)){
+    await registerPatient(formData)
       await navigate('/login');
-    }
+    
 }
 
 catch (error) {

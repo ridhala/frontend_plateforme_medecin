@@ -1,5 +1,5 @@
 // types/types.ts
-export interface LoginFormProps {
-    cin_medecin: string;
+export interface LoginForm {
+    cin: string;
     password: string;
   }

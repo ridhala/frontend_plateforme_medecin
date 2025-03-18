@@ -82,12 +82,12 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
         photo_profil: null,
       });
 
-      // Call the success callback
+      
       onRegisterSuccess();
+
     } catch (error) {
       console.error("Échec de l'inscription:", error);
 
-      // Display the specific error message from the backend
       if (error instanceof Error) {
         setErrorMessage(`Échec de l'inscription: ${error.message}`);
       } else {
