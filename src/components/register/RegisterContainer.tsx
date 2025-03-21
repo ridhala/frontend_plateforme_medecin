@@ -97,10 +97,10 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-blue-100">
-      <div className="flex bg-white-150 p-8 rounded-xl shadow-xl w-full max-w-4xl border-t-4 border-indigo-600">
+    <div className="flex justify-center items-center  ">
+      <div className="flex bg-white p-3 rounded-4xl shadow-xl w-full max-w-3xl">
         {/* Registration Form Section */}
-        <div className="w-2/3">
+        <div className="w-6/9 rounded-4xl bg-gradient-to-r from-blue-100 to-white ">
           {/* Title with Doctor Icon */}
           <h2 className="text-2xl font-bold text-center text-gray-900 flex items-center justify-center gap-3 mb-6">
             <FaUserMd className="text-indigo-600 text-3xl" />
@@ -109,13 +109,13 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
 
           {/* Display error message */}
           {errorMessage && (
-            <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-400 text-red-700 rounded-md">
+            <div className="mb-4 p-4 bg-red-200 border-l-4 border-red-400 text-red-700 rounded-2xl">
               <p>{errorMessage}</p>
             </div>
           )}
 
           {/* Registration Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InputField
                 label="CIN Médecin"
@@ -213,7 +213,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-blue-700 hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
               Register
             </button>
@@ -221,7 +221,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
         </div>
 
         {/* Profile Photo Section */}
-        <div className="w-1/3 flex flex-col items-center justify-center pl-8">
+        <div className="w-3/9 rounded-4xl bg-gradient-to-r from-white to-blue-200 flex flex-col items-center justify-center pl-8">
           <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
             {formData.photo_profil ? (
               <img

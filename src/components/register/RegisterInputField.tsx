@@ -12,7 +12,7 @@ interface InputFieldProps {
 function InputField({ label, type, name, value, onChange, required }: InputFieldProps) {
   return (
     <div>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={name} className="block text-l font-medium text-black">
         {label}
       </label>
       <div className="mt-2">
@@ -23,7 +23,7 @@ function InputField({ label, type, name, value, onChange, required }: InputField
           value={value}
           onChange={onChange}
           required={required}
-          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+          className="block w-full rounded-xl bg-white px-3 py-1.5 text-base text-black-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-black-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm"
         />
       </div>
     </div>

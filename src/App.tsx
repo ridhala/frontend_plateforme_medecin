@@ -9,6 +9,7 @@ import ForgotPassword from './pages/forgotPassword'; // Forgot password page
 import Accueil from './pages/Accueil';
 import RegisterPat from './pages/registerpat';
 import Home from './pages/home';
+import VerificationSuccess from './pages/verifemail';
 ////////////////////////////////////////////////////////////////////////////////////////////
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         {/* Route for the register Patient page */}
         <Route path="/registerpat" element={<RegisterPat />} />
-
+<Route path='/verifemail' element={<VerificationSuccess/>}/>
         {/* Route for the register page */}
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Home />} />

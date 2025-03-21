@@ -18,24 +18,21 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
     const { name, value } = e.target;
     setFormData((prevData: any) => ({ ...prevData, [name]: value }));
   };
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await login(formData); // Appel du service de login
+      const response = await login(formData); 
       console.log('Authentification réussie:', response);
 
       // Stocker les tokens dans le localStorage
       localStorage.setItem('accessToken', response.accessToken);
       localStorage.setItem('refreshToken', response.refreshToken);
 
-      // Redirection après une connexion réussie
       onLoginSuccess();
     } catch (error) {
-      console.error('Échec de l\'authentification:', error);
 
-      // Afficher un message d'erreur
       if (error instanceof Error) {
         setErrorMessage(`Échec de l'authentification: ${error.message}`);
       } else {

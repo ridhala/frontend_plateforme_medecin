@@ -2,14 +2,11 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LoginContainer from '../components/login/LoginContainer';
 
-
-
-
 function Login() {
   const navigate = useNavigate();
 
   const handleLoginSuccess = () => {
-    console.log('Login successful!',);
+    console.log('Login successful!');
     navigate('/home');
   };
 
@@ -28,28 +25,24 @@ function Login() {
           {/* Left side login form, now shifted to the right */}
           <div className="w-1/2 p-12 bg-gray-200 flex flex-col items-center justify-center relative z-10 ml-auto">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">Connexion</h2>
-
-
             <LoginContainer onLoginSuccess={handleLoginSuccess} />
-
-            
             <p className="mt-4 text-sm text-gray-700 text-center">
               Mot de passe oublié ?{' '}
-              <a href="#" className="text-red-600 hover:text-red-700">Cliquez ici</a>
+              <a href="#" className="text-red-600 hover:text-black">Cliquez ici</a>
             </p>
           </div>
 
           {/* Right side sign up section */}
-          <div className="w-1/2 p-12 bg-gradient-to-r from-red-400 to-red-600 text-white flex flex-col items-center justify-center relative">
+          <div className="w-1/2 p-12 bg-blue-300 text-white flex flex-col items-center justify-center relative">
             <h1 className="text-5xl font-extrabold mb-6">
-              Welcome to <span className="text-gray-200">MedPlat</span>
+              Welcome  <span className="text-gray-200"></span>
             </h1>
             <p className="text-lg mb-6 text-center">
               Inscrivez-vous et commencez à gérer vos rendez-vous médicaux en toute simplicité.
             </p>
             <Link
               to="/register"
-              className="bg-white text-red-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+              className="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
             >
               S'inscrire
             </Link>
