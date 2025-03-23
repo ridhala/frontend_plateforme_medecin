@@ -1,44 +1,55 @@
-import { useNavigate } from 'react-router-dom';
-import { FaCheckCircle } from 'react-icons/fa'; // Success icon
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 
-function VerificationSuccess() {
-  const navigate = useNavigate();
+export default function ActivationPage() {
+  const { activationcode } = useParams();
+  const [status, setStatus] = useState("loading"); // 'loading', 'success', 'error'
 
-  // Redirect to login page after 5 seconds
-  
+  useEffect(() => {
+    axios
+      .post(`http://localhost:3000/authmedecin/verifmedecin/${activationcode}`)
+      .then(() => setStatus("success"))
+      .catch(() => setStatus("error"));
+  }, [activationcode]);
 
   return (
-    <div
-      className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-50"
-      style={{
-        backgroundImage: `url('https://media.tenor.com/5oA6W5zZ7ZAAAAAC/medical-heartbeat.gif')`, // Dynamic GIF background
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      {/* Overlay to improve readability */}
-      <div className="absolute inset-0 bg-gray-100 backdrop-blur-sm"></div>
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md rounded-xl bg-white p-6 text-center shadow-lg">
+        {status === "loading" && (
+          <div className="flex flex-col items-center">
+            <Loader2 className="h-16 w-16 animate-spin text-blue-500" />
+            <p className="mt-4 text-lg font-semibold text-gray-700">
+              Activation en cours...
+            </p>
+          </div>
+        )}
 
-      {/* Success Message */}
-      <div className="relative z-10 text-center bg-white/80 backdrop-blur-md p-8 rounded-xl shadow-2xl border-t-4 border-green-500 max-w-md">
-        <FaCheckCircle className="text-green-500 text-6xl mx-auto mb-4" />
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Account Verified!
-        </h1>
-        <p className="text-gray-700 mb-6">
-          Your account has been successfully verified. You will be redirected to
-          the login page in a few seconds.
-        </p>
-        <button
-          onClick={() => navigate('/login')}
-          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-green-600 hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-        >
-          Go to Login
-        </button>
+        {status === "success" && (
+          <div className="flex flex-col items-center">
+            <CheckCircle className="h-16 w-16 text-green-500" />
+            <h2 className="mt-4 text-2xl font-bold text-green-600">
+              Activation réussie !
+            </h2>
+            <p className="mt-2 text-gray-600">Votre compte a été activé avec succès.</p>
+            <a href="/login" className="mt-4 rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700">
+              Se connecter
+            </a>
+          </div>
+        )}
+
+        {status === "error" && (
+          <div className="flex flex-col items-center">
+            <XCircle className="h-16 w-16 text-red-500" />
+            <h2 className="mt-4 text-2xl font-bold text-red-600">Échec de l'activation</h2>
+            <p className="mt-2 text-gray-600">Code d'activation invalide ou expiré.</p>
+            <a href="/resend" className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700">
+              Renvoyer l'email
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
-export default VerificationSuccess;

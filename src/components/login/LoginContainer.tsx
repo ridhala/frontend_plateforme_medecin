@@ -49,7 +49,7 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
             </div>
           )}
       {/* Titre du formulaire */}
-      <h2 className="mt-2 text-center text-2xl font-bold tracking-tight text-red-900">
+      <h2 className="mt-2 text-center text-2xl font-bold tracking-tight text-gray-800">
         Sign in to your account
       </h2>
 
@@ -88,7 +88,7 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
         {/* Bouton de soumission */}
         <button
   type="submit"
-  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
 >
   Sign in
 </button>
