@@ -3,6 +3,7 @@ import { FaUserMd } from "react-icons/fa"; // Doctor Icon
 import InputField from "../../components/register/RegisterInputField"; // Import the InputField component
 import { registerDoctor } from "../../services/registerdoctorService"; // Import the service for doctor registration
 import { DoctorFormData } from "../../types/doctorregistertype"; // Import the DoctorFormData type
+import { Loader2 } from "lucide-react";
 
 interface RegisterContainerProps {
   onRegisterSuccess: () => void; // Prop for handling successful registration
@@ -22,7 +23,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
     password: "",
     photo_profil: null,
   });
-
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
 
   // Handle input changes
@@ -61,7 +62,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
     if (formData.photo_profil) {
       formDataToSend.append("photo_profil", formData.photo_profil);
     }
-
+    setIsLoading(true); // Activer le loader
     try {
       console.log(formData);
       await registerDoctor(formDataToSend);
@@ -93,6 +94,9 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
       } else {
         setErrorMessage("Une erreur inconnue est survenue lors de l'inscription.");
       }
+    }
+    finally{ 
+      setIsLoading(false)
     }
   };
 
@@ -213,9 +217,14 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
             {/* Submit Button */}
             <button
               type="submit"
+              disabled={isLoading} // Désactiver le bouton pendant le chargement
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-blue-700 hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
-              Register
+              {isLoading ? (
+                <Loader2 className="h-6 w-6 animate-spin text-white" />
+              ) : (
+                "Register"
+              )}
             </button>
           </form>
         </div>

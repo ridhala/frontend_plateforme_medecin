@@ -4,6 +4,7 @@ import InputField from '././InputField'; // Import du composant InputField
 import { LoginForm} from '../../types/logintype'; // Import des types
 import { Link } from 'react-router-dom';
 import { login } from '../../services/loginService'
+import { Loader2 } from 'lucide-react';
 interface LoginContainerProps {
   onLoginSuccess: () => void; // Prop appelée après une connexion réussie
 }
@@ -18,10 +19,14 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
     const { name, value } = e.target;
     setFormData((prevData: any) => ({ ...prevData, [name]: value }));
   };
+    const [isLoading, setIsLoading] = useState(false);
+  
   const [errorMessage, setErrorMessage] = useState<string | null>(null); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+      setIsLoading(true);
+
     try {
       const response = await login(formData); 
       console.log('Authentification réussie:', response);
@@ -38,6 +43,9 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
       } else {
         setErrorMessage('Une erreur inconnue est survenue lors de la connexion.');
       }
+    }
+    finally{
+      setIsLoading(false)
     }
   };
 
@@ -87,11 +95,16 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
 
         {/* Bouton de soumission */}
         <button
-  type="submit"
-  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
->
-  Sign in
-</button>
+              type="submit"
+              disabled={isLoading} // Désactiver le bouton pendant le chargement
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-blue-700 hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+            >
+              {isLoading ? (
+                <Loader2 className="h-6 w-6 animate-spin text-white" />
+              ) : (
+                "Sign in"
+              )}
+            </button>
 
       </form>
     </div>
