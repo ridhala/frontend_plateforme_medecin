@@ -5,6 +5,7 @@ import AppointmentsList from './AppointmentsList';
 import ConsultationsList from './ConsultationsList';
 import QuickActions from './QuickActions';
 import Profil from './Profil';
+import Chat from '../Messagerie/Chat';
 
 interface DashboardProps {
   activeSection: string | null;
@@ -30,6 +31,10 @@ export default function DashboardContent({ activeSection }: DashboardProps) {
       className="w-full h-full object-cover"
     />
   </div>
+  <div>
+      
+      <Chat doctorId={''}/>
+    </div>
 </div>
 
         </div>
