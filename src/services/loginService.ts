@@ -1,54 +1,46 @@
+// loginService.ts
 import axios from 'axios';
+import Cookies from 'js-cookie'; 
 import { LoginForm } from '../types/logintype';
-export const login = async (formData: LoginForm) => {
 
-  interface LoginResponse {
-    accessToken: string;
-    refreshToken: string;
-  }
-  
+export const login = async (credentials:  LoginForm) => {
   try {
-     
-    const response = await axios.post<LoginResponse>('http://localhost:3000/loginuser/login', formData, {
-    
-      
-    });
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      // Handle Axios-specific error
-      if (error.response) {
-       
-        throw new Error(error.response.data.message || 'An error occurred during login.');
-      } else if (error.request) {
-        // The request was made but no response was received
-        throw new Error('No response received from the server.');
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        throw new Error(error.message);
+    const response = await axios.post('http://localhost:3000/loginuser/login', credentials,{
+      withCredentials: true, // Pour envoyer les cookies
+      headers: {
+        'Content-Type': 'application/json',
       }
-    } else {
-      throw new Error('An unexpected error occurred.');
+
+    });
+    
+   Cookies.set('accessToken', response.data.accessToken, {
+    expires: 7, // 7 jours
+    
+  });
+  
+  Cookies.set('refreshToken', response.data.refreshToken, {
+    expires: 30, // 30 jours
+    
+  });
+  
+  return response.data;
+  }catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data.message || 'Échec de la connexion');
     }
+    throw new Error('Erreur inconnue');
   }
 };
-/*// services/loginService.ts
-import axios from 'axios';
 
-interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-}
+export const getAccessToken = () => {
+  return Cookies.get('accessToken');
+};
 
-export const login = async (formData: { cin: string; password: string }) => {
-  try {
-    const response = await axios.post<LoginResponse>('http://localhost:3000/auth/login', formData);
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data.message || 'Login failed');
-    } else {
-      throw new Error('An unknown error occurred');
-    }
-  }
-}; */
+export const logout = () => {
+  
+  Cookies.remove('accessToken');
+  Cookies.remove('refreshToken');
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken")
+
+};

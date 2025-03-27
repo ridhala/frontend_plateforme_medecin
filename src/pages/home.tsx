@@ -16,3 +16,17 @@ export default function Home() {
     </div>
   );
 }
+/**  useEffect(()=>{
+    try{
+      const UserResponse=  axios.get("http://localhost:3000/update/profile", { responseType: 'blob', 
+        withCredentials: true,
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+      }
+      });
+      setUserData(UserResponse)
+
+    }
+  catch{}
+  }
+) */

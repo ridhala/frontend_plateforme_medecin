@@ -1,125 +1,229 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Loader2 } from 'lucide-react';
 
-export default function Profil() {
-  const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState({
-    name: "Nom de l'utilisateur",
-    email: "user@example.com",
-    phone: "+33 6 12 34 56 78",
-    address: "123 Rue Exemple, Paris",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsEditing(false);
-    // Ici, tu peux ajouter une logique pour sauvegarder les modifications (ex: API)
-  };
-
-  return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg mx-auto">
-      {/* Header */}
-      <div className="flex flex-col items-center border-b pb-4 mb-4">
-        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-500">
-          <img
-            src="https://www.cliniquecic.ch/data/dataimages/Upload/thumbnails/zoom_PapaNata.jpg"
-            alt="Profile"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <h2 className="text-2xl font-semibold text-gray-800 mt-3">
-          {userData.name}
-        </h2>
-        <p className="text-gray-500 text-sm">Utilisateur | Rôle</p>
-      </div>
-
-      {/* Affichage des infos ou Formulaire */}
-      {!isEditing ? (
-        <div className="space-y-4 text-gray-700">
-          <div className="flex justify-between border-b pb-2">
-            <span className="font-medium">Email :</span>
-            <span className="text-gray-600">{userData.email}</span>
-          </div>
-          <div className="flex justify-between border-b pb-2">
-            <span className="font-medium">Téléphone :</span>
-            <span className="text-gray-600">{userData.phone}</span>
-          </div>
-          <div className="flex justify-between border-b pb-2">
-            <span className="font-medium">Adresse :</span>
-            <span className="text-gray-600">{userData.address}</span>
-          </div>
-          {/* Bouton Modifier */}
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => setIsEditing(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            >
-              Modifier le Profil
-            </button>
-          </div>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4 text-gray-700">
-          <div className="flex flex-col">
-            <label className="font-medium">Nom :</label>
-            <input
-              type="text"
-              name="name"
-              value={userData.name}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="font-medium">Email :</label>
-            <input
-              type="email"
-              name="email"
-              value={userData.email}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="font-medium">Téléphone :</label>
-            <input
-              type="text"
-              name="phone"
-              value={userData.phone}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="font-medium">Adresse :</label>
-            <input
-              type="text"
-              name="address"
-              value={userData.address}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            />
-          </div>
-          <div className="mt-6 text-center">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-            >
-              Sauvegarder
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="ml-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
-            >
-              Annuler
-            </button>
-          </div>
-        </form>
-      )}
-    </div>
-  );
+interface MedecinProfile {
+  _id: string;
+  nom: string;
+  prenom: string;
+  email: string;
+  telephone_personnel: string;
+  telephone_cabinet: string;
+  adresse_cabinet: string;
+  specialite: string;
+  photo_profil: string; // Supposons que c'est une URL ou base64
 }
+
+const ProfilMedecin = () => {
+  const [stateprofil, setstateprofil]= useState(false);
+  const [profileData, setProfileData] = useState<MedecinProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState<MedecinProfile>({
+    _id: "",
+    nom: "",
+    prenom: "",
+    email: "",
+    telephone_personnel: "",
+    telephone_cabinet: "",
+    adresse_cabinet: "",
+    specialite: "",
+    photo_profil: ""
+  });  const [error, setError] = useState<string | null>(null);
+ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          setUserData({ ...userData, [e.target.name]: e.target.value });
+        };
+      
+        const handleSubmit = (e: React.FormEvent) => {
+          e.preventDefault();
+          setstateprofil(false);
+          // Ici, tu peux ajouter une logique pour sauvegarder les modifications (ex: API)
+        };
+  useEffect(() => {
+    const ProfileData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/update/profile', {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        });
+
+       
+
+        
+        // Structure de réponse adaptée à votre backend
+        setProfileData(response.data.utilisateur);
+      } catch (err) {
+        console.error('Erreur:', err);
+        setError('Erreur lors du chargement du profil');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    ProfileData();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
+        <span className="ml-3 text-lg">Chargement du profil...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 max-w-md">
+          <p className="font-bold">Erreur</p>
+          <p>{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-3 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Réessayer
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (!stateprofil ?
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="md:flex">
+          {/* Section Photo de profil */}
+          <div className="md:w-1/3 p-8 flex flex-col items-center bg-gray-100">
+            <div className="relative mb-6">
+              {profileData?.photo_profil ? (
+                <img
+                  src={profileData.photo_profil}
+                  alt="Photo de profil"
+                  className="w-40 h-40 rounded-full object-cover border-4 border-white shadow-lg"
+                />
+              ) : (
+                <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center">
+                  <span className="text-gray-500">Pas de photo</span>
+                </div>
+              )}
+            </div>
+            
+            <h2 className="text-xl font-semibold text-gray-800">
+              {profileData?.prenom} {profileData?.nom}
+            </h2>
+            {profileData?.specialite && (
+              <p className="text-gray-600 mt-1">{profileData.specialite}</p>
+            )}
+          </div>
+
+          {/* Section Informations */}
+          <div className="md:w-2/3 p-8">
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">Informations du profil</h1>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-500">Nom complet</label>
+                <p className="mt-1 p-2 bg-gray-50 rounded">
+                  {profileData?.prenom} {profileData?.nom}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-500">Email</label>
+                <p className="mt-1 p-2 bg-gray-50 rounded">{profileData?.email}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-500">Téléphone Personnel</label>
+                <p className="mt-1 p-2 bg-gray-50 rounded">{profileData?.telephone_personnel}</p>
+              </div>
+
+              {profileData?.telephone_cabinet && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-500">Téléphone Cabinet</label>
+                  <p className="mt-1 p-2 bg-gray-50 rounded">{profileData.telephone_cabinet}</p>
+                </div>
+              )}
+
+              {profileData?.adresse_cabinet && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-500">Adresse Cabinet</label>
+                  <p className="mt-1 p-2 bg-gray-50 rounded">{profileData.adresse_cabinet}</p>
+                </div>
+              )}
+
+              <div className="pt-4">
+                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                onClick={()=>setstateprofil(true)}>
+                  Modifier le profil
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    :(<form onSubmit={handleSubmit} className="space-y-4 text-gray-700">
+      <div className="flex flex-col">
+        <label className="font-medium">Nom :</label>
+        <input
+          type="text"
+          name="name"
+          value={userData.nom}
+          onChange={handleChange}
+          className="border p-2 rounded-md"
+        />
+      </div>
+      <div className="flex flex-col">
+        <label className="font-medium">Email :</label>
+        <input
+          type="email"
+          name="email"
+          value={userData.email}
+          onChange={handleChange}
+          className="border p-2 rounded-md"
+        />
+      </div>
+      <div className="flex flex-col">
+        <label className="font-medium">Téléphone :</label>
+        <input
+          type="text"
+          name="phone"
+          value={userData.telephone_personnel}
+          onChange={handleChange}
+          className="border p-2 rounded-md"
+        />
+      </div>
+      <div className="flex flex-col">
+        <label className="font-medium">Adresse :</label>
+        <input
+          type="text"
+          name="address"
+          value={userData.adresse_cabinet}
+          onChange={handleChange}
+          className="border p-2 rounded-md"
+        />
+      </div>
+      <div className="mt-6 text-center">
+        <button
+          type="submit"
+          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+        >
+          Sauvegarder
+        </button>
+        <button
+          type="button"
+          onClick={() => setstateprofil(false)}
+          className="ml-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+        >
+          Annuler
+        </button>
+      </div>
+    </form>
+  )
+  );
+};
+
+export default ProfilMedecin;
