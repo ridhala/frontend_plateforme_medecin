@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
+import { update } from '../../services/serviceshome/profilservice';
+import { MedecinProfile } from '../../types/profilemedecin';
 
-interface MedecinProfile {
-  _id: string;
-  nom: string;
-  prenom: string;
-  email: string;
-  telephone_personnel: string;
-  telephone_cabinet: string;
-  adresse_cabinet: string;
-  specialite: string;
-  photo_profil: string; // Supposons que c'est une URL ou base64
-}
 
 const ProfilMedecin = () => {
   const [stateprofil, setstateprofil]= useState(false);
@@ -23,21 +14,31 @@ const ProfilMedecin = () => {
     nom: "",
     prenom: "",
     email: "",
-    telephone_personnel: "",
-    telephone_cabinet: "",
+    telephone_personnel: null,
+    numero_licence:null,
+    telephone_cabinet: null,
     adresse_cabinet: "",
-    specialite: "",
+    nom_specialite: "",
     photo_profil: ""
-  });  const [error, setError] = useState<string | null>(null);
+  }); 
+   const [error, setError] = useState<string | null>(null);
  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           setUserData({ ...userData, [e.target.name]: e.target.value });
         };
       
-        const handleSubmit = (e: React.FormEvent) => {
+        const handleSubmit =async (e: React.FormEvent) => {
           e.preventDefault();
-          setstateprofil(false);
-          // Ici, tu peux ajouter une logique pour sauvegarder les modifications (ex: API)
-        };
+          try{
+           const updateprofil= await update(userData);
+           setProfileData(updateprofil)
+console.log("succes" , userData)
+          }
+          catch (err) {
+            console.log( "erreur d'update" ,userData)
+
+          }
+        }
+
   useEffect(() => {
     const ProfileData = async () => {
       try {
@@ -48,10 +49,6 @@ const ProfilMedecin = () => {
           }
         });
 
-       
-
-        
-        // Structure de réponse adaptée à votre backend
         setProfileData(response.data.utilisateur);
       } catch (err) {
         console.error('Erreur:', err);
@@ -76,7 +73,7 @@ const ProfilMedecin = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 max-w-md">
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 ">
           <p className="font-bold">Erreur</p>
           <p>{error}</p>
           <button 
@@ -91,8 +88,7 @@ const ProfilMedecin = () => {
   }
 
   return (!stateprofil ?
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="max-w-xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <div className="md:flex">
           {/* Section Photo de profil */}
           <div className="md:w-1/3 p-8 flex flex-col items-center bg-gray-100">
@@ -101,7 +97,7 @@ const ProfilMedecin = () => {
                 <img
                   src={profileData.photo_profil}
                   alt="Photo de profil"
-                  className="w-40 h-40 rounded-full object-cover border-4 border-white shadow-lg"
+                  className="w-40 h-40 rounded-full object-cover border-8 border-white shadow-lg"
                 />
               ) : (
                 <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center">
@@ -110,15 +106,14 @@ const ProfilMedecin = () => {
               )}
             </div>
             
-            <h2 className="text-xl font-semibold text-gray-800">
+            <h2 className="text-xl font-bold text-gray-800 ">
               {profileData?.prenom} {profileData?.nom}
             </h2>
-            {profileData?.specialite && (
-              <p className="text-gray-600 mt-1">{profileData.specialite}</p>
-            )}
+            
+              <p className="text-gray-500">{profileData?._id}</p>
+            
           </div>
 
-          {/* Section Informations */}
           <div className="md:w-2/3 p-8">
             <h1 className="text-2xl font-bold text-gray-800 mb-6">Informations du profil</h1>
             
@@ -127,6 +122,12 @@ const ProfilMedecin = () => {
                 <label className="block text-sm font-medium text-gray-500">Nom complet</label>
                 <p className="mt-1 p-2 bg-gray-50 rounded">
                   {profileData?.prenom} {profileData?.nom}
+                </p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-500">Specialité</label>
+                <p className="mt-1 p-2 bg-gray-50 rounded">
+                  {profileData?.nom_specialite}
                 </p>
               </div>
 
@@ -164,14 +165,24 @@ const ProfilMedecin = () => {
           </div>
         </div>
       </div>
-    </div>
+    
     :(<form onSubmit={handleSubmit} className="space-y-4 text-gray-700">
       <div className="flex flex-col">
         <label className="font-medium">Nom :</label>
         <input
           type="text"
-          name="name"
+          name="nom"
           value={userData.nom}
+          onChange={handleChange}
+          className="border p-2 rounded-md"
+        />
+      </div>
+      <div className="flex flex-col">
+        <label className="font-medium">Prenom :</label>
+        <input
+          type="text"
+          name="prenom"
+          value={userData.prenom}
           onChange={handleChange}
           className="border p-2 rounded-md"
         />
@@ -190,17 +201,27 @@ const ProfilMedecin = () => {
         <label className="font-medium">Téléphone :</label>
         <input
           type="text"
-          name="phone"
-          value={userData.telephone_personnel}
+          name="telephone_personnel"
+          value={userData.telephone_personnel?.toString()|| ''}
           onChange={handleChange}
           className="border p-2 rounded-md"
         />
       </div>
       <div className="flex flex-col">
-        <label className="font-medium">Adresse :</label>
+        <label className="font-medium">Téléphone de cabinet :</label>
         <input
           type="text"
-          name="address"
+          name="telephone_cabinet"
+          value={userData.telephone_cabinet?.toString()|| ""}
+          onChange={handleChange}
+          className="border p-2 rounded-md"
+        />
+      </div>
+      <div className="flex flex-col">
+        <label className="font-medium">Adresse cabinet:</label>
+        <input
+          type="text"
+          name="adresse_cabinet"
           value={userData.adresse_cabinet}
           onChange={handleChange}
           className="border p-2 rounded-md"

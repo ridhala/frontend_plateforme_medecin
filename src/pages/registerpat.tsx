@@ -59,13 +59,13 @@ catch (error) {
         minHeight: '100vh', // S'assure que la section couvre toute la fenêtre
       }}
     >
-      <div className="flex justify-center items-center min-h-screen w-full">
-        <div className="relative w-full max-w-3xl h-[835px] bg-white bg-opacity-100 backdrop-blur-lg rounded-lg shadow-lg flex overflow-hidden mx-auto">
+      <div className="flex justify-center items-center min-h-screen w-full px-8 py-8">
+        <div className="relative w-full max-w-2xl h-[680px]  bg-white bg-opacity-100 backdrop-blur-lg rounded-lg shadow-lg flex overflow-hidden mx-auto">
           
           {/* Left side registration form */}
-          <div className="w-1/2 p-12 bg-gray-200 flex flex-col items-center justify-center relative z-10">
+          <div className="w-3/2 p-12 bg-gray-100 flex flex-col items-center justify-center relative z-10">
             {/* Formulaire d'inscription */}
-            <form onSubmit={handleSubmit} className="space-y-6 mt-1">
+            <form onSubmit={handleSubmit} className="space-y-3 ">
             {errorMessage && (
             <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-400 text-red-700 rounded-md">
               <p>{errorMessage}</p>
@@ -90,6 +90,7 @@ catch (error) {
                   />
                 </div>
               </div>
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
 
               {/* Nom */}
               <div>
@@ -147,7 +148,48 @@ catch (error) {
                 </div>
               </div>
               
-            <div>
+          
+
+
+
+              {/* Téléphone */}
+              <div>
+                <label htmlFor="telephone" className="block text-sm font-medium text-gray-900">
+                  Téléphone
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="telephone"
+                    name="telephone"
+                    type="text"
+                    required
+                    autoComplete="off"
+                    value={formData.telephone}
+                    onChange={handleChange}
+                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-900">
+                  Email
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+                  />
+                </div>
+              </div>
+              <div>
   <label className="block text-sm font-medium text-gray-900">
     Sex
   </label>
@@ -179,46 +221,6 @@ catch (error) {
     </label>
   </div>
 </div>
-
-
-
-              {/* Téléphone */}
-              <div>
-                <label htmlFor="telephone" className="block text-sm font-medium text-gray-900">
-                  Téléphone
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="telephone"
-                    name="telephone"
-                    type="text"
-                    required
-                    autoComplete="off"
-                    value={formData.telephone}
-                    onChange={handleChange}
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              {/* Email */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-900">
-                  Email
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
-                  />
-                </div>
-              </div>
              
               {/* Mot de passe */}
               <div>
@@ -247,6 +249,7 @@ catch (error) {
                   Register
                 </button>
               </div>
+              
             </form>
 
             {/* Lien pour retourner à la page de connexion */}
@@ -261,9 +264,9 @@ catch (error) {
           {/* Right side sign up section with light gray background */}
           <div className="w-1/2 p-12 bg-gradient-to-r from-white to-blue-300 text-white flex flex-col items-center justify-center relative">
             
-            <p className="text-lg mb-6 text-center">
+            <div className="text-lg mb-6 text-center">
               <h2 className="text-4xl font-bold text-gray-800 mb-6">Create a Patient Account</h2>
-            </p>
+            </div>
             <Link
               to="/login"
               className="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"

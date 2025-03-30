@@ -9,7 +9,6 @@ import ForgotPassword from './pages/forgotPassword'; // Forgot password page
 import Accueil from './pages/Accueil';
 import RegisterPat from './pages/registerpat';
 import Home from './pages/home';
-import activationpage from './pages/verifemail';
 import Activationpage from './pages/verifemail';
 ////////////////////////////////////////////////////////////////////////////////////////////
 function App() {
