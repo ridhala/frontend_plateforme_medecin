@@ -23,9 +23,9 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
     password: "",
     photo_profil: null,
   });
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
-
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -85,28 +85,29 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
 
       
       onRegisterSuccess();
-
     } catch (error) {
       console.error("Échec de l'inscription:", error);
 
       if (error instanceof Error) {
-        setErrorMessage(`Échec de l'inscription: ${error.message}`);
+        setErrorMessage(`Erreur : ${error.message}`);
       } else {
         setErrorMessage("Une erreur inconnue est survenue lors de l'inscription.");
       }
     }
     finally{ 
       setIsLoading(false)
+    
+
     }
   };
-
+ 
   return (
     <div className="flex justify-center items-center  ">
-      <div className="flex bg-white p-3 rounded-4xl shadow-xl w-full max-w-3xl">
+      <div className="flex bg-gray-200 p-3 rounded-4xl shadow-xl w-full max-w-2xl">
         {/* Registration Form Section */}
-        <div className="w-6/9 rounded-4xl bg-gradient-to-r from-blue-100 to-white ">
+        <div className="w-7/9 rounded-4xl bg-gradient-to-r from-blue-200 to-gray-200 ">
           {/* Title with Doctor Icon */}
-          <h2 className="text-2xl font-bold text-center text-gray-900 flex items-center justify-center gap-3 mb-6">
+          <h2 className="text-2xl font-bold text-center text-gray-900 flex items-center justify-center gap-3 mb-4">
             <FaUserMd className="text-indigo-600 text-3xl" />
             Create a Doctor Account
           </h2>
@@ -119,7 +120,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
           )}
 
           {/* Registration Form */}
-          <form onSubmit={handleSubmit} className="space-y-2">
+          <form onSubmit={handleSubmit} className="space-y-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InputField
                 label="CIN Médecin"
@@ -214,10 +215,9 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
               required
             />
 
-            {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading} // Désactiver le bouton pendant le chargement
+              disabled={isLoading} 
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-blue-700 hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
               {isLoading ? (
@@ -230,7 +230,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
         </div>
 
         {/* Profile Photo Section */}
-        <div className="w-3/9 rounded-4xl bg-gradient-to-r from-white to-blue-200 flex flex-col items-center justify-center pl-8">
+        <div className="w-3/9 rounded-4xl bg-gradient-to-r from-gray-200 to-blue-200 flex flex-col items-center justify-center pl-8">
           <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
             {formData.photo_profil ? (
               <img

@@ -1,55 +1,112 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { Patientform } from '../types/patienttype';
-import { registerPatient } from '../services/patientService';
-export default function RegisterPat() {
-  const [formData, setFormData] = useState<Patientform>({
-   
+import { Loader2 } from 'lucide-react';
+import { HiUser } from 'react-icons/hi';
+
+interface PatientData {
+  cin_patient: number | '';
+  nom_patient: string;
+  prenom_patient: string;
+  email: string;
+  telephone: number | '';
+  password: string;
+  date_naissance: string;
+  sex: string;
+}
+
+const RegisterPatient = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<PatientData>({
     cin_patient: '',
     nom_patient: '',
     prenom_patient: '',
-    date_naissance: "",
-    sex: '',
     email: '',
     telephone: '',
-    
-     password: '',
+    password: '',
+    date_naissance: '',
+    sex: ''
   });
-  
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+   const [success, setSuccess] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    
+    // Handle numeric fields
+    if (name === 'cin_patient' || name === 'telephone') {
+      setFormData(prev => ({ ...prev, [name]: value === '' ? '' : Number(value) }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
-  const navigate = useNavigate(); // Hook for navigation
+
+  const validateForm = (): string | null => {
+    if (!formData.cin_patient) return "CIN is required";
+    if (isNaN(formData.cin_patient)) return "CIN must be a number";
+    if (!formData.nom_patient.trim()) return "Last name is required";
+    if (!formData.prenom_patient.trim()) return "First name is required";
+    if (!formData.email.trim()) return "Email is required";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return "Invalid email format";
+    if (!formData.telephone) return "Phone number is required";
+    if(!formData.sex) return"sex is required"
+    if (isNaN(formData.telephone)) return "Phone must be a number";
+    if (!formData.password) return "Password is required";
+    if (formData.password.length < 8) return "Password must be at least 8 characters";
+    if (!formData.date_naissance) return "Birth date is required";
+    return null;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    try{
-      console.log("Inscription réussie:", formData);
-
-    await registerPatient(formData)
-      await navigate('/login');
     
-}
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
 
-catch (error) {
-  console.error("Échec de l'inscription:", error);
+    setIsLoading(true);
 
-  // Display the specific error message from the backend
-  if (error instanceof Error) {
-    setErrorMessage(`Échec de l'inscription: ${error.message}`);
-  } else {
-    setErrorMessage("Une erreur inconnue est survenue lors de l'inscription.");
-  }
-}
+    try {
+      const response= await axios.post('http://localhost:3000/authpatient/register', {
+        cin_patient: formData.cin_patient,
+        nom_patient: formData.nom_patient,
+        prenom_patient: formData.prenom_patient,
+        email: formData.email,
+        telephone: formData.telephone,
+        password: formData.password,
+        date_naissance: new Date(formData.date_naissance).toISOString(),
+        sex: formData.sex
+      });
 
+      setSuccess(true);
+      setTimeout(() => navigate('/login'), 3000);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || 
+               err.response?.data || 
+               'Registration failed. Please try again.');
+      } else {
+        setError('An unexpected error occurred');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="bg-white p-8 rounded-lg shadow-md text-center">
+          <h1 className="text-2xl font-bold text-green-600 mb-4">Registration Successful!</h1>
+          <h2 className='text-2xl font-bold'>Please check your email to verify your account.</h2>
+          <p className='text-xl font-semibold'>You will be redirected to login page shortly...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section
@@ -60,22 +117,26 @@ catch (error) {
       }}
     >
       <div className="flex justify-center items-center min-h-screen w-full px-8 py-8">
-        <div className="relative w-full max-w-2xl h-[680px]  bg-white bg-opacity-100 backdrop-blur-lg rounded-lg shadow-lg flex overflow-hidden mx-auto">
+        <div className=" bg-white p-3 rounded-4xl shadow-xl w-full max-w-xl  ">
           
           {/* Left side registration form */}
-          <div className="w-3/2 p-12 bg-gray-100 flex flex-col items-center justify-center relative z-10">
+          <div className="bg-gradient-to-r from-gray-200 to-blue-200 p-8  rounded-xl flex flex-col items-center justify-center relative z-10">
             {/* Formulaire d'inscription */}
+            <div className='text-indigo-600 text-2xl font-bold mb-2'>
+              <h1 className="flex items-center justify-center gap-3 mb-4">
+              <HiUser className="text-indigo-600 text-3xl" />
+            Register Patient</h1></div>
             <form onSubmit={handleSubmit} className="space-y-3 ">
-            {errorMessage && (
+            {error&& (
             <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-400 text-red-700 rounded-md">
-              <p>{errorMessage}</p>
+              <p>{error}</p>
             </div>
           )}
 
               {/* CIN */}
               <div>
                 <label htmlFor="cin_patient" className="block text-sm font-medium text-gray-900">
-                  CIN 
+                  CIN :
                 </label>
                 <div className="mt-1">
                   <input
@@ -95,7 +156,7 @@ catch (error) {
               {/* Nom */}
               <div>
                 <label htmlFor="nom_patient" className="block text-sm font-medium text-gray-900">
-                  Nom
+                  Nom :
                 </label>
                 <div className="mt-1">
                   <input
@@ -114,7 +175,7 @@ catch (error) {
               {/* Prénom */}
               <div>
                 <label htmlFor="prenom_patient" className="block text-sm font-medium text-gray-900">
-                  Prénom
+                  Prénom :
                 </label>
                 <div className="mt-1">
                   <input
@@ -132,7 +193,7 @@ catch (error) {
           {/*DATE*/}
           <div>
                 <label htmlFor="date_naissance" className="block text-sm font-medium text-gray-900">
-                  Date de naissance
+                  Date de naissance :
                 </label>
                 <div className="mt-1">
                 <input
@@ -155,7 +216,7 @@ catch (error) {
               {/* Téléphone */}
               <div>
                 <label htmlFor="telephone" className="block text-sm font-medium text-gray-900">
-                  Téléphone
+                  Téléphone :
                 </label>
                 <div className="mt-1">
                   <input
@@ -174,7 +235,7 @@ catch (error) {
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-900">
-                  Email
+                  Email :
                 </label>
                 <div className="mt-1">
                   <input
@@ -190,10 +251,10 @@ catch (error) {
                 </div>
               </div>
               <div>
-  <label className="block text-sm font-medium text-gray-900">
-    Sex
+  <label className=" block text-sm font-medium text-gray-900">
+    Sex :
   </label>
-  <div className="mt-1 flex space-x-4">
+  <div className="mt-1 flex space-x-4 flex justify-center items-center">
     {/* Checkbox for Male */}
     <label className="inline-flex items-center">
       <input
@@ -225,7 +286,7 @@ catch (error) {
               {/* Mot de passe */}
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-900">
-                 Password
+                 Password :
                 </label>
                 <div className="mt-1">
                   <input
@@ -246,7 +307,10 @@ catch (error) {
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  Register
+                 { isLoading ?(
+                    <Loader2 className='h-6 w-6 animate-spin text-white text-semifont'/>
+                  ): 
+                 ( "Register")}
                 </button>
               </div>
               
@@ -261,21 +325,11 @@ catch (error) {
             </p>
           </div>
 
-          {/* Right side sign up section with light gray background */}
-          <div className="w-1/2 p-12 bg-gradient-to-r from-white to-blue-300 text-white flex flex-col items-center justify-center relative">
-            
-            <div className="text-lg mb-6 text-center">
-              <h2 className="text-4xl font-bold text-gray-800 mb-6">Create a Patient Account</h2>
-            </div>
-            <Link
-              to="/login"
-              className="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-            >
-              Already have an account? Sign in
-            </Link>
-          </div>
+         
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default RegisterPatient;

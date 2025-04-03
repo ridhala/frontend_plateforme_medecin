@@ -88,10 +88,10 @@ console.log("succes" , userData)
   }
 
   return (!stateprofil ?
-      <div className="max-w-xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="h-170 w-150 mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <div className="md:flex">
           {/* Section Photo de profil */}
-          <div className="md:w-1/3 p-8 flex flex-col items-center bg-gray-100">
+          <div className="md:w-1/3 p-8 flex flex-col items-center bg-gray-400">
             <div className="relative mb-6">
               {profileData?.photo_profil ? (
                 <img
@@ -145,13 +145,6 @@ console.log("succes" , userData)
                 <div>
                   <label className="block text-sm font-medium text-gray-500">Téléphone Cabinet</label>
                   <p className="mt-1 p-2 bg-gray-50 rounded">{profileData.telephone_cabinet}</p>
-                </div>
-              )}
-
-              {profileData?.adresse_cabinet && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Adresse Cabinet</label>
-                  <p className="mt-1 p-2 bg-gray-50 rounded">{profileData.adresse_cabinet}</p>
                 </div>
               )}
 

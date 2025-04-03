@@ -9,7 +9,7 @@ export const getconsultation = async()=>{
           }
         });
 
-        response.data.utilisateur;
+       return response.data.utilisateur;
       }
       catch (error) {
         if (axios.isAxiosError(error)) {

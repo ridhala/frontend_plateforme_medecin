@@ -85,7 +85,7 @@ navigate('/login')
           >
             {/* Avatar Placeholder */}
             <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
-              <span className="text-sm font-semibold">P</span>
+              <span className="text-sm font-semibold">Dr</span>
             </div>
             <div className="flex flex-col items-start">
               <span className="font-medium">Profil</span>

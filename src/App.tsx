@@ -10,6 +10,7 @@ import Accueil from './pages/Accueil';
 import RegisterPat from './pages/registerpat';
 import Home from './pages/home';
 import Activationpage from './pages/verifemail';
+import DoctorDashboard from './components/home/welcome';
 ////////////////////////////////////////////////////////////////////////////////////////////
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
        
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<Register />} />
- 
+        <Route path="welcome" element={<DoctorDashboard />} />
+
         <Route path='/Acceuil' element={<Accueil />}/>
         
         <Route path="/" element={<Navigate to="/Acceuil" />} />

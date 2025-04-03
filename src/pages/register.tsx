@@ -1,15 +1,33 @@
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
-import RegisterContainer from '../components/register/RegisterContainer'; // Import the RegisterContainer component
+import { useNavigate } from 'react-router-dom';
+import RegisterContainer from '../components/register/RegisterContainer'; 
+import { useState } from 'react';
 
 function Register() {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate(); 
 
-  // Function to handle successful registration
-  const handleRegisterSuccess = () => {
+    const [success, setSuccess] = useState(false);
+
+  const handleRegisterSuccess =async () => {
     console.log('Registration successful!');
-    navigate('/login'); // Redirect to the login page after successful registration
-  };
+    setSuccess(true);
 
+    setTimeout(async () => {
+      await navigate("/login");
+      setSuccess(false); 
+    }, 3000)
+
+  };
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="bg-white p-8 rounded-lg shadow-md text-center">
+          <h2 className="text-2xl font-bold text-green-600 mb-4">Registration Successful!</h2>
+          <h2 className='text-2xl font-bold'>Please check your email to verify your account.</h2>
+          <p className='text-xl font-semibold'>You will be redirected to login page shortly...</p>
+          </div>
+      </div>
+    );
+  }
   return (
     <div
       className="flex min-h-screen flex-col items-center justify-center"
@@ -20,7 +38,6 @@ function Register() {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      {/* Welcome Message Design with Shadow */}
      
 
 <div >
