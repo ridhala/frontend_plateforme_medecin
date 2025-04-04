@@ -199,7 +199,7 @@ function Accueil() {
     simplifiez votre suivi de santé.
   </p>
 
-  {/* Bouton transparent avec effet rouge bordeaux au survol et arrondi */}
+  {/* Bouton emmene au register */}
   <Link
     to="/RegisterPat"
     className="border border-white text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 

@@ -9,6 +9,7 @@ import ForgotPassword from './pages/forgotPassword'; // Forgot password page
 import Accueil from './pages/Accueil';
 import RegisterPat from './pages/registerpat';
 import Home from './pages/home';
+import SpecialtySelector from './pages/specialite';
 ////////////////////////////////////////////////////////////////////////////////////////////
 function App() {
   return (
@@ -31,7 +32,8 @@ function App() {
         {/* Route for the forgot password page */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<Register />} />
- 
+        <Route path='/sp' element={<SpecialtySelector />}/>
+
         <Route path='/Acceuil' element={<Accueil />}/>
         {/* Fallback route for unknown paths (redirects to home) */}
         <Route path="/" element={<Navigate to="/Acceuil" />} />
