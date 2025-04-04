@@ -17,7 +17,8 @@ const verifyAccount = async ({ user, activationcode }: VerifyAccountParams): Pro
       user,
       activationcode,
     });
-    return response.data; // Return the response data (e.g., success message)
+    return response.data; 
+    
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(

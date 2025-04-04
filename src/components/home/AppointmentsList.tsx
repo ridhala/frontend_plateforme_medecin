@@ -1,22 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { getrendezvous } from '../../services/serviceshome/rendezvousservice';
+import { getrendezvous, postrendezvous } from '../../services/serviceshome/rendezvousservice';
 import { data } from 'react-router-dom';
+import { Appointment, Appointments } from '../../types/rendezvoustype';
 
-interface Appointment {
-  _id: number; 
-  date_rendez_vous: string;
-  prenom_patient: string; 
-  nom_patient: string; 
-  cin_patient: number; 
-  telephone: number; 
-  specialite: string; 
-  medecin: string; 
-  status: boolean; 
-}
 
 export default function AppointmentsList() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [appointments, setappointments]= useState<Appointments>({ 
+    
+   date_rendez_vous: "",
+   prenom_patient: "" ,
+   nom_patient: "", 
+   cin_patient: "",
+   telephone: "",
+   specialite: "", 
+   status: "" })
 const [rendezvous, setrendezvous]=useState<Appointment[]>([]);
+const [appointment, setappointment]= useState<Appointment>({ 
+   _id: "",
+  date_rendez_vous: "",
+  prenom_patient: "" ,
+  nom_patient: "", 
+  cin_patient: "",
+  telephone: "",
+  specialite: "", 
+  medecin:"", 
+  status: false })
 
   const handleAddAppointment = () => {
     setIsFormOpen(true);
@@ -25,13 +34,31 @@ const [rendezvous, setrendezvous]=useState<Appointment[]>([]);
   const handleCloseForm = () => {
     setIsFormOpen(false);
   };
-
-  const handleSubmit = (e: React.FormEvent) => {
+ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    
+    // Handle numeric fields
+    if (name === 'cin_patient' || name === 'telephone') {
+      setappointments(prev => ({ ...prev, [name]: value === '' ? '' : Number(value) }));
+    } else {
+      setappointments(prev => ({ ...prev, [name]: value }));
+    }
+  } ;
+  const handleSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add logic to submit form data (e.g., API call) here
-    console.log("Form submitted"); // Placeholder for submission logic
-    setIsFormOpen(false);
+    const payload = {
+      ...appointments,
+      date_rendez_vous: new Date(appointments.date_rendez_vous).toISOString(),
+      status: appointments.status === "true"
+  };   
+   console.log(payload)
+    await postrendezvous(payload);
+    console.log("Form submitted"); 
+    const updatedRendezvous = await getrendezvous();
+    setrendezvous(updatedRendezvous); 
+       setIsFormOpen(false);
   };
+
 useEffect(()=>{
   const afficahe =async()=>{
   const datarendezvous= await getrendezvous();
@@ -61,6 +88,9 @@ useEffect(()=>{
               <label className="block text-sm font-medium text-gray-700">Date Rendez-vous</label>
               <input
                 type="date"
+                name='date_rendez_vous'
+                value={appointments.date_rendez_vous}
+                onChange={handleChange}
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
@@ -69,6 +99,10 @@ useEffect(()=>{
               <label className="block text-sm font-medium text-gray-700">Prénom Patient</label>
               <input
                 type="text"
+                name='prenom_patient'
+                value={appointments.prenom_patient}
+                onChange={handleChange}
+
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
@@ -77,6 +111,10 @@ useEffect(()=>{
               <label className="block text-sm font-medium text-gray-700">Nom Patient</label>
               <input
                 type="text"
+                name='nom_patient'
+                value={appointments.nom_patient}
+                onChange={handleChange}
+
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
@@ -85,6 +123,10 @@ useEffect(()=>{
               <label className="block text-sm font-medium text-gray-700">CIN Patient</label>
               <input
                 type="number"
+                name='cin_patient'
+                value={appointments.cin_patient}
+                onChange={handleChange}
+
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
@@ -93,6 +135,10 @@ useEffect(()=>{
               <label className="block text-sm font-medium text-gray-700">Téléphone</label>
               <input
                 type="number"
+                name='telephone'
+                value={appointments.telephone}
+                onChange={handleChange}
+
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
@@ -101,27 +147,31 @@ useEffect(()=>{
               <label className="block text-sm font-medium text-gray-700">Spécialité</label>
               <input
                 type="text"
+                name='specialite'
+                value={appointments.specialite}
+                onChange={handleChange}
+
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Médecin</label>
-              <input
-                type="text"
-                required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              />
-            </div>
+           
             <div>
               <label className="block text-sm font-medium text-gray-700">Statut</label>
               <select
                 required
+                name='status'
+                value={appointments.status.toString()}
+                onChange={handleChange}
+
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               >
                 <option value="">Sélectionner</option>
                 <option value="false">En attente</option>
                 <option value="true">Confirmé</option>
+                <option value="true">En Salle d'Attente</option>
+
+
               </select>
             </div>
             <div className="flex justify-end space-x-4">
@@ -159,9 +209,7 @@ useEffect(()=>{
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-w_ider">
                     Téléphone
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-w_ider">
-                    Spécialité
-                  </th>
+                 
                  
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-w_ider">
                     Date Rendez-vous
@@ -197,18 +245,15 @@ useEffect(()=>{
                     <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
                       {appointment.telephone}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                      {appointment.specialite}
-                    </td>
-                  
+                 
                     <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
                     {new Date(appointment.date_rendez_vous).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <span
                         className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          appointment.status
-                            ? "bg-green-100 text-green-800" // True = Confirmed
+                          appointment.status ?
+                             "bg-green-100 text-green-800" // True = Confirmed
                             : "bg-yellow-100 text-yellow-800" // False = Pending/Scheduled
                         }`}
                       >

@@ -40,7 +40,7 @@ const RegisterPatient = () => {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
-  };
+  } ;
 
   const validateForm = (): string | null => {
     if (!formData.cin_patient) return "CIN is required";
