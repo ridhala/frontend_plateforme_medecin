@@ -10,6 +10,7 @@ import Accueil from './pages/Accueil';
 import RegisterPat from './pages/registerpat';
 import Home from './pages/home';
 import SpecialtySelector from './pages/specialite';
+import SalleAttente from './pages/SalleAttente';
 ////////////////////////////////////////////////////////////////////////////////////////////
 function App() {
   return (
@@ -33,6 +34,9 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<Register />} />
         <Route path='/sp' element={<SpecialtySelector />}/>
+        
+         {/* Route pour la salle d'attente avec l'ID du médecin */}
+         <Route path="/salle-attente" element={<SalleAttente />} />
 
         <Route path='/Acceuil' element={<Accueil />}/>
         {/* Fallback route for unknown paths (redirects to home) */}
