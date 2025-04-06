@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import  { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LoginContainer from '../components/login/LoginContainer';
 import { Stethoscope } from 'lucide-react';
 
@@ -11,7 +11,7 @@ const [succes, setsuccess]= useState(false)
     setsuccess(true)
 
     setTimeout(async() => {
-      navigate('/home');
+      navigate('/home/patients');
       setsuccess(false)
     }, ((3000)));
   };

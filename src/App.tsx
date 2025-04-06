@@ -1,5 +1,5 @@
 // App.tsx
-import React from 'react';
+import  { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // Import your components
@@ -11,8 +11,12 @@ import RegisterPat from './pages/registerpat';
 import Home from './pages/home';
 import Activationpage from './pages/verifemail';
 import DoctorDashboard from './components/home/welcome';
+import DashboardContent from './components/home/DashboardContent';
+import Sidebar from './components/home/Sidebar';
 ////////////////////////////////////////////////////////////////////////////////////////////
 function App() {
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
   return (
     <Router>
       <Routes>
@@ -26,6 +30,20 @@ function App() {
         <Route path="/home" element={<Home />} />
 
        
+      <Route 
+        path="/home/:section" 
+        element={
+          <div className="flex h-screen ">
+            <Sidebar 
+              setActiveSection={setActiveSection}  />
+            <DashboardContent 
+              activeSection={activeSection} 
+              setActiveSection={setActiveSection} 
+            />
+          </div>
+        } 
+      />
+
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<Register />} />
         <Route path="welcome" element={<DoctorDashboard />} />

@@ -7,7 +7,7 @@ export default function ActivationPage() {
   const { activationcode } = useParams();
   const [status, setStatus] = useState("loading"); // 'loading', 'success', 'error'
 
-  useEffect(() => {
+  useEffect(() => {console.log(activationcode)
     axios
       .post(`http://localhost:3000/authmedecin/verifmedecin/${activationcode}`)
       .then(() => setStatus("success"))
