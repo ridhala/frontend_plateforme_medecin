@@ -7,7 +7,7 @@ export interface Appointment {
   telephone: number| ""; 
   specialite: string; 
   medecin: string; 
-  status: boolean; 
+  status: boolean|string
 }
 export interface Appointments {
   date_rendez_vous: string;

@@ -1,30 +1,24 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import  { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LoginContainer from '../components/login/LoginContainer';
 import { Stethoscope } from 'lucide-react';
 
 function Login() {
   const navigate = useNavigate();
-const [succes, setsuccess]= useState(false)
-  const handleLoginSuccess = async() => {
+const [succes, setsuccess]= useState(false);
+  const handleLoginSuccess = async(role:string) => {
     console.log('Login successful!');
     setsuccess(true)
 
     setTimeout(async() => {
-      navigate('/home');
-      setsuccess(false)
+      console.log(role); 
+      if(role==="medecin" &&"secretaire")
+      navigate('/home/patients');
+    if(role==="patient"){navigate('/welcome')}
     }, ((3000)));
   };
 if(succes) {
-  return (/*<div
-    className="flex min-h-screen flex-col items-center justify-center"
-    style={{
-      backgroundImage: `url()`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-    }}
-  >*/
+  return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-blue-400 to-gray-100">
       <div className="bg-gray-200 shadow-lg rounded-4xl p-26 flex items-center justify-center space-x-3 animate-fade-in ">
         <div className="bg-blue-100 p-2 rounded-full">

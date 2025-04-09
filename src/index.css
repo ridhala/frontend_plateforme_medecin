@@ -1,6 +1,29 @@
 @import "tailwindcss";
 @tailwind utilities;
+@apply utilities{
+.rbc-calendar {
+  @apply rounded-lg shadow;
+}
 
+.rbc-header {
+  @apply bg-gray-100 py-2 text-gray-700 font-medium;
+}
+
+.rbc-today {
+  @apply bg-blue-50;
+}
+
+.rbc-event {
+  @apply bg-blue-500 border-blue-600;
+}
+
+.rbc-event-content {
+  @apply text-white;
+}
+
+.rbc-button-link {
+  @apply text-gray-700 hover:text-blue-600;
+}}
 @layer utilities {
   .animate-fade-in {
   animation: fade-in 1s ease-out forwards;
@@ -14,6 +37,7 @@
   .animate-pulse-slow {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
+  
 }
 
 @keyframes fadeIn {
@@ -34,4 +58,5 @@
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 

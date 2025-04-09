@@ -1,83 +1,68 @@
-import { useState } from "react";
+import React, { useState } from 'react';
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-// Define Consultation Type
-interface Consultation {
+const localizer = momentLocalizer(moment);
+
+interface Event {
   id: number;
-  patient: string;
-  date: string;
-  details: string;
+  title: string;
+  start: Date;
+  end: Date;
+  allDay?: boolean;
 }
 
-// Modal Component (Reusable)
-const ConsultationModal = ({
-  consultation,
-  onClose,
-}: {
-  consultation: Consultation;
-  onClose: () => void;
-}) => {
+const InteractiveCalendar = () => {
+  const [events, setEvents] = useState<Event[]>([
+    {
+      id: 1,
+      title: 'Example Event',
+      start: new Date(2023, 10, 15, 10, 0),
+      end: new Date(2023, 10, 15, 12, 0),
+    },
+  ]);
+
+  const [selectedSlot, setSelectedSlot] = useState<{
+    start: Date;
+    end: Date;
+  } | null>(null);
+
+  const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
+    setSelectedSlot(slotInfo);
+    
+    // Example: Create a new event when a slot is clicked
+    const newEvent: Event = {
+      id: events.length + 1,
+      title: `New Event ${events.length + 1}`,
+      start: slotInfo.start,
+      end: slotInfo.end,
+    };
+    
+    setEvents([...events, newEvent]);
+  };
+
+  const handleSelectEvent = (event: Event) => {
+    // Handle event click (e.g., show details)
+    alert(`Event clicked: ${event.title}\nFrom: ${event.start.toLocaleString()}\nTo: ${event.end.toLocaleString()}`);
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
-        <h3 className="text-xl font-bold text-indigo-600">Consultation Details</h3>
-        <p><strong>Patient:</strong> {consultation.patient}</p>
-        <p><strong>Date:</strong> {consultation.date}</p>
-        <p><strong>Details:</strong> {consultation.details}</p>
-        <button
-          className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 w-full"
-          onClick={onClose}
-        >
-          Close
-        </button>
-      </div>
+    <div style={{ height: '800px' }}>
+      <Calendar
+        localizer={localizer}
+        events={events}
+        defaultView={Views.MONTH}
+        views={[Views.DAY, Views.WEEK, Views.MONTH]}
+        selectable={true}  // Enable slot selection
+        onSelectSlot={handleSelectSlot}
+        onSelectEvent={handleSelectEvent}
+        onDoubleClickEvent={(event) => console.log('Double clicked event', event)}
+        onView={(view) => console.log('View changed to', view)}
+        className="bg-white rounded-lg shadow"
+      />
     </div>
   );
 };
 
-// Main Table Component
-function ConsultationTable() {
-  const [selectedConsultation, setSelectedConsultation] = useState<Consultation | null>(null);
-
-  // Sample consultations data
-  const consultations: Consultation[] = [
-    { id: 1, patient: "John Doe", date: "2025-04-01", details: "Routine check-up" },
-    { id: 2, patient: "Jane Smith", date: "2025-04-02", details: "Follow-up appointment" },
-    { id: 3, patient: "Alice Brown", date: "2025-04-03", details: "Blood test review" },
-  ];
-
-  return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Consultations</h2>
-      <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-        <thead className="bg-indigo-600 text-white">
-          <tr>
-            <th className="px-4 py-2">ID</th>
-            <th className="px-4 py-2">Patient</th>
-            <th className="px-4 py-2">Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {consultations.map((consultation) => (
-            <tr key={consultation.id} className="border-b">
-              <td
-                className="px-4 py-2 text-indigo-600 font-bold cursor-pointer hover:underline"
-                onClick={() => setSelectedConsultation(consultation)}
-              >
-                {consultation.id}
-              </td>
-              <td className="px-4 py-2">{consultation.patient}</td>
-              <td className="px-4 py-2">{consultation.date}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Modal should be outside the table but always present */}
-      {selectedConsultation && (
-        <ConsultationModal consultation={selectedConsultation} onClose={() => setSelectedConsultation(null)} />
-      )}
-    </div>
-  );
-}
-
-export default ConsultationTable;
+export default InteractiveCalendar;

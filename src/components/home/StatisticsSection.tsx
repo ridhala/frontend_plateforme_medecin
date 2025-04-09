@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaUserPlus, FaUserMd, FaHeartbeat, FaDollarSign } from 'react-icons/fa';
 import { Line } from 'react-chartjs-2';
 import {
@@ -155,40 +154,15 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
               <Line data={chartData} options={chartOptions} />
             </div>
           </div>
-          <div className="bg-blue-100 p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold text-black mb-4">Best Doctor</h3>
-            <div className="flex items-center space-x-4">
-              <img
-                src="https://via.placeholder.com/80"
-                alt="Doctor"
-                className="h-20 w-20 rounded-full"
-              />
-              <div>
-                <h4 className="text-black font-medium">Dr. Rayen Dlimi</h4>
-                <p className="text-black-200 text-sm">Endocrinologist - Tunis</p>
-              </div>
-            </div>
-            <div className="mt-4 grid grid-cols-3 gap-2 text-center text-white">
-              <div>
-                <p className="text-black 200 text-sm">Experience</p>
-                <p className="font-medium">8 Years</p>
-              </div>
-              <div>
-                <p className="text-black 200 text-sm">Patients</p>
-                <p className="font-medium">2,598</p>
-              </div>
-              <div>
-                <p className="text-black 200 text-sm">Reviews</p>
-                <p className="font-medium">1537</p>
-              </div>
-            </div>
-          </div>
+         
+            
+          
         </div>
       </div>
     );
   }
 
-  if (activeSection === "Patients") {
+  if (activeSection === "patients") {
     return (
       <div className="space-y-6"> {/* Single parent div for Patients section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -233,7 +207,7 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
     );
   }
 
-  if (activeSection === "Rendez-vous") {
+  if (activeSection === "rendez-vous") {
     return (
       <div className="space-y-6"> {/* Single parent div for Rendez-vous section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -278,7 +252,7 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
     );
   }
 
-  if (activeSection === "Consultations") {
+  if (activeSection === "consultations") {
     return (
       <div className="space-y-6"> {/* Single parent div for Consultations section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

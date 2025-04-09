@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { login } from '../../services/loginService'
 import { Loader2 } from 'lucide-react';
 interface LoginContainerProps {
-  onLoginSuccess: () => void; // Prop appelée après une connexion réussie
+  onLoginSuccess: (role: string) => void;
 }
 
 function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
@@ -35,7 +35,7 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
       localStorage.setItem('accessToken', response.accessToken);
       localStorage.setItem('refreshToken', response.refreshToken);
 
-      onLoginSuccess();
+      onLoginSuccess(response.role);
     } catch (error) {
 
       if (error instanceof Error) {

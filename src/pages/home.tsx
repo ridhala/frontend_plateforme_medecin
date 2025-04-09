@@ -1,32 +1,28 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useParams, Outlet } from 'react-router-dom';
 import Sidebar from '../components/home/Sidebar';
 import DashboardContent from '../components/home/DashboardContent';
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const { section } = useParams(); // Get section from URL
+  const [activeSection, setActive] = useState<string | null>(section || null);
 
+ 
+
+  
+  
   return (
     <div className="flex h-screen bg-gray-100">
-      <Sidebar setActiveSection={setActiveSection} />
+      <Sidebar 
+        setActiveSection={setActive} 
+      />
       <div className="flex-grow p-6 overflow-auto">
-       
-        {/* ✅ Bas : DashboardContent for dynamic lists */}
-        <DashboardContent activeSection={activeSection} />
+        {/* Using Outlet for nested routes */}
+        <Outlet context={{ activeSection }} />
+               
+          <DashboardContent activeSection={activeSection}
+          setActiveSection={setActive} />
       </div>
     </div>
   );
 }
-/**  useEffect(()=>{
-    try{
-      const UserResponse=  axios.get("http://localhost:3000/update/profile", { responseType: 'blob', 
-        withCredentials: true,
-      headers:{
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-      }
-      });
-      setUserData(UserResponse)
-
-    }
-  catch{}
-  }
-) */
