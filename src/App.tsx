@@ -9,8 +9,12 @@ import ForgotPassword from './pages/forgotPassword'; // Forgot password page
 import Accueil from './pages/Accueil';
 import RegisterPat from './pages/registerpat';
 import Home from './pages/home';
+
 import Activationpage from './pages/verifemail';
 import DoctorDashboard from './components/home/welcome';
+import SpecialtySelector from './pages/specialite';
+import SalleAttente from './pages/SalleAttente';
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 function App() {
   return (
@@ -28,7 +32,14 @@ function App() {
        
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<Register />} />
+
         <Route path="welcome" element={<DoctorDashboard />} />
+
+        <Route path='/sp' element={<SpecialtySelector />}/>
+        
+         {/* Route pour la salle d'attente avec l'ID du médecin */}
+         <Route path="/salle-attente" element={<SalleAttente />} />
+
 
         <Route path='/Acceuil' element={<Accueil />}/>
         
