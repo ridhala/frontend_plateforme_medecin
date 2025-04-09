@@ -5,19 +5,25 @@ import { Stethoscope } from 'lucide-react';
 
 function Login() {
   const navigate = useNavigate();
-const [succes, setsuccess]= useState(false);
+const [succes, setsuccess]= useState<string>("");
   const handleLoginSuccess = async(role:string) => {
-    console.log('Login successful!');
-    setsuccess(true)
+   if(role==="medecin" &&"secretaire")
+{    setsuccess("medecin");}
+   if(role==="patient")
+   { setsuccess("patient");}
 
     setTimeout(async() => {
-      console.log(role); 
+      
       if(role==="medecin" &&"secretaire")
-      navigate('/home/patients');
-    if(role==="patient"){navigate('/welcome')}
+      {navigate('/home/patients');}
+
+    else if(role==="patient"){
+      navigate('/sp');
+      
+    }
     }, ((3000)));
   };
-if(succes) {
+if(succes==="medecin") {
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-blue-400 to-gray-100">
       <div className="bg-gray-200 shadow-lg rounded-4xl p-26 flex items-center justify-center space-x-3 animate-fade-in ">
@@ -27,6 +33,21 @@ if(succes) {
         <div>
           <p className="font-bold text-2xl">Bienvenue Docteur</p>
           <p className="text-xl font-semibold text-gray-700">Bon courage pour votre journée</p>
+        </div>
+      </div>
+      </div>
+    
+  );
+}
+else if(succes==="patient") {
+  return (
+    <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-teal-400 to-gray-100">
+      <div className="bg-gray-200 shadow-lg rounded-4xl p-26 flex items-center justify-center space-x-3 animate-fade-in ">
+        <div className="bg-blue-100 p-2 rounded-full">
+        </div>
+        <div>
+          <p className="font-bold text-2xl">Bienvenue a votre plateforme </p>
+          <p className="text-xl text-center font-semibold text-gray-700">Reserver votre rendez-vous</p>
         </div>
       </div>
       </div>

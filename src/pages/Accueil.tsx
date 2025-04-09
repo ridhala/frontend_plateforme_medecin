@@ -60,7 +60,8 @@ function Accueil() {
     href="#specialites"
     className="relative text-white text-lg hover:text-blue-200 transition-colors"
   >
-    <span className="group hover:text-blue-200">Spécialités</span>
+   
+   <Link  to="/sp" > <span className="group hover:text-blue-200">Spécialités</span> </Link>
     <span className="absolute left-0 bottom-0 w-0 group-hover:w-full h-0.5 bg-blue-200 transition-all duration-300"></span>
   </a>
   <Link
