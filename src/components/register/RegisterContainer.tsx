@@ -103,9 +103,9 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
  
   return (
     <div className="flex justify-center items-center  ">
-      <div className="flex bg-gray-200 p-3 rounded-4xl shadow-xl w-full max-w-2xl">
+      <div className="flex bg-white p-3 rounded-4xl shadow-xl w-full max-w-2xl">
         {/* Registration Form Section */}
-        <div className="w-7/9 rounded-4xl bg-gradient-to-r from-blue-200 to-gray-200 ">
+        <div className="w-7/9 rounded-4xl bg-gradient-to-r from-blue-200 to-white ">
           {/* Title with Doctor Icon */}
           <h2 className="text-2xl font-bold text-center text-gray-900 flex items-center justify-center gap-3 mb-4">
             <FaUserMd className="text-indigo-600 text-3xl" />
@@ -230,7 +230,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
         </div>
 
         {/* Profile Photo Section */}
-        <div className="w-3/9 rounded-4xl bg-gradient-to-r from-gray-200 to-blue-200 flex flex-col items-center justify-center pl-8">
+        <div className="w-3/9 rounded-4xl bg-gradient-to-r from-white to-blue-200 flex flex-col items-center justify-center pl-8">
           <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
             {formData.photo_profil ? (
               <img

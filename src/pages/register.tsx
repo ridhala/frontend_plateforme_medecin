@@ -40,7 +40,7 @@ function Register() {
     >
      
 
-<div >
+<div>
   <RegisterContainer onRegisterSuccess={handleRegisterSuccess} />
 </div>
     </div>
