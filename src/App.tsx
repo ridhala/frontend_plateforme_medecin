@@ -11,7 +11,9 @@ import RegisterPat from './pages/registerpat';
 import Home from './pages/home';
 import SpecialtySelector from './pages/specialite';
 import SalleAttente from './pages/SalleAttente';
-////////////////////////////////////////////////////////////////////////////////////////////
+import ListeMedecins from './pages/ListeMedecins';
+import RegisterSecretaire from './pages/registerSecritaire';
+
 function App() {
   return (
     <Router>
@@ -41,6 +43,12 @@ function App() {
         <Route path='/Acceuil' element={<Accueil />}/>
         {/* Fallback route for unknown paths (redirects to home) */}
         <Route path="/" element={<Navigate to="/Acceuil" />} />
+
+       {/* Liste des medecins de chaque specialites */}
+        <Route path="/liste-medecins" element={<ListeMedecins />} />
+
+         {/* Route pour l'inscription des secrétaires */}
+         <Route path="/register-secretaire" element={<RegisterSecretaire />} />
       </Routes>
     </Router>
     

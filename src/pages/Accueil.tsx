@@ -8,178 +8,172 @@ function Accueil() {
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Section Hero + Navbar dans la même zone */}
       <section
-        className="relative bg-no-repeat bg-cover bg-center text-white"
-        style={{
-          backgroundImage:
-            'linear-gradient(to right, rgba(0, 44, 79, 0.7), rgba(0, 102, 128, 0.7)), url(https://www.pourquoidocteur.fr/media/article/COPY_istock-1279995342-1730552453.jpg)',
-          minHeight: '100vh', // La zone s'étend sur toute la hauteur de la fenêtre
-        }}
-      >
-        {/* Navbar + Header dans la zone du background */}
-        <header className="sticky top-0 z-50">
-          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            {/* Logo Professionnel à gauche */}
-<div className="flex items-center space-x-2">
-  <img
-    src="https://st2.depositphotos.com/4362315/7819/v/450/depositphotos_78194048-stock-illustration-medical-logo-health-care-center.jpg"
-    alt="MedPlateforme Logo"
-    className="h-12 w-12 object-contain mix-blend-multiply"
-  />
-  <span className="text-3xl italic font-extrabold tracking-tight text-white">
-    MedPlat
-  </span>
-</div>
+  className="relative bg-no-repeat bg-cover bg-center text-white"
+  style={{
+    backgroundImage:
+      'linear-gradient(to right, rgba(0, 44, 79, 0.7), rgba(0, 102, 128, 0.7)), url(https://www.pourquoidocteur.fr/media/article/COPY_istock-1279995342-1730552453.jpg)',
+    minHeight: '100vh',
+  }}
+>
+  {/* Navbar + Header dans la zone du background */}
+  <header className="sticky top-0 z-50">
+    <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      {/* Logo Professionnel à gauche */}
+      <div className="flex items-center space-x-2">
+        <img
+          src="https://st2.depositphotos.com/4362315/7819/v/450/depositphotos_78194048-stock-illustration-medical-logo-health-care-center.jpg"
+          alt="MedPlateforme Logo"
+          className="h-12 w-12 object-contain mix-blend-multiply"
+        />
+        <span className="text-3xl italic font-extrabold tracking-tight text-white">
+          MedPlat
+        </span>
+      </div>
 
+      {/* Menu Desktop */}
+      <nav className="hidden md:flex items-center space-x-8 font-medium ml-auto">
+        <Link
+          to="#patient"
+          className="relative text-white text-lg hover:text-blue-200 transition-colors"
+        >
+          <span className="group hover:text-blue-200">Espace Patient</span>
+          <span className="absolute left-0 bottom-0 w-0 group-hover:w-full h-0.5 bg-blue-200 transition-all duration-300"></span>
+        </Link>
+        <Link
+          to="#about"
+          className="relative text-white text-lg hover:text-blue-200 transition-colors"
+        >
+          <span className="group hover:text-blue-200">À Propos</span>
+          <span className="absolute left-0 bottom-0 w-0 group-hover:w-full h-0.5 bg-blue-200 transition-all duration-300"></span>
+        </Link>
+        <Link
+          to="#features"
+          className="relative text-white text-lg hover:text-blue-200 transition-colors"
+        >
+          <span className="group hover:text-blue-200">Fonctionnalités</span>
+          <span className="absolute left-0 bottom-0 w-0 group-hover:w-full h-0.5 bg-blue-200 transition-all duration-300"></span>
+        </Link>
+        <Link
+          to="/Sp"
+          className="relative text-white text-lg hover:text-blue-200 transition-colors"
+        >
+          <span className="group hover:text-blue-200">Spécialités</span>
+          <span className="absolute left-0 bottom-0 w-0 group-hover:w-full h-0.5 bg-blue-200 transition-all duration-300"></span>
+        </Link>
+        <Link
+          to="/login"
+          className="border border-gray-300 text-white text-lg px-6 py-2 rounded-full hover:bg-[#800020] hover:border-[#800020] transition-colors"
+        >
+          Connexion
+        </Link>
+      </nav>
 
-          {/* Menu Desktop */}
-<nav className="hidden md:flex items-center space-x-8 font-medium ml-auto">
-  <a
-    href="#patient"
-    className="relative text-white text-lg hover:text-blue-200 transition-colors"
-  >
-    <span className="group hover:text-blue-200">Espace Patient</span>
-    <span className="absolute left-0 bottom-0 w-0 group-hover:w-full h-0.5 bg-blue-200 transition-all duration-300"></span>
-  </a>
-  <a
-    href="#about"
-    className="relative text-white text-lg hover:text-blue-200 transition-colors"
-  >
-    <span className="group hover:text-blue-200">À Propos</span>
-    <span className="absolute left-0 bottom-0 w-0 group-hover:w-full h-0.5 bg-blue-200 transition-all duration-300"></span>
-  </a>
-  <a
-    href="#features"
-    className="relative text-white text-lg hover:text-blue-200 transition-colors"
-  >
-    <span className="group hover:text-blue-200">
-      Fonctionnalités
-    </span>
-    <span className="absolute left-0 bottom-0 w-0 group-hover:w-full h-0.5 bg-blue-200 transition-all duration-300"></span>
-  </a>
-  <a
-    href="#specialites"
-    className="relative text-white text-lg hover:text-blue-200 transition-colors"
-  >
-    <span className="group hover:text-blue-200">Spécialités</span>
-    <span className="absolute left-0 bottom-0 w-0 group-hover:w-full h-0.5 bg-blue-200 transition-all duration-300"></span>
-  </a>
-  <Link
-    to="/login"
-    className="border border-gray-300 text-white text-lg px-6 py-2 rounded-full hover:bg-[#800020] hover:border-[#800020] transition-colors"
-  >
-    Connexion
-  </Link>
-</nav>
+      {/* Bouton Espace Médecin (Desktop) */}
+      <div className="hidden md:flex">
+        <Link
+          to="#medecin"
+          className="flex items-center space-x-2 py-2 px-6 ml-4 rounded-full border border-[#800020] bg-[#800020] hover:bg-[#990024] text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow"
+        >
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_toxasjYNJn27Eq6bIztsNmbApSQVo2UhBrbOr10-aFXBS7xdOOs7HleMralym9NpkVA&usqp=CAU"
+            alt="Logo Médecin"
+            className="h-6 w-6 rounded-full object-cover"
+          />
+          <span className="font-medium text-sm">Espace Médecin</span>
+        </Link>
+      </div>
 
-
-
-     {/* Bouton Espace Médecin (Desktop) */}
-<div className="hidden md:flex">
-  <a
-    href="#medecin"
-    className="flex items-center space-x-2 py-2 px-6 ml-4 rounded-full border border-[#800020] bg-[#800020] hover:bg-[#990024] text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow"
-  >
-    <img
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_toxasjYNJn27Eq6bIztsNmbApSQVo2UhBrbOr10-aFXBS7xdOOs7HleMralym9NpkVA&usqp=CAU"
-      alt="Logo Médecin"
-      className="h-6 w-6 rounded-full object-cover"
-    />
-    <span className="font-medium text-sm">Espace Médecin</span>
-  </a>
-</div>
-
-
-            {/* Menu Mobile */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="text-white focus:outline-none"
-              >
-                {menuOpen ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 8h16M4 16h16"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Menu Mobile déroulant */}
-          {menuOpen && (
-            <div className="md:hidden bg-white shadow-md">
-              <nav className="px-4 py-4 flex flex-col space-y-3 text-gray-700 font-medium">
-                <a
-                  href="#patient"
-                  onClick={() => setMenuOpen(false)}
-                  className="hover:text-blue-600"
-                >
-                  Espace Patient
-                </a>
-                <a
-                  href="#about"
-                  onClick={() => setMenuOpen(false)}
-                  className="hover:text-blue-600"
-                >
-                  À Propos
-                </a>
-                <a
-                  href="#features"
-                  onClick={() => setMenuOpen(false)}
-                  className="hover:text-blue-600"
-                >
-                  Fonctionnalités
-                </a>
-                <a
-                  href="#specialites"
-                  onClick={() => setMenuOpen(false)}
-                  className="hover:text-blue-600"
-                >
-                  Spécialités
-                </a>
-                <a
-                  href="#medecin"
-                  onClick={() => setMenuOpen(false)}
-                  className="hover:text-blue-600"
-                >
-                  Espace Médecin
-                </a>
-                <Link
-                  to="/login"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Connexion
-                </Link>
-              </nav>
-            </div>
+      {/* Menu Mobile */}
+      <div className="md:hidden">
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="text-white focus:outline-none"
+        >
+          {menuOpen ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 8h16M4 16h16"
+              />
+            </svg>
           )}
-        </header>
+        </button>
+      </div>
+    </div>
+
+    {/* Menu Mobile déroulant */}
+    {menuOpen && (
+      <div className="md:hidden bg-white shadow-md">
+        <nav className="px-4 py-4 flex flex-col space-y-3 text-gray-700 font-medium">
+          <Link
+            to="#patient"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-blue-600"
+          >
+            Espace Patient
+          </Link>
+          <Link
+            to="#about"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-blue-600"
+          >
+            À Propos
+          </Link>
+          <Link
+            to="#features"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-blue-600"
+          >
+            Fonctionnalités
+          </Link>
+          <Link
+            to="/Sp"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-blue-600"
+          >
+            Spécialités
+          </Link>
+          <Link
+            to="#medecin"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-blue-600"
+          >
+            Espace Médecin
+          </Link>
+          <Link
+            to="/login"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            onClick={() => setMenuOpen(false)}
+          >
+            Connexion
+          </Link>
+        </nav>
+      </div>
+    )}
+  </header>
 
         {/* Contenu "Hero" au-dessus du background */}
 <div
