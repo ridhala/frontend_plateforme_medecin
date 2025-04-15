@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Patientform } from '../types/patienttype';
+import { Patientform } from '../../types/patienttype';
 export const registerPatient = async (formData: Patientform) => {
   const token = localStorage.getItem('token'); 
 

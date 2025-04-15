@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaUserMd } from "react-icons/fa"; // Doctor Icon
 import InputField from "../../components/register/RegisterInputField"; // Import the InputField component
-import { registerDoctor } from "../../services/registerdoctorService"; // Import the service for doctor registration
+import { registerDoctor } from "../../services/authentification/registerdoctorService"; // Import the service for doctor registration
 import { DoctorFormData } from "../../types/doctorregistertype"; // Import the DoctorFormData type
 import { Loader2 } from "lucide-react";
 

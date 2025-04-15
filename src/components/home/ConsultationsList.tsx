@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Consultation } from '../../types/consultationtype';
+import { postconsultation } from '../../services/serviceshome/consultationservice';
 
-interface Consultation {
-  _id: number | null;
-  cin_patient: number | null;
-  diagnostic: string;
-  remarque: string;
-  rapport: string;
-  type_consyltation: string;
-  patient: string;
-  date: string;
-  antecedents: string;
-}
+
 
 export default function ConsultationsList() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -21,9 +13,7 @@ export default function ConsultationsList() {
     cin_patient: null,
     diagnostic: "",
     remarque: "",
-    rapport: "",
-    type_consyltation: "",
-    patient: "",
+    type_consultation: "",
     date: "",
     antecedents: ""
   });
@@ -54,13 +44,17 @@ export default function ConsultationsList() {
     setIsFormOpen(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted", currentConsultation);
+    console.log( currentConsultation);
+
+    await postconsultation(currentConsultation)
     setIsFormOpen(false);
+        window.location.reload()
+
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setCurrentConsultation(prev => ({
       ...prev,
@@ -95,6 +89,57 @@ export default function ConsultationsList() {
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
                 />
               </div>
+              <div>
+              <label className="block text-sm font-medium text-gray-700">Type de Consultation</label>
+              <select
+                required
+                name='type_consultation'
+                value={currentConsultation.type_consultation.toString()}
+                onChange={handleInputChange}
+
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              >
+                <option value="">Sélectionner</option>
+                <option value="visite">visite</option>
+                <option value="control">control</option>
+
+
+              </select>
+            </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Diagnostic</label>
+                <input
+                  type="text"
+                  name="diagnostic"
+                  value={currentConsultation.diagnostic || ''}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Remarque</label>
+                <input
+                  type="text"
+                  name="remarque"
+                  value={currentConsultation.remarque || ''}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Date de Consultation</label>
+                <input
+                  type="date"
+                  name="date"
+                  value={currentConsultation.date || ''}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+                />
+              </div>
+  
               <div className="flex justify-end space-x-4">
                 <button
                   type="button"
@@ -114,31 +159,31 @@ export default function ConsultationsList() {
           </div>
         ) : (
           <div className="bg-white shadow-md rounded-lg overflow-x-auto w-full">
-            <table className="min-w-full divide-y divide-black">
+            <table className="min-w-full divide-y divide-black table-fixed">
               <thead className="bg-gray-300">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="sticky top-0 px-4 py-3   text-left text-l font-medium text-black uppercase tracking-wider">
                     CIN Patient
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                     Diagnostic
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Type de consultation
+                  <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
+                    Date
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                     Remarque
                   </th>
                 
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date
+                  <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
+                  Consultation
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-black">
+              <tbody className="bg-white divide-y divide-gray-400">
                 {consultations.length > 0 ? (
                   consultations.map((consultation) => (
                     <tr 
@@ -146,28 +191,48 @@ export default function ConsultationsList() {
                       className="hover:bg-gray-300 transition-colors duration-100 cursor-pointer"
                       onClick={() => setSelectedConsultation(consultation)}
                     >
-                      <td className="px-4 py-2 bg-gray-300 whitespace-nowrap text-sm text-black">
+                      <td className="px-4 py-2  w-full text-left font-bold text-gray-900 break-words">
                         {consultation.cin_patient}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-sm text-black">
+                      <td className="px-4 py-2 text-l text-gray-900 ">
+                      <div className="line-clamp-2 break-words">
                         {consultation.diagnostic}
-                      </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-sm text-black">
-                        {consultation.type_consyltation}
-                      </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-sm text-black">
-                        {consultation.remarque }
-                      </td>
-                     
-                      <td className="px-4 py-2 whitespace-nowrap text-sm text-black">
+                      </div></td>
+
+                      <td className="px-4 py-2 whitespace-nowrap w-20 text-l   text-gray-900 break-words">
                         {new Date(consultation.date).toLocaleDateString()}
                       </td>
+
+                      <td className="px-4 py-2 text-l text-gray-900">
+            <div className="line-clamp-2 break-words">
+              {consultation.remarque}
+            </div>
+          </td>   <td className="px-4 py-2 whitespace-nowrap">
+                      <span
+                        className={`px-2 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${
+                          consultation.type_consultation==="control"&&
+                             "bg-yellow-100 w-15 text-yellow-700"}
+                             ${consultation.type_consultation==="visite"&&
+                              "bg-green-200   w-15 text-center text-green-700"
+                             } 
+                      `}
+                      >
+                        {consultation.type_consultation==="visite"&&(
+                          " Visite "
+                        )}
+                        {consultation.type_consultation==="control"&&(
+                          "Control"
+                        )}
+                      </span>
+                    </td>
+                     
+                     
                       <td 
                         className="px-4 py-2 whitespace-nowrap text-sm font-medium"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button 
-                          className="text-teal-600 hover:text-black mr-2"
+                          className=" w-10 text-teal-600 hover:text-black mr-2"
                           onClick={() => setSelectedConsultation(consultation)}
                         >
                           Voir
@@ -219,7 +284,7 @@ export default function ConsultationsList() {
               
               <div>
                 <h4 className="text-xl font-medium rounded-xl text-black  bg-white">Type de consultation</h4>
-                <p className="mt-1 text-sm text-gray-900">{selectedConsultation.type_consyltation}</p>
+                <p className="mt-1 text-sm text-gray-900">{selectedConsultation.type_consultation}</p>
               </div>
               
               <div>

@@ -42,6 +42,10 @@ export const getrendezvousbydate =async (date :Date| string)=>{
             }
       }
   }
+  
+
+
+
 // ajouter rendez-vous
 export const postrendezvous = async (credentials:Appointments)=>{
   try{
@@ -55,8 +59,6 @@ export const postrendezvous = async (credentials:Appointments)=>{
     
   return response.data
   }
-
-
 
   catch (error) {
     if (axios.isAxiosError(error)) {

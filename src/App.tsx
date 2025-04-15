@@ -47,6 +47,7 @@ function App() {
           <div className="flex h-screen ">
             <Sidebar 
               setActiveSection={setActiveSection}  />
+              
             <DashboardContent 
               activeSection={activeSection} 
               setActiveSection={setActiveSection} 

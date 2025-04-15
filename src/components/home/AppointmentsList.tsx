@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { getrendezvous, postrendezvous } from '../../services/serviceshome/rendezvousservice';
 import { Appointment, Appointments } from '../../types/rendezvoustype';
-import { momentLocalizer, Views, Calendar } from 'react-big-calendar';
 import moment from 'moment';
-import DatePicker from "react-datepicker";
+import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import axios from 'axios';
+import { fr } from 'date-fns/locale/fr';
 
 export default function AppointmentsList() {
+  //registerLocale('fr', fr);
+//setDefaultLocale('fr');
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const [availableTimes, setAvailableTimes] = useState<Date[]>([]);
+
   const [isFormOpen, setIsFormOpen] = useState("affichage");
   const [appointments, setappointments]= useState<Appointments>({ 
     
@@ -19,63 +25,38 @@ export default function AppointmentsList() {
    specialite: "", 
    status: "" })
 const [rendezvous, setrendezvous]=useState<Appointment[]>([]);
-const localizer = momentLocalizer(moment);
+useEffect(() => {
+  const fetchAvailableTimes = async () => {
+    if (!selectedDate) return;
 
-interface Event {
-  id: number;
-  title: string;
-  start: Date;
-  end: Date;
-  allDay?: boolean;
-}
-const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
-  setSelectedSlot(slotInfo);
-  
-  // Example: Create a new event when a slot is clicked
-  const newEvent: Event = {
-    id: events.length + 1,
-    title: `New Event ${events.length + 1}`,
-    start: slotInfo.start,
-    end: slotInfo.end,
+    const dateString = selectedDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+console.log(dateString)
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/rendezvous/available?date=${dateString}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      );
+      const formattedTimes = response.data.map((isoDate: string) =>
+        new Date(isoDate)
+      );
+      setAvailableTimes(formattedTimes); 
+      console.log(formattedTimes)
+     
+    } catch (error) {
+      console.error('Erreur lors du chargement des horaires disponiblses :', error);
+    }
   };
-  
-  setEvents([...events, newEvent]);
-};
- const [events, setEvents] = useState<Event[]>([
-    {
-      id: 1,
-      title: 'Example Event',
-      start: new Date(2023, 10, 15, 10, 0),
-      end: new Date(2023, 10, 15, 12, 0),
-    },
-  ]);
-  const reservedSlots = [
-    '2025-04-02T08:30:00.000Z',
-    '2025-04-02T09:00:00.000Z',
-    '2025-04-02T10:30:00.000Z'
-  ];
-  
-  const [selectedSlot, setSelectedSlot] = useState<{
-    start: Date;
-    end: Date;
-  } | null>(null);
-
-  const selectedDate = appointments.date_rendez_vous
-  ? new Date(appointments.date_rendez_vous)
-  : new Date();
-
-  const reservedTimesForDay = reservedSlots
-  .map(time => new Date(time))
-  .filter(date => date.toDateString() === selectedDate.toDateString());
+  fetchAvailableTimes();
+}, [selectedDate]);
 
   const handleAddAppointment = () => {
     setIsFormOpen("ajout");
   };
-  // select event for calendrier
-  const handleSelectEvent = (event: Event) => {
-    // Handle event click (e.g., show details)
-    alert(`Event clicked: ${event.title}\nFrom: ${event.start.toLocaleString()}\nTo: ${event.end.toLocaleString()}`);
-  };
+
   const handleCloseForm = () => {
     setIsFormOpen("affichage");
   };
@@ -93,15 +74,17 @@ const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
     e.preventDefault();
     const payload = {
       ...appointments,
-      date_rendez_vous: new Date(appointments.date_rendez_vous).toISOString(),
       status: appointments.status === "true"
+      
   };   
    console.log(payload)
     await postrendezvous(payload);
+   
     console.log("Form submitted"); 
     const updatedRendezvous = await getrendezvous();
     setrendezvous(updatedRendezvous); 
        setIsFormOpen("affichage");
+       window.location.reload()
        setappointments({ 
     
         date_rendez_vous: "",
@@ -114,22 +97,16 @@ const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
   };
 
 useEffect(()=>{
-  const afficahe =async()=>{
+  const affichage =async()=>{
   const datarendezvous= await getrendezvous();
-  console.log(datarendezvous)
  setrendezvous(datarendezvous)
-  console.log(rendezvous)
   }
-  afficahe()
+  affichage()
 },[])
   return (
     <div className="space-y-6 w-full">
       <div className="flex justify-between items-center w-full">
-      <button className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-400 transition-colors"
-      onClick={()=>{setIsFormOpen("calendar")}}
-        >
-          Voir calendrier
-        </button>
+     
           <h2 className="text-xl font-semibold text-gray-800">Rendez-vous à venir</h2>
         <button
           onClick={handleAddAppointment}
@@ -137,34 +114,46 @@ useEffect(()=>{
         >
           + Ajouter un rendez-vous
         </button>
-        
       </div>
 
       {isFormOpen==="ajout" && (
         <div className="bg-white shadow-md rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Ajouter un nouveau rendez-vous</h3>
-         
+        <div className='flex '>
+          <div className='w-4/3'>
           <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-  <label className="block text-sm font-medium text-gray-700">Date Rendez-vous</label>
- <DatePicker
-  selected={appointments.date_rendez_vous ? new Date(appointments.date_rendez_vous) : null}
-  onChange={(date: Date | null) => {
-    if (date) {
-      setappointments(prev => ({ ...prev, date_rendez_vous: date.toISOString() }));
-    }
-  }}
-  showTimeSelect
-  timeIntervals={30}
+  <label className="block text-sm font-medium text-gray-700">jour de rendez vous </label>
+  <DatePicker
+    selected={selectedDate}
+    onChange={(date: Date | null) => {
+      if (date) {
+        //  Créer une nouvelle date en forçant le fuseau tunisien
+        const tunisianDateStr = date.toLocaleDateString('fr-TN',
+           
+          { timeZone: 'Africa/Tunis',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
+        // Convertir en Date (méthode robuste)
+        const [day, month, year] = tunisianDateStr.split('/');
+        const correctedDate = new Date(`${year}-${month}-${day}T12:00:00`);
+        setSelectedDate(correctedDate);
+      } 
+      else {
+        setSelectedDate(null);
+      }
+    }}
+
   timeCaption="Heure"
-  timeFormat="HH:mm"
-  dateFormat="dd/MM/yyyy HH:mm"
-  minTime={new Date(new Date().setHours(8, 30))}
-  maxTime={new Date(new Date().setHours(17, 0))}
-  excludeTimes={reservedTimesForDay}
-  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-  placeholderText="Sélectionner la date et l'heure"
-/>
+   timeIntervals={30}
+    dateFormat="dd/MM/yyyy"
+    minDate={new Date()}
+
+    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+    placeholderText="Choisir une date et heure"
+  />
 </div>
 
           
@@ -252,7 +241,60 @@ useEffect(()=>{
               </button>
             </div>
           </form>
+          </div>
+
+<div className="w-1/3 pl-6 border-l">
+  <h4 className="text-md font-medium text-gray-700 mb-3">Available Times</h4>
+  {availableTimes.length > 0 ? (
+    <div className="flex flex-wrap gap-2">
+      {availableTimes.map((time, index) => {
+  // Format time as HH:mm
+  const timeString = new Date(time).toLocaleTimeString([], { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: false 
+  });
+
+  return (
+    <button
+      key={index}
+      onClick={() => {
+        // When clicked, create a new Date combining selected date and this time
+        if (selectedDate) {
+          const [hours, minutes] = timeString.split(':').map(Number);
+          const newDateTime = new Date(selectedDate);
+          newDateTime.setHours(hours, minutes, 0, 0);
+          // Update your appointments state
+          setappointments(prev => ({
+            ...prev,
+            date_rendez_vous: newDateTime.toISOString()
+          }));
+        }
+        if (selectedDate){
+          setAvailableTimes(prevTimes => 
+            prevTimes.filter(time => time.getTime() !== new Date(appointments.date_rendez_vous).getTime())
+          );    }
+      }}
+      className={`time-item text-center w-[calc(33.33%-10px)] p-2 rounded-xl ${
+        appointments.date_rendez_vous && 
+        new Date(appointments.date_rendez_vous).getHours() === new Date(time).getHours() && 
+        new Date(appointments.date_rendez_vous).getMinutes() === new Date(time).getMinutes()
+          ? 'bg-teal-600 text-white' // Selected style
+          : 'bg-blue-500 text-white hover:bg-blue-600' // Default style
+      }`}
+    >
+      {timeString}
+    </button>
+  );
+})}
+    </div>
+  ) : (
+    <p className="text-gray-500">No available times</p>
+  )}
+</div>
+          </div>
         </div>
+        
       ) } {isFormOpen==="affichage"&& (
         <div className="bg-white shadow-md rounded-lg overflow-hidden w-full">
         <div className="max-h-[70vh] overflow-y-auto">
@@ -286,27 +328,27 @@ useEffect(()=>{
               {rendezvous.length > 0 ? (
                 rendezvous.map((appointment) => (
                   <tr key={appointment._id} className="hover:bg-gray-100 transition-colors duration-200">
-                    <td className="px-4 py-2 whitespace-nowrap text-m font-medium text-gray-900">
+                    <td className="px-4 py-4 whitespace-nowrap text-m font-bold text-gray-900">
                       {appointment.cin_patient}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-m font-medium text-gray-900">
+                    <td className="px-4 py-2 whitespace-nowrap text-m text-gray-900">
                       {appointment.prenom_patient}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-m font-medium text-gray-900">
+                    <td className="px-4 py-2 whitespace-nowrap text-m  text-gray-900">
                       {appointment.nom_patient}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-m font-medium text-gray-900">
+                    <td className="px-4 py-2 whitespace-nowrap text-m text-gray-900">
                       {appointment.telephone}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-m font-medium text-gray-900">
+                    <td className="px-4 py-2 whitespace-nowrap text-m  text-gray-900">
                     {moment(appointment.date_rendez_vous).format('DD/MM/YYYY HH:mm')}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <span
-                        className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        className={`px-2 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${
                           appointment.status
-                            ? "bg-green-100 text-green-800"
-                            : "bg-yellow-100 text-yellow-800"
+                            ? "bg-green-100 w-full text-green-800"
+                            : "bg-yellow-100 w-full text-yellow-800"
                         }`}
                       >
                         {appointment.status ? "Confirmé" : "En attente"}
@@ -336,21 +378,7 @@ useEffect(()=>{
           </table>
         </div>
       </div>
-        )} {isFormOpen==="calendar" &&(<div className="h-[500px] p-4">
-              <Calendar
-                localizer={localizer}
-                events={events}
-                selectable={true} 
-                onSelectSlot={handleSelectSlot}
-                onSelectEvent={handleSelectEvent}
-                defaultView={Views.WEEK}
-                onDoubleClickEvent={(event) => console.log('Double clicked event', event)}
-                onView={(view) => console.log('View changed to', view)}
-                views={[Views.DAY, Views.WEEK, Views.MONTH]}
-                style={{ height: '100%' }}
-                className="bg-white rounded-lg shadow"
-              />
-            </div>) } 
+        )} 
       </div>
     
   );

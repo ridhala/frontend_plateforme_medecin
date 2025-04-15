@@ -1,7 +1,7 @@
 // loginService.ts
 import axios from 'axios';
 import Cookies from 'js-cookie'; 
-import { LoginForm } from '../types/logintype';
+import { LoginForm } from '../../types/logintype';
 
 export const login = async (credentials:  LoginForm) => {
   try {

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import InputField from '././InputField'; // Import du composant InputField
 import { LoginForm} from '../../types/logintype'; // Import des types
 import { Link } from 'react-router-dom';
-import { login } from '../../services/loginService'
+import { login } from '../../services/authentification/loginService'
 import { Loader2 } from 'lucide-react';
 interface LoginContainerProps {
   onLoginSuccess: (role: string) => void;

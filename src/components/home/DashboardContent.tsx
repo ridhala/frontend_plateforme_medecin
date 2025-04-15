@@ -57,7 +57,7 @@ export default function DashboardContent({ activeSection, setActiveSection }: Da
       </div>
 
       {/* Dynamic Content Section */}
-      <div className="grid grid-cols-1 gap-6 w-full">
+      <div className="grid grid-cols-1 gap-6 w-300">
         {activeSection === "patients" && (
           <div className="bg-white p-4 rounded-lg shadow-lg w-full">
             <PatientsList />

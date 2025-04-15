@@ -1,4 +1,4 @@
-import { logout } from '../../services/loginService';
+import { logout } from '../../services/authentification/loginService';
 import { useNavigate, NavLink } from 'react-router-dom';
 
 type SidebarProps = {
