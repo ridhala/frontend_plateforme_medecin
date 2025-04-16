@@ -191,7 +191,7 @@ export default function ConsultationsList() {
                       className="hover:bg-gray-300 transition-colors duration-100 cursor-pointer"
                       onClick={() => setSelectedConsultation(consultation)}
                     >
-                      <td className="px-4 py-2  w-full text-left font-bold text-gray-900 break-words">
+                      <td className="px-4 py-2 text-left font-bold text-gray-900 break-words">
                         {consultation.cin_patient}
                       </td>
                       <td className="px-4 py-2 text-l text-gray-900 ">

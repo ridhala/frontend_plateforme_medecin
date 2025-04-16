@@ -317,6 +317,9 @@ useEffect(()=>{
                   Date Rendez-vous
                 </th>
                 <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
+                  Temps
+                </th>
+                <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                   Statut
                 </th>
                 <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
@@ -341,7 +344,10 @@ useEffect(()=>{
                       {appointment.telephone}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap text-m  text-gray-900">
-                    {moment(appointment.date_rendez_vous).format('DD/MM/YYYY HH:mm')}
+                    {moment(appointment.date_rendez_vous).format('DD/MM/YYYY')}
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-m  text-gray-900">
+                    {moment(appointment.date_rendez_vous).format('hh:mm')}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <span
