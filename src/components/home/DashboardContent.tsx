@@ -30,11 +30,7 @@ export default function DashboardContent({ activeSection, setActiveSection }: Da
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
         <div className="flex items-center space-x-4">
-          <input
-            type="text"
-            placeholder="Search"
-            className="p-2 rounded-lg border border-gray-300"
-          />
+        
           <div className="flex items-center space-x-2">
             <span>Dalanda Chtioui</span>
             <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-400">
@@ -44,9 +40,9 @@ export default function DashboardContent({ activeSection, setActiveSection }: Da
                 className="w-full h-full object-cover"
               />
             </div>
-            <div>
+           { /*<div>
               <Chat doctorId={''}/>
-            </div>
+            </div>*/}
           </div>
         </div>
       </div>

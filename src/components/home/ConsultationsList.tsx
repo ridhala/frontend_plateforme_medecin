@@ -163,7 +163,7 @@ export default function ConsultationsList() {
               <thead className="bg-gray-300">
                 <tr>
                   <th className="sticky top-0 px-4 py-3   text-left text-l font-medium text-black uppercase tracking-wider">
-                    CIN Patient
+                    CIN 
                   </th>
                   <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                     Diagnostic

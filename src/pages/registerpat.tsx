@@ -117,10 +117,10 @@ const RegisterPatient = () => {
       }}
     >
       <div className="flex justify-center items-center min-h-screen w-full px-8 py-8">
-        <div className=" bg-white p-3 rounded-4xl shadow-xl w-full max-w-xl  ">
+        <div className=" bg-white p-2 rounded-4xl shadow-xl w-full max-w-xl  ">
           
           {/* Left side registration form */}
-          <div className="bg-gradient-to-r from-gray-200 to-blue-200 p-8  rounded-xl flex flex-col items-center justify-center relative z-10">
+          <div className="bg-gradient-to-r from-gray-200 to-blue-300 p-6  rounded-xl flex flex-col items-center justify-center relative z-10">
             {/* Formulaire d'inscription */}
             <div className='text-indigo-600 text-2xl font-bold mb-2'>
               <h1 className="flex items-center justify-center gap-3 mb-4">

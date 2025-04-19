@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import axios from 'axios';
 
 const localizer = momentLocalizer(moment);
 
@@ -41,14 +42,36 @@ const InteractiveCalendar = () => {
     
     setEvents([...events, newEvent]);
   };
-
+const [url, seturl]=useState('')
   const handleSelectEvent = (event: Event) => {
     // Handle event click (e.g., show details)
     alert(`Event clicked: ${event.title}\nFrom: ${event.start.toLocaleString()}\nTo: ${event.end.toLocaleString()}`);
   };
-
+const [file, setfile]= useState<File>()
+const uploadimage=async ()=>{
+  const form = new FormData();
+if(file)
+ ( form.append("file", file),
+    form.append('upload_preset', "medplat"),
+ await axios.post("https://api.cloudinary.com/v1_1/daerk3xrm/upload", form).then((res)=>seturl(res.data.secure_url)))
+}
   return (
     <div style={{ height: '800px' }}>
+     
+<div>
+  <input className='bg-indigo-200' type='file'
+ onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{setfile(e.target.files?.[0]);}}/>
+
+ <h1 className='bg-teal-700 text-center'>mettre votre photo  </h1>
+ 
+
+  <button className='bg-blue-200 ' onClick={uploadimage}
+  >upload now</button></div>
+<div><img src={url}></img></div>
+
+
+<br></br>
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       <Calendar
         localizer={localizer}
         events={events}

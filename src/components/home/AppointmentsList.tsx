@@ -302,7 +302,7 @@ useEffect(()=>{
             <thead className="bg-gray-50 sticky top-0 z-10">
               <tr className='bg-gray-300'>
                 <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
-                  CIN Patient
+                  CIN 
                 </th>
                 <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                   Prénom Patient

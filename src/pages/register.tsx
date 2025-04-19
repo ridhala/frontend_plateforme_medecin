@@ -28,14 +28,16 @@ function Register() {
       </div>
     );
   }
+  //filtre img:  linear-gradient(to right, rgba(0, 100, 100, 0.3), rgba(100, 100, 100, 0.4)),
   return (
     <div
       className="flex min-h-screen flex-col items-center justify-center"
       style={{
-        backgroundImage: `url(https://etimg.etb2bimg.com/thumb/msid-91574236,imgsize-130648,width-1200,height=765,overlay-ethealth/health-it/how-do-technology-and-healthcare-go-hand-in-hand.jpg)`,
+        backgroundImage: ` url(https://etimg.etb2bimg.com/thumb/msid-91574236,imgsize-130648,width-1200,height=765,overlay-ethealth/health-it/how-do-technology-and-healthcare-go-hand-in-hand.jpg)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
+
       }}
     >
      

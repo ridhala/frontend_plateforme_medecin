@@ -4,7 +4,10 @@ import InputField from "../../components/register/RegisterInputField"; // Import
 import { registerDoctor } from "../../services/authentification/registerdoctorService"; // Import the service for doctor registration
 import { DoctorFormData } from "../../types/doctorregistertype"; // Import the DoctorFormData type
 import { Loader2 } from "lucide-react";
+import axios from "axios";
 
+//name : daerk3xrm
+//upload preset:  medplat 
 interface RegisterContainerProps {
   onRegisterSuccess: () => void; // Prop for handling successful registration
 }
@@ -23,11 +26,15 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
     password: "",
     photo_profil: null,
   });
+  const [url, seturl]= useState<string>("")
+  
+  const specialtyOptions = JSON.parse(import.meta.env.VITE_SPECIALTY_NAMES || '[]');
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
   // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    
     const { name, value } = e.target;
     setFormData((prevData: any) => ({
       ...prevData,
@@ -37,7 +44,9 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
 
   // Handle file upload for profile photo
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
     if (e.target.files && e.target.files.length > 0) {
+ 
       setFormData((prevData: any) => ({
         ...prevData,
         photo_profil: e.target.files?.[0],
@@ -50,7 +59,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
     e.preventDefault();
 
     const formDataToSend = new FormData();
-
+const formphoto= new FormData()
     // Append all text fields
     Object.entries(formData).forEach(([key, value]) => {
       if (key !== "photo_profil") {
@@ -58,14 +67,17 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
       }
     });
 
-    // Append file field separately
     if (formData.photo_profil) {
-      formDataToSend.append("photo_profil", formData.photo_profil);
-    }
+      formphoto.append("file", formData.photo_profil),
+      formphoto.append('upload_preset', "medplat")
+      await axios.post("https://api.cloudinary.com/v1_1/daerk3xrm/upload", formphoto)
+        .then((res)=>formDataToSend.append("photo_profil", res.data.secure_url) )
+  }
     setIsLoading(true); // Activer le loader
     try {
       console.log(formData);
       await registerDoctor(formDataToSend);
+      
       console.log("Inscription réussie:", formData);
 
       // Reset the form
@@ -83,7 +95,6 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
         photo_profil: null,
       });
 
-      
       onRegisterSuccess();
     } catch (error) {
       console.error("Échec de l'inscription:", error);
@@ -102,10 +113,10 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
   };
  
   return (
-    <div className="flex justify-center items-center  ">
-      <div className="flex bg-white p-3 rounded-4xl shadow-xl w-full max-w-2xl">
+    <div className="flex justify-center items-center bg-white p-2 rounded-2xl ">
+      <div className="flex bg-gradient-to-r from-gray-300 to-blue-200 p-3 rounded-4xl shadow-xl w-full max-w-2xl">
         {/* Registration Form Section */}
-        <div className="w-7/9 rounded-4xl bg-gradient-to-r from-blue-200 to-white ">
+        <div className="w-7/9 rounded-4xl  ">
           {/* Title with Doctor Icon */}
           <h2 className="text-2xl font-bold text-center text-gray-900 flex items-center justify-center gap-3 mb-4">
             <FaUserMd className="text-indigo-600 text-3xl" />
@@ -158,15 +169,26 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
                 required
               />
             </div>
+            <label htmlFor="nom_specialite" className="block text-sm font-medium text-gray-700">
+  Spécialité
+</label>
+<select
+  id="nom_specialite"
+  name="nom_specialite"
+  value={formData.nom_specialite}
+  onChange={handleChange}
+  required
+  className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+>
+  <option value="">-- Choisir une spécialité --</option>
+  {specialtyOptions.map((specialty: string) => (
+    <option key={specialty} value={specialty}>
+      {specialty}
+    </option>
+  ))}
+</select>
 
-            <InputField
-              label="Spécialité"
-              type="text"
-              name="nom_specialite"
-              value={formData.nom_specialite}
-              onChange={handleChange}
-              required
-            />
+
 
             <InputField
               label="Email"
@@ -230,7 +252,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
         </div>
 
         {/* Profile Photo Section */}
-        <div className="w-3/9 rounded-4xl bg-gradient-to-r from-white to-blue-200 flex flex-col items-center justify-center pl-8">
+        <div className="w-3/9 rounded-4xl  flex flex-col items-center justify-center pl-8">
           <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
             {formData.photo_profil ? (
               <img

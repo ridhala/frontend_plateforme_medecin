@@ -91,8 +91,11 @@ console.log("succes" , userData)
       <div className="h-170 w-150 mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <div className="md:flex">
           {/* Section Photo de profil */}
-          <div className="md:w-1/3 p-8 flex flex-col items-center bg-gray-400">
+          <div className="md:w-1/3 p-8 flex flex-col items-center bg-gray-300">
             <div className="relative mb-6">
+            <h2 className="text-xl font-bold text-gray-800 ">
+              Dr {profileData?.prenom} {profileData?.nom}
+            </h2>
               {profileData?.photo_profil ? (
                 <img
                   src={profileData.photo_profil}
@@ -106,11 +109,8 @@ console.log("succes" , userData)
               )}
             </div>
             
-            <h2 className="text-xl font-bold text-gray-800 ">
-              {profileData?.prenom} {profileData?.nom}
-            </h2>
+         
             
-              <p className="text-gray-500">{profileData?._id}</p>
             
           </div>
 
