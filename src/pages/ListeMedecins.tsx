@@ -1,22 +1,19 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  StarIcon, 
   MapPinIcon, 
-  CalendarIcon, 
-  ClockIcon, 
   PhoneIcon,
   ArrowRightIcon,
-  UserIcon,
   AcademicCapIcon,
-  LanguageIcon
+  LanguageIcon,
+  ClockIcon,
+  ArrowLeftIcon
 } from '@heroicons/react/24/solid';
+import { HeartIcon } from '@heroicons/react/24/outline';
 
 type Doctor = {
   id: string;
   name: string;
   specialty: string;
-  rating: number;
-  reviews: number;
   distance: number;
   address: string;
   image: string;
@@ -25,6 +22,7 @@ type Doctor = {
   languages: string[];
   education: string;
   experience: number;
+  mapUrl: string;
 };
 
 const doctorsData: Record<string, Doctor[]> = {
@@ -33,8 +31,6 @@ const doctorsData: Record<string, Doctor[]> = {
       id: 'doc1',
       name: 'Dr. Sophie Martin',
       specialty: 'General Medicine',
-      rating: 4.9,
-      reviews: 127,
       distance: 1.2,
       address: '15 Rue de la Paix, Paris 75002',
       image: 'https://randomuser.me/api/portraits/women/65.jpg',
@@ -42,14 +38,13 @@ const doctorsData: Record<string, Doctor[]> = {
       price: 25,
       languages: ['Français', 'Anglais'],
       education: 'Université Paris Descartes',
-      experience: 12
+      experience: 12,
+      mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.991626693345!2d2.331642315674389!3d48.86851077928835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e3a948fb3b5%3A0x6e5e3a9d7a3b4b1d!2s15%20Rue%20de%20la%20Paix%2C%2075002%20Paris!5e0!3m2!1sfr!2sfr!4v1623760000000!5m2!1sfr!2sfr'
     },
     {
       id: 'doc2',
       name: 'Dr. Jean Dupont',
       specialty: 'General Medicine',
-      rating: 4.7,
-      reviews: 89,
       distance: 2.5,
       address: '22 Boulevard Saint-Germain, Paris 75005',
       image: 'https://randomuser.me/api/portraits/men/32.jpg',
@@ -57,7 +52,8 @@ const doctorsData: Record<string, Doctor[]> = {
       price: 30,
       languages: ['Français', 'Espagnol'],
       education: 'Université Pierre et Marie Curie',
-      experience: 8
+      experience: 8,
+      mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2625.0000000000005!2d2.3399999999999994!3d48.853000000000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e671c7785c4fd9%3A0x5e9e5e5e5e5e5e5e!2s22%20Boulevard%20Saint-Germain%2C%2075005%20Paris!5e0!3m2!1sfr!2sfr!4v1623760000000!5m2!1sfr!2sfr'
     }
   ],
   'Cardiology': [
@@ -65,8 +61,6 @@ const doctorsData: Record<string, Doctor[]> = {
       id: 'doc3',
       name: 'Dr. Claire Dubois',
       specialty: 'Cardiology',
-      rating: 4.8,
-      reviews: 156,
       distance: 3.1,
       address: '8 Avenue de la République, Paris 75011',
       image: 'https://randomuser.me/api/portraits/women/44.jpg',
@@ -74,39 +68,8 @@ const doctorsData: Record<string, Doctor[]> = {
       price: 50,
       languages: ['Français', 'Anglais', 'Arabe'],
       education: 'Université Paris Diderot',
-      experience: 15
-    }
-  ],
-  'Dermatology': [
-    {
-      id: 'doc4',
-      name: 'Dr. Michel Lambert',
-      specialty: 'Dermatology',
-      rating: 4.6,
-      reviews: 94,
-      distance: 0.8,
-      address: '30 Rue de Rivoli, Paris 75004',
-      image: 'https://randomuser.me/api/portraits/men/75.jpg',
-      availability: ['Mar 09:00-13:00', 'Jeu 14:00-19:00', 'Sam 10:00-14:00'],
-      price: 45,
-      languages: ['Français', 'Anglais'],
-      education: 'Université Paris-Sud',
-      experience: 10
-    },
-    {
-      id: 'doc5',
-      name: 'Dr. Amélie Rousseau',
-      specialty: 'Dermatology',
-      rating: 4.9,
-      reviews: 203,
-      distance: 1.7,
-      address: '5 Rue de la Pompe, Paris 75016',
-      image: 'https://randomuser.me/api/portraits/women/68.jpg',
-      availability: ['Lun 13:00-18:00', 'Mer 08:00-12:00', 'Ven 14:00-18:00'],
-      price: 55,
-      languages: ['Français', 'Italien'],
-      education: 'Université Paris Descartes',
-      experience: 18
+      experience: 15,
+      mapUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2625.0000000000005!2d2.3699999999999997!3d48.857000000000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66df0e9b3b3b3%3A0x5e9e5e5e5e5e5e5e!2s8%20Avenue%20de%20la%20R%C3%A9publique%2C%2075011%20Paris!5e0!3m2!1sfr!2sfr!4v1623760000000!5m2!1sfr!2sfr'
     }
   ]
 };
@@ -127,193 +90,180 @@ export default function ListeMedecins() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-50">
-      {/* Navigation améliorée */}
-      <nav className="bg-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-20 items-center">
-            <button 
-              onClick={() => navigate(-1)}
-              className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              <span className="text-lg font-medium">Retour</span>
-            </button>
-            <div className="flex items-center space-x-2">
-              <UserIcon className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-800">Medplat</h1>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+  {/* Hero Header avec effet visuel médical */}
+  <div className="relative bg-gradient-to-r from-gray-600 to-green-500 text-white pb-12">
+     {/* Background Image avec filtre */}
+ <div
+  className="absolute inset-0 bg-cover bg-blend-multiply"
+  style={{
+    backgroundImage:
+      "url('https://f.maformation.fr/edito/sites/3/2017/12/secretaire.jpeg')",
+    backgroundPosition: "center", // Affiche la partie supérieure de l'image
+    filter: "brightness(50%) saturate(120%) blur(1px)",
+  }}
+></div>
+    {/* Pattern médical subtil */}
+    <div className="absolute inset-0 opacity-10 bg-[url('https://img.freepik.com/free-vector/medical-background-with-abstract-shapes_53876-93773.jpg')] bg-cover"></div>
+    
+    {/* Navigation */}
+    <nav className="relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="flex justify-between items-center">
+          <button 
+            onClick={() => navigate(-1)}
+            className="flex items-center space-x-2 text-white hover:text-blue-100 transition-colors"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+            <span className="text-sm font-medium">Retour</span>
+          </button>
+          
+          <div className="flex items-center space-x-3">
+            <div className="bg-white p-1.5 rounded-full shadow-lg">
+              <HeartIcon className="h-5 w-5 text-red-500" />
             </div>
-            <div className="w-24"></div>
+            <h1 className="text-lg font-bold text-white">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">Medplat</span>
+            </h1>
           </div>
+          
+          <div className="w-16"></div>
         </div>
-      </nav>
+      </div>
+    </nav>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header amélioré */}
-        <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-500">
-              Médecins en {specialty}
-            </span>
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {doctors.length > 0 
-              ? `${doctors.length} spécialistes disponibles près de chez vous`
-              : 'Aucun médecin disponible pour cette spécialité actuellement'}
-          </p>
-        </div>
+    {/* Titre principal */}
+    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8 text-center">
+      <h1 className="text-3xl md:text-4xl font-bold mb-3">
+        Trouvez votre {specialty.toLowerCase()}
+      </h1>
+      <p className="text-lg md:text-xl max-w-2xl mx-auto">
+        Des professionnels de santé qualifiés près de chez vous
+      </p>
+    </div>
+ 
+</div>
 
-        {/* Filtres améliorés */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-10 border border-gray-100">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">Localisation</label>
-              <div className="relative rounded-lg shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <MapPinIcon className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  id="location"
-                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-12 py-3 border-gray-300 rounded-lg text-base"
-                  placeholder="Paris, France"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label htmlFor="availability" className="block text-sm font-medium text-gray-700 mb-2">Disponibilité</label>
-              <div className="relative">
-                <select
-                  id="availability"
-                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base"
-                >
-                  <option>Prochainement</option>
-                  <option>Aujourd'hui</option>
-                  <option>Cette semaine</option>
-                </select>
-              </div>
-            </div>
-            
-            <div>
-              <label htmlFor="sort" className="block text-sm font-medium text-gray-700 mb-2">Trier par</label>
-              <div className="relative">
-                <select
-                  id="sort"
-                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base"
-                >
-                  <option>Meilleures notes</option>
-                  <option>Plus proches</option>
-                  <option>Prix croissant</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Doctors List améliorée */}
-        <div className="space-y-8">
+        {/* Vague de séparation */}
+    
+      {/* Contenu principal */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 -mt-12 relative z-10">
+        {/* Liste des médecins */}
+        <div className="space-y-9">
           {doctors.length > 0 ? (
             doctors.map((doctor) => (
-              <div key={doctor.id} className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-100">
-                <div className="p-8">
+              <div key={doctor.id} className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 border border-blue-100">
+                <div className="p-6 md:p-8">
                   <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Doctor Image */}
-                    <div className="flex-shrink-0">
-                      <div className="relative">
+                    {/* Photo et carte */}
+                    <div className="flex-shrink-0 space-y-6">
+                      <div className="relative group">
                         <img
-                          className="h-40 w-40 rounded-xl object-cover border-4 border-white shadow-md"
+                          className="h-40 w-40 rounded-xl object-cover border-4 border-white shadow-lg transform group-hover:scale-105 transition-transform duration-300"
                           src={doctor.image}
                           alt={`Photo de ${doctor.name}`}
                         />
-                        <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full shadow-lg flex items-center">
-                          <StarIcon className="h-4 w-4 text-yellow-300 mr-1" />
-                          <span className="font-bold">{doctor.rating}</span>
-                          <span className="text-xs ml-1">({doctor.reviews})</span>
+                        <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-white px-4 py-1 rounded-full shadow-md text-sm font-medium text-blue-700 border border-blue-200">
+                          {doctor.experience}+ ans exp.
                         </div>
+                      </div>
+                      
+                      <div className="h-56 w-full lg:w-64 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                        <iframe
+                          title={`Carte pour ${doctor.name}`}
+                          src={doctor.mapUrl}
+                          width="100%"
+                          height="100%"
+                          style={{ border: 0 }}
+                          allowFullScreen
+                          loading="lazy"
+                        ></iframe>
                       </div>
                     </div>
                     
-                    {/* Doctor Info */}
+                    {/* Informations principales */}
                     <div className="flex-1">
                       <div className="flex flex-col h-full">
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h2 className="text-2xl font-bold text-gray-900">{doctor.name}</h2>
-                              <p className="text-blue-600 font-medium">{doctor.specialty}</p>
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h2 className="text-2xl font-bold text-gray-900">{doctor.name}</h2>
+                            <p className="text-blue-600 font-medium">{doctor.specialty}</p>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-3xl font-bold text-gray-900">{doctor.price}€</span>
+                            <span className="text-gray-500 text-sm block">/ consultation</span>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="flex items-start">
+                            <div className="bg-blue-100 p-2 rounded-lg mr-4">
+                              <MapPinIcon className="h-5 w-5 text-blue-600" />
                             </div>
-                            <div className="text-right">
-                              <span className="text-3xl font-bold text-gray-900">{doctor.price}€</span>
-                              <span className="text-gray-500 text-sm block">/ consultation</span>
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-500 mb-1">Adresse</h4>
+                              <p className="text-gray-700">{doctor.address}</p>
+                              <p className="text-sm text-blue-600 mt-2">
+                                <span className="font-medium">{doctor.distance} km</span> de votre position
+                              </p>
                             </div>
                           </div>
                           
-                          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="flex items-start">
-                              <MapPinIcon className="h-5 w-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-                              <div>
-                                <h4 className="text-sm font-medium text-gray-500">Adresse</h4>
-                                <p className="text-gray-700">{doctor.address}</p>
-                                <p className="text-sm text-blue-600 mt-1">{doctor.distance} km de vous</p>
+                          <div className="flex items-start">
+                            <div className="bg-blue-100 p-2 rounded-lg mr-4">
+                              <AcademicCapIcon className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-500 mb-1">Formation</h4>
+                              <p className="text-gray-700">{doctor.education}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-start">
+                            <div className="bg-blue-100 p-2 rounded-lg mr-4">
+                              <LanguageIcon className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-500 mb-1">Langues</h4>
+                              <div className="flex flex-wrap gap-2 mt-1">
+                                {doctor.languages.map((lang, idx) => (
+                                  <span key={idx} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
+                                    {lang}
+                                  </span>
+                                ))}
                               </div>
                             </div>
-                            
-                            <div className="flex items-start">
-                              <AcademicCapIcon className="h-5 w-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-                              <div>
-                                <h4 className="text-sm font-medium text-gray-500">Formation</h4>
-                                <p className="text-gray-700">{doctor.education}</p>
-                                <p className="text-sm text-gray-500 mt-1">{doctor.experience} ans d'expérience</p>
-                              </div>
+                          </div>
+                          
+                          <div className="flex items-start">
+                            <div className="bg-blue-100 p-2 rounded-lg mr-4">
+                              <ClockIcon className="h-5 w-5 text-blue-600" />
                             </div>
-                            
-                            <div className="flex items-start">
-                              <LanguageIcon className="h-5 w-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-                              <div>
-                                <h4 className="text-sm font-medium text-gray-500">Langues parlées</h4>
-                                <div className="flex flex-wrap gap-2 mt-1">
-                                  {doctor.languages.map((lang, idx) => (
-                                    <span key={idx} className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs">
-                                      {lang}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-start">
-                              <ClockIcon className="h-5 w-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
-                              <div>
-                                <h4 className="text-sm font-medium text-gray-500">Disponibilités</h4>
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                  {doctor.availability.map((slot, index) => (
-                                    <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                      <ClockIcon className="h-3 w-3 mr-1" />
-                                      {slot}
-                                    </span>
-                                  ))}
-                                </div>
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-500 mb-1">Disponibilités</h4>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {doctor.availability.map((slot, index) => (
+                                  <span key={index} className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-blue-50 text-blue-800 border border-blue-200">
+                                    {slot}
+                                  </span>
+                                ))}
                               </div>
                             </div>
                           </div>
                         </div>
                         
-                        {/* Action Buttons */}
-                        <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
-                          <button className="flex items-center justify-center px-6 py-3 border border-gray-300 rounded-xl shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                        {/* Boutons d'action */}
+                        <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4">
+                          <button className="flex-1 flex items-center justify-center px-6 py-3 border border-gray-300 rounded-xl text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
                             <PhoneIcon className="h-5 w-5 mr-2 text-gray-500" />
                             Contacter
                           </button>
                           <button
                             onClick={() => handleGoToWaitingRoom(doctor.id)}
-                            className="flex items-center justify-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
+                            className="flex-1 flex items-center justify-center px-6 py-3 border border-transparent rounded-xl text-base font-medium text-white bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all shadow-lg"
                           >
                             <ArrowRightIcon className="h-5 w-5 mr-2" />
-                            Aller en salle d'attente
+                            Prendre rendez-vous
                           </button>
                         </div>
                       </div>
@@ -336,9 +286,7 @@ export default function ListeMedecins() {
                   onClick={() => navigate(-1)}
                   className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                  </svg>
+                  <ArrowLeftIcon className="-ml-1 mr-2 h-5 w-5" />
                   Retour aux spécialités
                 </button>
               </div>

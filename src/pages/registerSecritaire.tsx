@@ -181,38 +181,7 @@ export default function RegisterSecretaire() {
           </div>
         </div>
 
-        {/* Right Side - Visual */}
-        <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-800 to-blue-600 flex-col items-center justify-center p-12 text-white">
-          <div className="max-w-md text-center">
-            <h1 className="text-4xl font-bold mb-6">Créer un compte pour la secritaire</h1>
-            <p className="text-lg mb-8 opacity-90">
-              Enregistrez-vous...
-            </p>
-            <div className="bg-gray-600 bg-opacity-20 backdrop-blur-sm rounded-xl p-6">
-              <h3 className="text-xl font-semibold mb-3">Pourquoi s'inscrire?</h3>
-              <ul className="space-y-2 text-left text-sm">
-                <li className="flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Accès sécurisé aux dossiers
-                </li>
-                <li className="flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Gestion des rendez-vous
-                </li>
-                <li className="flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Interface intuitive
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
   );
