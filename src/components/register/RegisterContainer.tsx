@@ -26,8 +26,7 @@ function RegisterContainer({ onRegisterSuccess }: RegisterContainerProps) {
     password: "",
     photo_profil: null,
   });
-  const [url, seturl]= useState<string>("")
-  
+    
   const specialtyOptions = JSON.parse(import.meta.env.VITE_SPECIALTY_NAMES || '[]');
 
   const [isLoading, setIsLoading] = useState(false);

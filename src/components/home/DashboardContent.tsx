@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import StatisticsSection from './StatisticsSection';
 import PatientsList from './PatientsList';
 import AppointmentsList from './AppointmentsList';
@@ -6,6 +6,8 @@ import ConsultationsList from './ConsultationsList';
 import Profil from './Profil';
 import Chat from '../Messagerie/Chat';
 import {  useParams } from 'react-router-dom';
+import Support from './support';
+import axios from 'axios';
 
 interface DashboardProps {
   activeSection: string | null;
@@ -14,15 +16,39 @@ interface DashboardProps {
 
 export default function DashboardContent({ activeSection, setActiveSection }: DashboardProps) {
   const params = useParams();
+const [profil, setprofil]= useState("");
+const [nom, setnom]= useState("")
+const [prenom, setprenom]= useState("")
 
   // Sync URL parameter with active section
   useEffect(() => {
     if (params.section) {
-      console.log(params)
       setActiveSection(params.section);
     }
   }, [params.section, setActiveSection]);
 
+  useEffect(() => {
+    const ProfileData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/update/profile', {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        });
+
+        setprofil(response.data.utilisateur.photo_profil);
+        setnom(response.data.utilisateur.nom);
+        setprenom(response.data.utilisateur.prenom);
+
+      } catch (err) {
+        console.error('Erreur:', err);
+      }
+     
+    };
+
+    ProfileData();
+  }, []);
 
   return (
     <div className="flex-grow p-6 bg-gray-100 overflow-auto">
@@ -31,11 +57,11 @@ export default function DashboardContent({ activeSection, setActiveSection }: Da
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
         <div className="flex items-center space-x-4">
         
-          <div className="flex items-center space-x-2">
-            <span>Dalanda Chtioui</span>
-            <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-400">
+          <div className="flex items-center text-xl font-semibold space-x-2">
+            <span>Dr {nom} {prenom} </span>
+            <div className="w-15 h-15 rounded-full overflow-hidden border-2 border-gray-400">
               <img
-                src="https://www.cliniquecic.ch/data/dataimages/Upload/thumbnails/zoom_PapaNata.jpg"
+                src={profil}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
@@ -69,6 +95,11 @@ export default function DashboardContent({ activeSection, setActiveSection }: Da
         {activeSection === "consultations" && (
           <div className="bg-white p-4 rounded-lg shadow-lg w-full">
             <ConsultationsList />
+          </div>
+        )}
+         {activeSection === "support" && (
+          <div className="bg-white p-4 rounded-lg shadow-lg w-full">
+            <Support />
           </div>
         )}
 

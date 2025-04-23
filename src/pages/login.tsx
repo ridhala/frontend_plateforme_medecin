@@ -7,14 +7,14 @@ function Login() {
   const navigate = useNavigate();
 const [succes, setsuccess]= useState<string>("");
   const handleLoginSuccess = async(role:string) => {
-   if(role==="medecin" &&"secretaire")
+   if(role==="medecin")
 {    setsuccess("medecin");}
    if(role==="patient")
    { setsuccess("patient");}
 
     setTimeout(async() => {
       
-      if(role==="medecin" &&"secretaire")
+      if(role==="medecin")
       {navigate('/home/patients');}
 
     else if(role==="patient"){
