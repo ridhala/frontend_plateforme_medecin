@@ -12,3 +12,12 @@ export interface DoctorFormData {
     password: string; // Mot de passe
     photo_profil: File | null; // Photo de profil (fichier)
   }
+  // types/types.ts
+  export interface profileformData {
+    nom: string; // Nom du médecin
+    prenom: string; // Prénom du médecin
+    email: string; // Email
+    telephone_personnel:string; // Téléphone personnel (chaîne de caractères)
+    adresse_cabinet: string; // Adresse du cabinet
+    telephone_cabinet: string; // Téléphone du cabinet (chaîne de caractères)
+  }

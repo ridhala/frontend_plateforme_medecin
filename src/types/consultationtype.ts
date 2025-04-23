@@ -1,8 +1,10 @@
 export interface Consultation {
     _id: number | null;
     cin_patient: number | null;
+    prenom_patient :string;
+    nom_patient :string;
     diagnostic: string;
-    remarque: string;
+    ordonnance: string;
     type_consultation: string;
     date: string;
     antecedents: string;

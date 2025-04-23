@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Consultation } from '../../types/consultationtype';
 import { postconsultation } from '../../services/serviceshome/consultationservice';
-
+import { Modal } from "./pop-up/modal";
 
 
 export default function ConsultationsList() {
@@ -11,13 +11,31 @@ export default function ConsultationsList() {
   const [currentConsultation, setCurrentConsultation] = useState<Consultation>({
     _id: null,
     cin_patient: null,
+    prenom_patient :"",
+    nom_patient :"",
     diagnostic: "",
-    remarque: "",
+    ordonnance: "",
     type_consultation: "",
     date: "",
     antecedents: ""
   });
   const [selectedConsultation, setSelectedConsultation] = useState<Consultation | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formConsultation, setFormConsultation] = useState<Consultation | null>(null);
+  const handleSave = async () => { setSelectedConsultation(null);
+    window.location.reload();}
+  useEffect(() => {
+    if (selectedConsultation) {
+      setFormConsultation(selectedConsultation);
+    }
+  }, [selectedConsultation]);
+  
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormConsultation((prev) => prev ? { ...prev, [name]: value } : prev);
+  };
+
+
 
   useEffect(() => {
     const fetchConsultations = async () => {
@@ -46,7 +64,6 @@ export default function ConsultationsList() {
 
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    console.log( currentConsultation);
 
     await postconsultation(currentConsultation)
     setIsFormOpen(false);
@@ -119,11 +136,11 @@ export default function ConsultationsList() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Remarque</label>
+                <label className="block text-sm font-medium text-gray-700">ordonnance</label>
                 <input
                   type="text"
-                  name="remarque"
-                  value={currentConsultation.remarque || ''}
+                  name="ordonnance"
+                  value={currentConsultation.ordonnance || ''}
                   onChange={handleInputChange}
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
                 />
@@ -158,12 +175,16 @@ export default function ConsultationsList() {
             </form>
           </div>
         ) : (
-          <div className="bg-white shadow-md rounded-lg overflow-x-auto w-full">
-            <table className="min-w-full divide-y divide-black table-fixed">
-              <thead className="bg-gray-300">
+          <div className="bg-white shadow-md rounded-lg overflow-hidden w-full">
+            <div className='max-h-[70vh] overflow-y-auto'>
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-300 sticky top-0 z-10">
                 <tr>
                   <th className="sticky top-0 px-4 py-3   text-left text-l font-medium text-black uppercase tracking-wider">
                     CIN 
+                  </th>
+                  <th className="sticky top-0 px-4 py-3   text-left text-l font-medium text-black uppercase tracking-wider">
+                   Patient
                   </th>
                   <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                     Diagnostic
@@ -172,7 +193,7 @@ export default function ConsultationsList() {
                     Date
                   </th>
                   <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
-                    Remarque
+                  Ordonnance
                   </th>
                 
                   <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
@@ -194,8 +215,13 @@ export default function ConsultationsList() {
                       <td className="px-4 py-2 text-left font-bold text-gray-900 break-words">
                         {consultation.cin_patient}
                       </td>
-                      <td className="px-4 py-2 text-l text-gray-900 ">
+                      <td className="px-4 py-2px-4 py-2 text-l text-gray-900">
                       <div className="line-clamp-2 break-words">
+                        {consultation.prenom_patient} {consultation.nom_patient} 
+                         </div>
+                      </td>
+                      <td className="px-4 py-2 text-l text-gray-900 ">
+                      <div className="line-clamp-2">
                         {consultation.diagnostic}
                       </div></td>
 
@@ -205,13 +231,18 @@ export default function ConsultationsList() {
 
                       <td className="px-4 py-2 text-l text-gray-900">
             <div className="line-clamp-2 break-words">
-              {consultation.remarque}
+              {consultation.ordonnance}
             </div>
-          </td>   <td className="px-4 py-2 whitespace-nowrap">
+          </td>   
+          <td className="px-4 py-2 whitespace-nowrap">
                       <span
                         className={`px-2 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${
                           consultation.type_consultation==="control"&&
                              "bg-yellow-100 w-15 text-yellow-700"}
+                              ${
+                          consultation.type_consultation==="En salle"&&
+                             "bg-yellow-100 w-15 text-yellow-700"}
+                             
                              ${consultation.type_consultation==="visite"&&
                               "bg-green-200   w-15 text-center text-green-700"
                              } 
@@ -237,76 +268,167 @@ export default function ConsultationsList() {
                         >
                           Voir
                         </button>
-                        <button className="text-indigo-600 hover:text-black">
-                          Modifier
-                        </button>
+                      
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7} className="px-4 py-4 text-center text-sm text-gray-500">
-                      Aucune consultation trouvée
+       <td colSpan={7} className="px-4 py-8 text-center text-xl text-gray-900">
+       Aucune consultation trouvée
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
+            </div>
           </div>
         )}
       </div>
+      <Modal open={!!selectedConsultation} onclose={() => setSelectedConsultation(null)}>
+  <div className="rounded-xl p-4 max-w-2xl w-full max-h-[80vh] overflow-auto">
+    <div className="flex justify-between items-center mb-4 bg-white">
+      <h3 className="text-3xl font-bold text-blue-700">
+        {isEditing ? "Modifier la consultation" : "Détails de la Consultation"}
+      </h3>
+      {!isEditing && (
+        <button
+          onClick={() => setIsEditing(true)}
+          className="text-sm text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700"
+        >
+          Modifier
+        </button>
+      )}
+    </div>
 
-      {selectedConsultation && (
-      <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-300 rounded-4xl p-6 max-w-2xl w-full max-h-[200vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4 bg-white">
-              <h3 className="text-3xl font-bold text-blue-700">Détails de la Consultation</h3>
-              <button 
-                onClick={() => setSelectedConsultation(null)}
-                className="text-black  hover:text-black"
+    {formConsultation && (
+      <div className="space-y-4">
+        {isEditing ? (
+          <form className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">CIN Patient</label>
+              <input
+                type="number"
+                name="cin_patient"
+                value={formConsultation.cin_patient ?? ""}
+                onChange={handleFormChange}
+                className="block w-full border-gray-300 rounded-md shadow-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Nom</label>
+              <input
+                type="text"
+                name="nom_patient"
+                value={formConsultation.nom_patient ?? ""}
+                onChange={handleFormChange}
+                className="block w-full border-gray-300 rounded-md shadow-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Prénom</label>
+              <input
+                type="text"
+                name="prenom_patient"
+                value={formConsultation.prenom_patient ?? ""}
+                onChange={handleFormChange}
+                className="block w-full border-gray-300 rounded-md shadow-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Diagnostic</label>
+              <input
+                type="text"
+                name="diagnostic"
+                value={formConsultation.diagnostic ?? ""}
+                onChange={handleFormChange}
+                className="block w-full border-gray-300 rounded-md shadow-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Ordonnance</label>
+              <input
+                type="text"
+                name="ordonnance"
+                value={formConsultation.ordonnance ?? ""}
+                onChange={handleFormChange}
+                className="block w-full border-gray-300 rounded-md shadow-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Type de consultation</label>
+              <select
+                name="type_consultation"
+                value={formConsultation.type_consultation ?? ""}
+                onChange={handleFormChange}
+                className="block w-full border-gray-300 rounded-md shadow-sm"
               >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <option value="">Sélectionner</option>
+                <option value="visite">Visite</option>
+                <option value="control">Contrôle</option>
+              </select>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4">
+              <button
+                type="button"
+                onClick={() => setIsEditing(false)}
+                className="px-4 py-2 bg-gray-300 text-black rounded-md"
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                onClick={handleSave}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                Sauvegarder
               </button>
             </div>
-            
-            <div className="space-y-4">
+          </form>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <h4 className="text-xl rounded-xl font-medium text-black bg-white">CIN Patient</h4>
-                <p className="mt-1 text-sm text-gray-900">{selectedConsultation.cin_patient}</p>
+                <h4 className="text-xl font-medium text-black">CIN</h4>
+                <p className="mt-1 text-sm text-gray-900">{formConsultation.cin_patient}</p>
               </div>
-              
               <div>
-                <h4 className="text-xl rounded-xl font-medium text-black  bg-white">Diagnostic</h4>
-                <p className="mt-1 text-sm text-gray-900 ">{selectedConsultation.diagnostic}</p>
-              </div>
-              
-              <div>
-                <h4 className="text-xl font-medium rounded-xl text-black  bg-white">Type de consultation</h4>
-                <p className="mt-1 text-sm text-gray-900">{selectedConsultation.type_consultation}</p>
-              </div>
-              
-              <div>
-                <h4 className="text-xl font-medium rounded-xl text-black  bg-white" >Remarque</h4>
-                <p className="mt-1 text-sm text-gray-900">{selectedConsultation.remarque}</p>
-              </div>
-              
-              <div>
-                <h4 className="text-xl font-medium rounded-xl text-black  bg-white">Date</h4>
+                <h4 className="text-xl font-medium text-black">Patient</h4>
                 <p className="mt-1 text-sm text-gray-900">
-                  {new Date(selectedConsultation.date).toLocaleDateString()}
+                  {formConsultation.prenom_patient} {formConsultation.nom_patient}
                 </p>
               </div>
-
-              <div>
-                <h4 className="text-xl font-medium text-black  rounded-xl bg-white">Antécédents</h4>
-                <p className="mt-1 text-sm text-gray-900">{selectedConsultation.antecedents || "N/A"}</p>
-              </div>
             </div>
-          </div>
-        </div>
-      )}
+
+            <div>
+              <h4 className="text-xl font-medium text-black">Diagnostic</h4>
+              <p className="mt-1 text-sm text-gray-900">{formConsultation.diagnostic}</p>
+            </div>
+            <div>
+              <h4 className="text-xl font-medium text-black">Ordonnance</h4>
+              <p className="mt-1 text-sm text-gray-900">{formConsultation.ordonnance}</p>
+            </div>
+            <div>
+              <h4 className="text-xl font-medium text-black">Date</h4>
+              <p className="mt-1 text-sm text-gray-900">
+                {formConsultation.date ? new Date(formConsultation.date).toLocaleDateString() : "Non disponible"}
+              </p>
+            </div>
+          </>
+        )}
+      </div>
+    )}
+  </div>
+</Modal>
+
+
+     
     </>
   );
 }
