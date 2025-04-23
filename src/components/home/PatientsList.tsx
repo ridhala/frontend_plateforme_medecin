@@ -1,30 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ajoutpatient, fetchpatient } from '../../services/serviceshome/patientservice';
+import { addpatient, Patient } from '../../types/patienttype';
+import moment from 'moment';
 
-interface Patient {
-  id: number; // Temporary ID for rendering, can be replaced with cin_patient
-  cin_patient: number; // Unique patient ID
-  nom_patient: string; // Last name
-  prenom_patient: string; // First name
-  sex: string; // Gender
-  password: string; // Password (masked for security)
-  date_naissance: string; // Birth date
-  email: string; // Email address
-  telephone: number; // Phone number
-}
+
+
 
 export default function PatientsList() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const patients: Patient[] = [
-    { id: 1, cin_patient: 123456789, nom_patient: "Dlimi", prenom_patient: "Rayen", sex: "Male", password: "********", date_naissance: "2002-03-15", email: "rayen.dlimi@example.com", telephone: 987654321 },
-    { id: 2, cin_patient: 987654321, nom_patient: "Aouini", prenom_patient: "Hakim", sex: "Male", password: "********", date_naissance: "1999-05-20", email: "hakim.aouini@example.com", telephone: 123456789 },
-    { id: 3, cin_patient: 456789123, nom_patient: "Ali", prenom_patient: "Mohamed", sex: "Male", password: "********", date_naissance: "1996-01-10", email: "mohamed.ali@example.com", telephone: 456789123 },
-    { id: 4, cin_patient: 789123456, nom_patient: "Ben Ali", prenom_patient: "Rafik", sex: "Male", password: "********", date_naissance: "1992-06-25", email: "rafik.benali@example.com", telephone: 789123456 },
-    { id: 5, cin_patient: 321654987, nom_patient: "Jalel", prenom_patient: "Yasmine", sex: "Female", password: "********", date_naissance: "1979-04-12", email: "yasmine.jalel@example.com", telephone: 321654987 },
-    { id: 6, cin_patient: 654987321, nom_patient: "Rahmeni", prenom_patient: "Nouri", sex: "Male", password: "********", date_naissance: "1986-08-30", email: "nouri.rahmeni@example.com", telephone: 654987321 },
-    { id: 7, cin_patient: 147258369, nom_patient: "Ben Jannet", prenom_patient: "Achref", sex: "Male", password: "********", date_naissance: "1986-08-30", email: "achref.bennjannet@example.com", telephone: 147258369 },
-    { id: 8, cin_patient: 258369147, nom_patient: "Mostfa", prenom_patient: "Sihem", sex: "Female", password: "********", date_naissance: "1986-08-30", email: "sihem.mostfa@example.com", telephone: 258369147 },
-    { id: 9, cin_patient: 369147258, nom_patient: "Ahmed", prenom_patient: "Ala", sex: "Male", password: "********", date_naissance: "1993-07-15", email: "ala.ahmed@example.com", telephone: 369147258 },
-  ];
+  const [listpatient, setlistpatient] = useState<Patient[]>([]);
+  const [patient, setpatient] = useState<addpatient>({
+    cin_patient: "",
+    nom_patient: "",
+    prenom_patient: "",
+    sex: "",
+    date_naissance: "",
+    email:"" ,
+    telephone: "",
+
+  });
+
+
+//affichage de patients
+  useEffect(() => {
+    const fetchPatients = async () => {
+   const list = await fetchpatient()
+   console.log(list)
+   setlistpatient(list)
+    };
+    fetchPatients();
+  }, []);
+
 
   const handleAddPatient = () => {
     setIsFormOpen(true);
@@ -34,12 +40,26 @@ export default function PatientsList() {
     setIsFormOpen(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add logic to submit form data (e.g., API call) here
-    console.log("Form submitted"); // Placeholder for submission logic
+    console.log(patient)
+await ajoutpatient(patient);
+
+    console.log("Form submitted");
     setIsFormOpen(false);
   };
+ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+     const { name, value } = e.target;
+     
+     // Handle numeric fields
+     if (name === 'cin_patient' || name === 'telephone') {
+       setpatient(prev => ({ ...prev, [name]: value === '' ? '' : Number(value) }));
+     } else {
+      setpatient(prev => ({ ...prev, [name]: value }));
+     }
+   } ;
+ 
+  
 
   return (
     <div className="space-y-6 w-full">
@@ -57,33 +77,53 @@ export default function PatientsList() {
         <div className="bg-white shadow-md rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Ajouter un nouveau patient</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
+            
             <div>
-              <label className="block text-sm font-medium text-gray-700">CIN</label>
+              <label htmlFor="cin" className="block text-sm font-medium text-gray-700">CIN</label>
               <input
+                id="cin"
+                name="cin_patient"
+                value={patient.cin_patient}
+                onChange={handleChange}
                 type="number"
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-700">Nom</label>
+              <label htmlFor="nom" className="block text-sm font-medium text-gray-700">Nom</label>
               <input
+                id="nom_patient"
+                name="nom_patient"
+                value={patient.nom_patient}
+                onChange={handleChange}
                 type="text"
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-700">Prénom</label>
+              <label htmlFor="prenom" className="block text-sm font-medium text-gray-700">Prénom</label>
               <input
+                id="prenom_patient"
+                name="prenom_patient"
+                value={patient.prenom_patient}
+                onChange={handleChange}
                 type="text"
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-700">Sexe</label>
+              <label htmlFor="sex" className="block text-sm font-medium text-gray-700">Sexe</label>
               <select
+                id="sex"
+                name="sex"
+                value={patient.sex}
+                onChange={handleChange}
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               >
@@ -92,38 +132,33 @@ export default function PatientsList() {
                 <option value="Female">Female</option>
               </select>
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-700">Mot de passe</label>
+              <label htmlFor="date_naissance" className="block text-sm font-medium text-gray-700">Date de Naissance</label>
               <input
-                type="password"
-                required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Date de Naissance</label>
-              <input
+                id="date_naissance"
+                name="date_naissance"
+                value={patient.date_naissance}
+                onChange={handleChange}
                 type="date"
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <label htmlFor="telephone" className="block text-sm font-medium text-gray-700">Téléphone</label>
               <input
-                type="email"
-                required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Téléphone</label>
-              <input
+                id="telephone"
+                name="telephone"
+                value={patient.telephone}
+                onChange={handleChange}
                 type="number"
                 required
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
             </div>
+
             <div className="flex justify-end space-x-4">
               <button
                 type="button"
@@ -144,72 +179,74 @@ export default function PatientsList() {
       ) : (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-300">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  CIN
+              <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
+              CIN
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                   Nom
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                   Prénom
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="sticky top-0 px-4 py-3 w-5  text-left text-l font-medium text-black uppercase tracking-wider">
                   Sexe
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                   Date de Naissance
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                
+                <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                   Téléphone
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {patients.map((patient) => (
-                <tr
-                  key={patient.id}
-                  className="hover:bg-gray-50 transition-colors duration-200"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+  {listpatient.length > 0 ? (
+    listpatient.map((patient) => (
+      <tr
+        key={patient._id}
+        className="hover:bg-gray-50 transition-colors duration-200"
+      >
+                    <td className="px-4 py-4 whitespace-nowrap text-m font-bold text-gray-900">
                     {patient.cin_patient}
+        </td>
+        <td className="px-4 py-2 whitespace-nowrap text-m text-gray-900">
+        {patient.nom_patient}
+       </td>
+       <td className="px-4 py-2 whitespace-nowrap text-m text-gray-900">
+       {patient.prenom_patient}
+        </td>
+        <td className="px-4 py-2 w-5 whitespace-nowrap text-m text-gray-900">
+        {patient.sex}
+        </td>
+        <td className="px-4 py-2 whitespace-nowrap text-m text-gray-900">
+ {moment(patient.date_naissance).format('DD/MM/YYYY')}
+        </td>
+  
+        <td className="px-4 py-2 whitespace-nowrap text-m text-gray-900">
+        {patient.telephone}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+         
+          <button className="text-indigo-600 hover:text-indigo-900">
+            Modifier
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+       <td colSpan={7} className="px-4 py-8 text-center text-xl text-gray-900">
+                    Aucun patient trouvé
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{patient.nom_patient}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {patient.prenom_patient}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {patient.sex}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {patient.date_naissance}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {patient.email}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {patient.telephone}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-teal-600 hover:text-teal-900 mr-4">
-                      Voir
-                    </button>
-                    <button className="text-indigo-600 hover:text-indigo-900">
-                      Modifier
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+    </tr>
+  )}
+</tbody>
           </table>
         </div>
       )}

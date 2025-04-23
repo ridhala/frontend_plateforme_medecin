@@ -1,15 +1,17 @@
 import axios from "axios"
 import { MedecinProfile } from "../../types/profilemedecin"
-export const update = async (credentials: Partial<MedecinProfile>) : Promise<MedecinProfile>=>{
+import { profileformData } from "../../types/doctorregistertype"
+export const update = async (credentials: profileformData) : Promise<MedecinProfile>=>{
     try{
-       const response =await axios.put("http://localhost:3000/profil/updateprofil",credentials,{
+       const response =await axios.post("http://localhost:3000/update/updateprofile",credentials,{
     withCredentials: true, // Pour envoyer les cookies
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`
     }
 
-  })
+  })  
+    console.log(response.data.utilisateur)
+
  return response.data.utilisateur;
 }
 
