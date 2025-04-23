@@ -13,6 +13,8 @@ import SpecialtySelector from './pages/specialite';
 import SalleAttente from './pages/SalleAttente';
 import ListeMedecins from './pages/ListeMedecins';
 import RegisterSecretaire from './pages/registerSecritaire';
+import DossierMedicale from './pages/DossierMedicale';
+
 
 function App() {
   return (
@@ -49,6 +51,8 @@ function App() {
 
          {/* Route pour l'inscription des secrétaires */}
          <Route path="/register-secretaire" element={<RegisterSecretaire />} />
+
+         <Route path="/dossier" element={<DossierMedicale />} />
       </Routes>
     </Router>
     
