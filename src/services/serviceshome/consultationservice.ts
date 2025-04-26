@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Consultation } from "../../types/consultationtype";
+import { Consultation, Consultations } from "../../types/consultationtype";
 
 export const getconsultation = async()=>{
     try {
@@ -22,7 +22,7 @@ export const getconsultation = async()=>{
         }
       }
 }
-export const postconsultation = async (credentials:Consultation)=>{
+export const postconsultation = async (credentials:Consultations)=>{
   try{
 
     const response = await axios.post("http://localhost:3000/consultation",credentials,{

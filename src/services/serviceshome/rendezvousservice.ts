@@ -1,6 +1,5 @@
 import axios from "axios"
-import { Appointments } from "../../types/rendezvoustype";
-// affichage des rendez-vous
+import { Appointments, RendezvousUpdateData } from "../../types/rendezvoustype";
 export const getrendezvous =async ()=>{
 try{
 
@@ -46,7 +45,7 @@ export const getrendezvousbydate =async (date :Date| string)=>{
 
 
 
-// ajouter rendez-vous
+// ajouter rendez-vous "http://localhost:3000/rendezvous/update/:id"
 export const postrendezvous = async (credentials:Appointments)=>{
   try{
 
@@ -69,3 +68,24 @@ export const postrendezvous = async (credentials:Appointments)=>{
       throw new Error('Une erreur inconnue est survenue.');
     }
   }}
+
+
+
+
+export const updateRendezvous = async (_id: string, updateData: RendezvousUpdateData) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:3000/rendezvous/update/${_id}`, // Adjust endpoint if different
+      updateData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating rendezvous:', error);
+    throw error;
+  }
+};

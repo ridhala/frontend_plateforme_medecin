@@ -12,7 +12,8 @@ const ProfilMedecin = () => {
     email: "",
     telephone_personnel: "",
     adresse_cabinet: "",
-    telephone_cabinet: ""
+    telephone_cabinet: "",
+    bio: ""
   });
 
   const [stateprofil, setstateprofil] = useState(false);
@@ -20,7 +21,7 @@ const ProfilMedecin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -29,27 +30,28 @@ const ProfilMedecin = () => {
 
     if (!profileData) return;
 
-    // Créer un objet combiné qui garde les anciennes données si champ vide
     const formDataToSend = Object.keys(form).reduce((acc: any, key) => {
       acc[key] = form[key as keyof profileformData] !== "" && form[key as keyof profileformData] !== null
         ? form[key as keyof profileformData]
         : profileData[key as keyof MedecinProfile];
       return acc;
     }, {});
-// Vérifier s'il y a une différence
-const isChanged = Object.keys(form).some((key) => {
-  const formValue = form[key as keyof profileformData];
-  const existingValue = profileData[key as keyof MedecinProfile];
-  return formValue !== "" && formValue?.toString() !== existingValue?.toString();
-});
+
+    const isChanged = Object.keys(form).some((key) => {
+      const formValue = form[key as keyof profileformData];
+      const existingValue = profileData[key as keyof MedecinProfile];
+      return formValue !== "" && formValue?.toString() !== existingValue?.toString();
+    });
+
     try {
       if(isChanged){
-      const updateprofil = await update(formDataToSend);
-      if (updateprofil) {
-        console.log("success", updateprofil);
-        setProfileData(updateprofil);
-        window.location.reload();
-       }
+        const updateprofil = await update(formDataToSend);
+        if (updateprofil) {
+          console.log("success", updateprofil);
+          setProfileData(updateprofil);
+          setstateprofil(false);
+          window.location.reload();
+        }
       }
     } catch (err) {
       console.log("erreur d'update", err);
@@ -67,6 +69,10 @@ const isChanged = Object.keys(form).some((key) => {
         });
 
         setProfileData(response.data.utilisateur);
+        // Initialize form with existing bio if available
+        if (response.data.utilisateur?.bio) {
+          setForm(prev => ({...prev, bio: response.data.utilisateur.bio}));
+        }
       } catch (err) {
         console.error('Erreur:', err);
         setError('Erreur lors du chargement du profil');
@@ -104,152 +110,220 @@ const isChanged = Object.keys(form).some((key) => {
     );
   }
 
-  return (!stateprofil ?
-    <div className="h-140 w-full mx-auto bg-gray-300 rounded-xl shadow-md overflow-hidden">
+  return (!stateprofil ? (
+    <div className="max-w-4xl mx-auto my-8 bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="md:flex">
-        <div className="md:w-1/3 p-8 flex flex-col items-center">
-          <div className="relative mb-6">
-            <h2 className="text-xl font-bold text-gray-800">
-              Dr {profileData?.prenom} {profileData?.nom}
-            </h2>
-            <br />
+        {/* Doctor Photo Section */}
+        <div className="md:w-1/3 bg-gradient-to-b from-blue-50 to-blue-100 p-8 flex flex-col items-center">
+          <div className="relative mb-6 w-full flex flex-col items-center">
             {profileData?.photo_profil ? (
               <img
                 src={profileData.photo_profil}
                 alt="Photo de profil"
-                className="w-50 h-50 rounded-full object-cover border-8 border-white shadow-lg"
+                className="w-40 h-40 rounded-full object-cover border-4 border-white shadow-xl"
               />
             ) : (
-              <div className="w-40 h-40 rounded-full bg-gray-300 flex items-center justify-center">
-                <span className="text-gray-500">Pas de photo</span>
+              <div className="w-40 h-40 rounded-full bg-blue-200 flex items-center justify-center shadow-xl">
+                <span className="text-blue-600 text-xl font-bold">
+                  {profileData?.prenom?.charAt(0)}{profileData?.nom?.charAt(0)}
+                </span>
               </div>
             )}
+            
+            <div className="mt-6 text-center">
+              <h2 className="text-2xl font-bold text-gray-800">
+                Dr. {profileData?.prenom} {profileData?.nom}
+              </h2>
+              <p className="text-blue-600 font-medium mt-2">{profileData?.nom_specialite}</p>
+              
+              <div className="mt-6">
+                <button 
+                  onClick={() => setstateprofil(true)}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                  Modifier le profil
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* Doctor Information Section */}
         <div className="md:w-2/3 p-8">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6">Informations du profil</h1>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600">Nom complet</label>
-              <p className="mt-1 p-2 bg-gray-50 rounded">
-                {profileData?.prenom} {profileData?.nom}
-              </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">Specialité</label>
-              <p className="mt-1 p-2 bg-gray-50 rounded">
-                {profileData?.nom_specialite}
-              </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">Email</label>
-              <p className="mt-1 p-2 bg-gray-50 rounded">{profileData?.email}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">Téléphone Personnel</label>
-              <p className="mt-1 p-2 bg-gray-50 rounded">{profileData?.telephone_personnel}</p>
-            </div>
-            {profileData?.telephone_cabinet && (
-              <div>
-                <label className="block text-sm font-medium text-gray-600">Téléphone Cabinet</label>
-                <p className="mt-1 p-2 bg-gray-50 rounded">{profileData.telephone_cabinet}</p>
+          <h1 className="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-200">Informations du profil</h1>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Informations personnelles</h3>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs font-medium text-gray-400">Nom complet</p>
+                  <p className="text-gray-700 font-medium">
+                    {profileData?.prenom} {profileData?.nom}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-400">Email</p>
+                  <p className="text-gray-700 font-medium">{profileData?.email}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-400">Téléphone</p>
+                  <p className="text-gray-700 font-medium">{profileData?.telephone_personnel}</p>
+                </div>
               </div>
-            )}
-            <div className="pt-4">
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-                onClick={() => setstateprofil(true)}>
-                Modifier le profil
-              </button>
             </div>
+
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Informations du cabinet</h3>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs font-medium text-gray-400">Adresse</p>
+                  <p className="text-gray-700 font-medium">
+                    {profileData?.adresse_cabinet || "Non renseignée"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-400">Téléphone</p>
+                  <p className="text-gray-700 font-medium">
+                    {profileData?.telephone_cabinet || "Non renseigné"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bio Section */}
+          <div className="mt-6 bg-gray-50 p-4 rounded-lg">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">À propos</h3>
+            <p className="text-gray-700 whitespace-pre-line">
+              {profileData?.bio || "Le Dr. n'a pas encore ajouté de description."}
+            </p>
           </div>
         </div>
       </div>
     </div>
-    : (<form onSubmit={handleSubmit} className="space-y-2 text-gray-700">
-      <div className="flex flex-col">
-        <label className="font-medium">Nom :</label>
-        <input
-          type="text"
-          name="nom"
-          value={form.nom}
-          placeholder={profileData?.nom}
-          onChange={handleChange}
-          className="border p-2 rounded-md"
-        />
-      </div>
-      <div className="flex flex-col">
-        <label className="font-medium">Prenom :</label>
-        <input
-          type="text"
-          name="prenom"
-          value={form.prenom}
-          placeholder={profileData?.prenom}
-          onChange={handleChange}
-          className="border p-2 rounded-md"
-        />
-      </div>
-      <div className="flex flex-col">
-        <label className="font-medium">Email :</label>
-        <input
-          type="email"
-          name="email"
-          placeholder={profileData?.email}
-          value={form.email}
-          onChange={handleChange}
-          className="border p-2 rounded-md"
-        />
-      </div>
-      <div className="flex flex-col">
-        <label className="font-medium">Téléphone :</label>
-        <input
-          type="text"
-          name="telephone_personnel"
-          value={form.telephone_personnel}
-          placeholder={profileData?.telephone_personnel?.toString()}
-          onChange={handleChange}
-          className="border p-2 rounded-md"
-        />
-      </div>
-      <div className="flex flex-col">
-        <label className="font-medium">Téléphone de cabinet :</label>
-        <input
-          type="number"
-          name="telephone_cabinet"
-          value={form.telephone_cabinet}
-          placeholder={profileData?.telephone_cabinet?.toString()}
-          onChange={handleChange}
-          className="border p-2 rounded-md"
-        />
-      </div>
-      <div className="flex flex-col">
-        <label className="font-medium">Adresse cabinet:</label>
-        <input
-          type="text"
-          name="adresse_cabinet"
-          placeholder={profileData?.adresse_cabinet}
-          value={form.adresse_cabinet}
-          onChange={handleChange}
-          className="border p-2 rounded-md"
-        />
-      </div>
-      <div className="mt-6 text-center">
+  ) : (
+    <div className="max-w-2xl mx-auto my-8 bg-white rounded-xl shadow-lg overflow-hidden p-6">
+      <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-800">Modifier le profil</h2>
         <button
-          type="submit"
-          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-        >
-          Sauvegarder
-        </button>
-        <button
-          type="button"
           onClick={() => setstateprofil(false)}
-          className="ml-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+          className="text-gray-500 hover:text-gray-700"
         >
-          Annuler
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
       </div>
-    </form>)
-  );
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              name="nom"
+              value={form.nom}
+              placeholder={profileData?.nom}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+            <input
+              type="text"
+              name="prenom"
+              value={form.prenom}
+              placeholder={profileData?.prenom}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder={profileData?.email}
+              value={form.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone personnel</label>
+            <input
+              type="text"
+              name="telephone_personnel"
+              value={form.telephone_personnel}
+              placeholder={profileData?.telephone_personnel?.toString()}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone cabinet</label>
+            <input
+              type="number"
+              name="telephone_cabinet"
+              value={form.telephone_cabinet}
+              placeholder={profileData?.telephone_cabinet?.toString()}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse cabinet</label>
+            <input
+              type="text"
+              name="adresse_cabinet"
+              placeholder={profileData?.adresse_cabinet}
+              value={form.adresse_cabinet}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Biographie</label>
+            <textarea
+              name="bio"
+              placeholder="Décrivez votre parcours, vos spécialités, etc."
+              value={form.bio}
+              onChange={handleChange}
+              rows={3}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end space-x-4 pt-4">
+          <button
+            type="button"
+            onClick={() => setstateprofil(false)}
+            className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Enregistrer les modifications
+          </button>
+        </div>
+      </form>
+    </div>
+  ));
 };
 
 export default ProfilMedecin;

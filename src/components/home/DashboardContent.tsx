@@ -74,12 +74,12 @@ const [prenom, setprenom]= useState("")
       </div>
 
       {/* Statistics Section */}
-      <div className="mb-4">
+      <div className="mb-3">
         <StatisticsSection activeSection={activeSection} />
       </div>
 
       {/* Dynamic Content Section */}
-      <div className="grid grid-cols-1 gap-6 w-300">
+      <div className="grid grid-cols-1 gap-5 w-300">
         {activeSection === "patients" && (
           <div className="bg-white p-4 rounded-lg shadow-lg w-full">
             <PatientsList />

@@ -1,11 +1,12 @@
   import React, { useEffect, useState } from 'react';
-  import { getrendezvous, postrendezvous } from '../../services/serviceshome/rendezvousservice';
-  import { Appointment, Appointments, convert } from '../../types/rendezvoustype';
+  import { getrendezvous, postrendezvous,updateRendezvous  } from '../../services/serviceshome/rendezvousservice';
+  import { Appointment, Appointments, convert, RendezvousUpdateData } from '../../types/rendezvoustype';
   import moment from 'moment';
   import DatePicker from "react-datepicker";
   import "react-datepicker/dist/react-datepicker.css";
   import axios from 'axios';
 import { Modal } from './pop-up/modal';
+import { format } from 'date-fns';
 
   export default function AppointmentsList() {
    // for pop-up
@@ -20,6 +21,10 @@ const closePopup = () => {
   setIsPopupOpen(false);
   setSelectedAppointment(null);
 };
+const [selectedTime, setSelectedTime] = useState<Date | null>(null);
+const[ dateupdates, setdateupdates] = useState<string | null>("")
+
+
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
     const [availableTimes, setAvailableTimes] = useState<Date[]>([]);
@@ -33,20 +38,52 @@ const closePopup = () => {
     cin_patient: "", telephone: "", type:"",  specialite: "", 
     status: "" })
 
-    const [updateappointments, setupdateappointments]= useState<Appointments>({ 
-      date_rendez_vous: "",prenom_patient: "" , nom_patient: "", 
-      cin_patient: "",telephone: "",type:"",specialite: "", status: "" })
       // prop change
-      const handleChanges = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      const handleChanges = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setSelectedAppointment((prev) => {
-          if (!prev) return prev; // Si null, ne rien faire
-          return {
-            ...prev,
-            [name]: value,
-          };
-        });
+        setSelectedAppointment((prev) => prev ? { ...prev, [name]: value } : prev);
+
       };
+      const handleSubmits = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (!selectedAppointment) return;
+      
+        try {
+          const fd =selectedDate?.toISOString().split('T')[0];
+        
+          
+             
+              const updateData: RendezvousUpdateData = {
+            nom_patient: selectedAppointment.nom_patient ,
+            prenom_patient: selectedAppointment.prenom_patient,
+            telephone: selectedAppointment.telephone === "" ? undefined : Number(selectedAppointment.telephone),
+            cin_patient: selectedAppointment.cin_patient === "" ? undefined : Number(selectedAppointment.cin_patient),
+            date_rendez_vous:dateupdates ? moment(dateupdates, "DD-MM-YYYYTHH:mm").toDate(): undefined,
+            status: typeof selectedAppointment.status === 'string' ? selectedAppointment.status : undefined
+          };
+      console.log(updateData)
+          // Call update function (replace with your actual update function)
+          await updateRendezvous(selectedAppointment._id.toString(), updateData);
+      
+          console.log("Rendez-vous mis à jour");
+          
+          // Refresh appointments
+          const updatedRendezvous = await getrendezvous();
+          setrendezvous(updatedRendezvous);
+      setIsPopupOpen(false)
+          // Close form and reset
+          setIsFormOpen("affichage");
+          setSelectedAppointment(null);
+           setSelectedDate(null)
+           setSelectedTime(null)
+          window.location.reload()
+        } catch (error) {
+          console.error("Erreur lors de la mise à jour du rendez-vous :", error);
+          // Add user feedback here (e.g., toast notification)
+        }
+      };
+
     
   //convert rendezvous to consultation
   const [convconsult]= useState<convert>({ 
@@ -114,6 +151,10 @@ const closePopup = () => {
         setappointments(prev => ({ ...prev, [name]: value }));
       }
     } ;
+
+   
+    
+
     const handleSubmit =async (e: React.FormEvent) => {
       e.preventDefault();
 
@@ -123,7 +164,6 @@ const closePopup = () => {
       const updatedRendezvous = await getrendezvous();
       setrendezvous(updatedRendezvous); 
         setIsFormOpen("affichage");
-        window.location.reload()
         setappointments({ 
           date_rendez_vous: "",
           prenom_patient: "" ,
@@ -133,6 +173,8 @@ const closePopup = () => {
           type:"",
           specialite: "", 
           status: "" })
+          window.location.reload();
+
     };
 
   useEffect(()=>{
@@ -142,6 +184,7 @@ const closePopup = () => {
     }
     affichage()
   },[])
+
     return (
       <div className="space-y-6 w-full">
         <div className="flex justify-between items-center w-full">
@@ -157,143 +200,141 @@ const closePopup = () => {
 
         {isFormOpen==="ajout" && (
           <div className="bg-white shadow-md rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Ajouter un nouveau rendez-vous</h3>
           <div className='flex '>
-            <div className='w-4/3'>
-            <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-    <label className="block text-sm font-medium text-gray-700">jour de rendez vous </label>
-    <DatePicker
-      selected={selectedDate}
-      onChange={(date: Date | null) => {
-        if (date) {
-          //  Créer une nouvelle date en forçant le fuseau tunisien
-          const tunisianDateStr = date.toLocaleDateString('fr-TN',
-            
-            { timeZone: 'Africa/Tunis',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-          });
-          // Convertir en Date (méthode robuste)
-          const [day, month, year] = tunisianDateStr.split('/');
-          const correctedDate = new Date(`${year}-${month}-${day}T12:00:00`);
-          setSelectedDate(correctedDate);
-        } 
-        else {
-          setSelectedDate(null);
-        }
-      }}
+          <div className=" shadow-lg rounded-2xl p-3 w-4xl mx-auto">
+  <h2 className="text-2xl font-bold text-teal-700 mb-6 border-b pb-2">
+    📅 Nouveau Rendez-vous
+  </h2>
 
-    timeCaption="Heure"
-    timeIntervals={30}
-      dateFormat="dd/MM/yyyy"
-      minDate={new Date()}
-      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-      placeholderText="Choisir une date et heure"
-    />
-  </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700">CIN Patient</label>
-                <input
-                  type="number"
-                  name='cin_patient'
-                  value={appointments.cin_patient}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Prénom Patient</label>
-                <input
-                  type="text"
-                  name='prenom_patient'
-                  value={appointments.prenom_patient}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Nom Patient</label>
-                <input
-                  type="text"
-                  name='nom_patient'
-                  value={appointments.nom_patient}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-                />
-              </div>
-          
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Type de Consultation</label>
-                <select
-                  required
-                  name='type'
-                  value={appointments.type?.toString()}
-                  onChange={handleChange}
+  <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    
+    <div className="md:col-span-2">
+      <label className="block text-sm font-medium text-gray-700">Jour de rendez-vous</label>
+      <DatePicker
+        selected={selectedDate}
+        onChange={(date: Date | null) => {
+          if (date) {
+            const tunisianDateStr = date.toLocaleDateString('fr-TN', {
+              timeZone: 'Africa/Tunis',
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit'
+            });
+            const [day, month, year] = tunisianDateStr.split('/');
+            const correctedDate = new Date(`${year}-${month}-${day}T12:00:00`);
+            setSelectedDate(correctedDate);
+          } else {
+            setSelectedDate(null);
+          }
+        }}
+        dateFormat="dd/MM/yyyy"
+        minDate={new Date()}
+        className="mt-1 w-3xl border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+        placeholderText="Choisir une date"
+      />
+    </div>
 
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-                >
-                  <option value="">Sélectionner</option>
-                  <option value="visite">visite</option>
-                  <option value="control">control</option>
+    <div>
+      <label className="block text-sm font-medium text-gray-700">CIN Patient</label>
+      <input
+        type="number"
+        name="cin_patient"
+        value={appointments.cin_patient}
+        onChange={handleChange}
+        required
+        className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+      />
+    </div>
 
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Prénom Patient</label>
+      <input
+        type="text"
+        name="prenom_patient"
+        value={appointments.prenom_patient}
+        onChange={handleChange}
+        required
+        className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+      />
+    </div>
 
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Téléphone</label>
-                <input
-                  type="number"
-                  name='telephone'
-                  value={appointments.telephone}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-                />
-              </div>
-            
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Statut</label>
-                <select
-                  required
-                  name='status'
-                  value={appointments.status.toString()}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-                >
-                  <option value="">Sélectionner</option>
-                  <option value="En attente">En attente</option>
-                  <option value="Confirmé">Confirmé</option>
-                  <option value="En salle d'attente">En Salle d'Attente</option>
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Nom Patient</label>
+      <input
+        type="text"
+        name="nom_patient"
+        value={appointments.nom_patient}
+        onChange={handleChange}
+        required
+        className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+      />
+    </div>
 
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Type de Consultation</label>
+      <select
+        required
+        name="type"
+        value={appointments.type?.toString()}
+        onChange={handleChange}
+        className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+      >
+        <option value="">Sélectionner</option>
+        <option value="visite">Visite</option>
+        <option value="control">Contrôle</option>
+      </select>
+    </div>
 
-                </select>
-              </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  onClick={handleCloseForm}
-                  className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors"
-                >
-                  Ajouter
-                </button>
-              </div>
-            </form>
-            </div>
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Téléphone</label>
+      <input
+        type="number"
+        name="telephone"
+        value={appointments.telephone}
+        onChange={handleChange}
+        required
+        className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Statut</label>
+      <select
+        required
+        name="status"
+        value={appointments.status.toString()}
+        onChange={handleChange}
+        className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+      >
+        <option value="">Sélectionner</option>
+        <option value="En attente">En attente</option>
+        <option value="Confirmé">Confirmé</option>
+        <option value="En salle d'attente">En salle d'attente</option>
+      </select>
+    </div>
+
+    <div className="flex items-end justify-end gap-4 md:col-span-2">
+      <button
+        type="button"
+        onClick={handleCloseForm}
+        className="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 transition"
+      >
+        Annuler
+      </button>
+      <button
+        type="submit"
+        className="px-6 py-2 bg-teal-600 text-white rounded-xl hover:bg-teal-700 transition shadow"
+      >
+        Ajouter
+      </button>
+    </div>
+  </form>
+</div>
+
 
   <div className="w-1/3 pl-6 border-l">
     <h4 className="text-md font-medium text-gray-700 mb-3">Available Times</h4>
-    {availableTimes.length > 0 ? (
+    {availableTimes.length > 0 || selectedDate ? (
       <div className="flex flex-wrap gap-2">
         {availableTimes.map((time, index) => {
     // Format time as HH:mm
@@ -301,7 +342,6 @@ const closePopup = () => {
       hour: '2-digit', 
       minute: '2-digit',
       hour12: false ,
-      hourCycle: 'h23'
     });
 
     return (
@@ -383,7 +423,7 @@ const closePopup = () => {
                         {appointment.cin_patient}
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap text-m text-gray-900">
-                        {appointment.prenom_patient} {appointment.nom_patient}
+                       <div className='line-clamp-2 break-words'> {appointment.prenom_patient} {appointment.nom_patient}</div>
                       </td>
                       
                       <td className="px-4 py-2 whitespace-nowrap text-m text-gray-900">
@@ -401,41 +441,38 @@ const closePopup = () => {
                                 "bg-green-200   w-15 text-center text-green-700")
                               }  ${ appointment.status==="En salle d'attente"&&(
                                 "bg-blue-500  w-15 text-center text-black")
-                              } 
-                        `}
-                        >
-                          { appointment.status==="En salle d'attente"&&(
-                            "En salle"
-                          )}
-                          { appointment.status==="En attente"&&(
-                            "En attente"
-                          )} { appointment.status==="Confirmé"&&(
-                            "Confirmé"
-                          )}
+                              }` } >
+
+                          { appointment.status==="En salle d'attente"&&( "En salle")} 
+                           { appointment.status==="En attente"&&( "En attente" )} 
+                            { appointment.status==="Confirmé"&&(  "Confirmé")}
                         </span>
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap text-m  text-gray-900">
                       {moment(appointment.date_rendez_vous).format('DD/MM/YYYY')}
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap text-m  text-gray-900">
-                      {moment(appointment.date_rendez_vous).format('HH:MM')}
+                      {moment(appointment.date_rendez_vous).format('HH:mm')}
                       </td>
                      
                       <td className="px-2 py-2 font-medium space-x-1">
                       <button 
-                    className="bg-blue-200 rounded-lg hover:text-black text-xl"
+                    className="bg-blue-200 rounded-lg hover:text-black "
                       onClick={() => openEditPopup(appointment)}>
                         Modifier
                       </button>
-                        <button className="bg-teal-500 rounded-lg hover:text-black text-xl"
+                      <button 
+                    className="bg-red-600 rounded-lg hover:text-black">
+                        Supprimer
+                      </button>
+                        <button className="bg-teal-500 rounded-lg hover:text-black"
                         onClick={()=>{convconsult._id = appointment._id;
                           converttoconsultation(convconsult)
                           window.location.reload();
                         }}>
                           entrer
                         </button>
-                      </td>
-                    </tr>
+                      </td></tr>               
                   ))
                 ) : (
                   <tr>
@@ -443,19 +480,22 @@ const closePopup = () => {
         Aucun rendez-vous trouvé
                     </td> </tr>
                 )}
-              </tbody></table>
+              </tbody>
+              </table>
           </div>
         </div>
           )} 
 
          <Modal open={isPopupOpen} onclose={closePopup}>
   {selectedAppointment  && (
-      <div> <h2 className="text-lg font-semibold mb-4">Modifier le rendez-vous</h2>
+      <div> 
+        <h2 className="text-lg font-semibold mb-4">Modifier le rendez-vous</h2>
       <form
-        onSubmit={handleAddAppointment} // À implémenter dans ton composant
-        className="space-y-4"
+        onSubmit={handleSubmits} // À implémenter dans ton composant
+        className="space-y-4 "
       >
-        <div>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <div>
           <label className="block font-medium">Nom</label>
           <input
             type="text"
@@ -476,7 +516,9 @@ const closePopup = () => {
             onChange={handleChanges}
             className="w-full border rounded p-2 bg-gray-100"
           /></div>
- 
+ </div>
+ <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+
         <div>
           <label className="block font-medium">CIN</label>
           <input
@@ -496,11 +538,95 @@ const closePopup = () => {
             onChange={handleChanges}
             className="w-full border rounded p-2 bg-gray-100"
           />
+         
+        </div> 
         </div>
+        
+      
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div>
+      <label className="block font-medium">Date rendez-vous</label>
+
+        <DatePicker
+        selected={selectedDate}
+        onChange={(date: Date | null) => {
+  if (date) {
+    const tunisianDateStr = date.toLocaleDateString('fr-TN', {
+      timeZone: 'Africa/Tunis',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const [day, month, year] = tunisianDateStr.split('/');
+    const correctedDate = new Date(`${year}-${month}-${day}T12:00:00`);
+    setSelectedDate(correctedDate);console.log(selectedDate)
+    setSelectedAppointment((prev) => prev ? { ...prev, date: correctedDate } : prev);
+  } else {
+    setSelectedDate(null);
+  }
+}}
+        dateFormat="dd/MM/yyyy"
+        minDate={new Date()}
+        className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+        placeholderText="Choisir une date"
+      /> </div>
+        <div>
+      <label className="block font-medium">Statut</label>
+      <select
+        required
+        name="status"
+        value={selectedAppointment.status.toString()}
+        onChange={handleChanges}
+        className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+      >
+        <option value="">Sélectionner</option>
+        <option value="En attente">En attente</option>
+        <option value="Confirmé">Confirmé</option>
+        <option value="En salle d'attente">En salle d'attente</option>
+      </select>
+    </div>
+      
+      </div>
+
+
+
+   {availableTimes.length > 0 && (
+  <div className="mt-1">
+    <label className="block font-medium mb-2">Créneaux disponibles</label>
+    <div className="grid grid-cols-4 gap-2">
+      {availableTimes.map((time, idx) => (
+        <button
+        type="button"
+          key={idx}
+          onClick={() => {
+  
+            setSelectedTime(time); 
+           const formatted = moment(time).format("DD-MM-YYYYTHH:mm");
+           setdateupdates(formatted)
+            console.log(formatted)
+            
+            setSelectedAppointment((prev) => prev ? { ...prev, heure: time } : prev);
+          }}
+          className={`p-2 border rounded ${
+            selectedTime === time 
+              ? 'bg-teal-600 text-white' // Color for selected
+              : 'bg-blue-500 text-white hover:bg-blue-600' // Color for unselected with hover effect
+          }`}
+        >
+          {typeof time === 'string' ? time : time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
+      { /*////////////////////////*/}
         <div className="flex justify-center mt-4">
           <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" 
+            onClick={()=>{ setIsPopupOpen(false);
+              handleSubmits
+          }}
           >
             Enregistrer
           </button>
@@ -509,9 +635,6 @@ const closePopup = () => {
     </div>
   )}
 </Modal>
-
-
         </div>
-      
     );
   }

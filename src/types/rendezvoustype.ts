@@ -10,8 +10,17 @@ export interface Appointment {
   medecin: string; 
   status: boolean|string
 }
+export interface RendezvousUpdateData {
+  nom_patient?: string
+  prenom_patient?: string
+  telephone?: number
+  cin_patient?: number 
+  date_rendez_vous?: Date | null;
+  status?: string;
+}
+
 export interface Appointments {
-  date_rendez_vous: string;
+  date_rendez_vous: string | "";
   prenom_patient: string; 
   nom_patient: string; 
   cin_patient: number|""; 

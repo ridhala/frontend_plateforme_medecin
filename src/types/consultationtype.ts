@@ -7,5 +7,14 @@ export interface Consultation {
     ordonnance: string;
     type_consultation: string;
     date: string;
-    antecedents: string;
+  }
+
+  export interface Consultations {
+    cin_patient: number | null;
+    prenom_patient :string;
+    nom_patient :string;
+    diagnostic: string;
+    ordonnance: string;
+    type_consultation: string;
+    date: string;
   }

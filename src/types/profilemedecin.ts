@@ -9,4 +9,5 @@ export interface MedecinProfile {
   adresse_cabinet: string;
   nom_specialite: string;
   photo_profil: string;
+  bio:string;
 }
