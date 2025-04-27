@@ -43,3 +43,42 @@ export const postconsultation = async (credentials:Consultations)=>{
       throw new Error('Une erreur inconnue est survenue.');
     }
   }}
+
+  export const updateconsultation = async (_id: string | null, updateData: Consultation | null) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/consultation/update/${_id}`, // Adjust endpoint if different
+        updateData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error updating rendezvous:', error);
+      throw error;
+    }
+  };
+
+  export const deleteconsultation = async (id: string) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/consultation/delete/${id}` , {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        }
+      });
+  
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message || 'probléme de suppression.'
+        );
+      } else {
+        throw new Error('Une erreur inconnue est survenue.');
+      }
+    }
+  };
+  

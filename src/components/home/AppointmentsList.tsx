@@ -1,5 +1,5 @@
   import React, { useEffect, useState } from 'react';
-  import { getrendezvous, postrendezvous,updateRendezvous  } from '../../services/serviceshome/rendezvousservice';
+  import { deleterendezvous, getrendezvous, postrendezvous,updateRendezvous  } from '../../services/serviceshome/rendezvousservice';
   import { Appointment, Appointments, convert, RendezvousUpdateData } from '../../types/rendezvoustype';
   import moment from 'moment';
   import DatePicker from "react-datepicker";
@@ -7,6 +7,7 @@
   import axios from 'axios';
 import { Modal } from './pop-up/modal';
 import { format } from 'date-fns';
+import { ConfirmModal } from './pop-up/deletemodal';
 
   export default function AppointmentsList() {
    // for pop-up
@@ -16,14 +17,19 @@ const openEditPopup = (appointment: Appointment) => {
   setSelectedAppointment(appointment);
   setIsPopupOpen(true);
 };
-// 
+
 const closePopup = () => {
   setIsPopupOpen(false);
   setSelectedAppointment(null);
 };
+
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [iddelete, setiddelete] = useState<string | null>("");
+
+
+
 const [selectedTime, setSelectedTime] = useState<Date | null>(null);
 const[ dateupdates, setdateupdates] = useState<string | null>("")
-
 
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -35,7 +41,7 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
 
     const [appointments, setappointments]= useState<Appointments>({ 
     date_rendez_vous: "", prenom_patient: "" , nom_patient: "", 
-    cin_patient: "", telephone: "", type:"",  specialite: "", 
+    cin_patient: "", telephone: "", type:"", 
     status: "" })
 
       // prop change
@@ -51,9 +57,7 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
       
         try {
           const fd =selectedDate?.toISOString().split('T')[0];
-        
-          
-             
+
               const updateData: RendezvousUpdateData = {
             nom_patient: selectedAppointment.nom_patient ,
             prenom_patient: selectedAppointment.prenom_patient,
@@ -143,40 +147,30 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
     };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
-      
       // Handle numeric fields
+      
       if (name === 'cin_patient' || name === 'telephone') {
         setappointments(prev => ({ ...prev, [name]: value === '' ? '' : Number(value) }));
-      } else {
+      } 
+
+       else {
         setappointments(prev => ({ ...prev, [name]: value }));
       }
     } ;
 
-   
-    
-
     const handleSubmit =async (e: React.FormEvent) => {
       e.preventDefault();
+      console.log("Form submitted" ,appointments); 
 
       await postrendezvous(appointments);
     
-      console.log("Form submitted"); 
+      console.log("Form submitted" ,appointments); 
       const updatedRendezvous = await getrendezvous();
       setrendezvous(updatedRendezvous); 
         setIsFormOpen("affichage");
-        setappointments({ 
-          date_rendez_vous: "",
-          prenom_patient: "" ,
-          nom_patient: "", 
-          cin_patient: "",
-          telephone: "",
-          type:"",
-          specialite: "", 
-          status: "" })
-          window.location.reload();
-
+       window.location.reload();
     };
-
+//////////////////////////////////// useeffect for creat automatic patient//////////////////
   useEffect(()=>{
     const affichage =async()=>{
     const datarendezvous= await getrendezvous();
@@ -184,6 +178,14 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
     }
     affichage()
   },[])
+
+ const deletebutton=async(elementdeleted: string | null)=>{  console.log()
+
+ if (elementdeleted){
+    await deleterendezvous((elementdeleted))
+  window.location.reload()
+  }
+  }
 
     return (
       <div className="space-y-6 w-full">
@@ -239,9 +241,8 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
       <input
         type="number"
         name="cin_patient"
-        value={appointments.cin_patient}
+        value={appointments.cin_patient === null ? '' : appointments.cin_patient}  // Si null, on affiche vide
         onChange={handleChange}
-        required
         className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
       />
     </div>
@@ -457,15 +458,17 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
                      
                       <td className="px-2 py-2 font-medium space-x-1">
                       <button 
-                    className="bg-blue-200 rounded-lg hover:text-black "
+                    className="bg-blue-200 text-lg rounded-lg hover:text-black cursor-pointer"
                       onClick={() => openEditPopup(appointment)}>
                         Modifier
                       </button>
                       <button 
-                    className="bg-red-600 rounded-lg hover:text-black">
+                      onClick={()=>{ setIsConfirmOpen(true)
+                        setiddelete(appointment._id.toString())}}
+                    className="bg-red-600 text-lg rounded-lg hover:text-black cursor-pointer">
                         Supprimer
                       </button>
-                        <button className="bg-teal-500 rounded-lg hover:text-black"
+                        <button className="bg-teal-500 text-lg rounded-lg hover:text-black cursor-pointer"
                         onClick={()=>{convconsult._id = appointment._id;
                           converttoconsultation(convconsult)
                           window.location.reload();
@@ -483,7 +486,17 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
               </tbody>
               </table>
           </div>
+           <ConfirmModal
+                open={isConfirmOpen}
+                onClose={() => setIsConfirmOpen(false)}
+                onConfirm={() => {deletebutton(iddelete)
+                  console.log("Item supprimé !");
+                  setIsConfirmOpen(false);
+                }}
+                message="Tu veux supprimer cette rendez-vous ?"
+              />
         </div>
+        
           )} 
 
          <Modal open={isPopupOpen} onclose={closePopup}>

@@ -26,7 +26,6 @@ export interface Appointments {
   cin_patient: number|""; 
   telephone: number| ""; 
   type: string | null;
-  specialite: string; 
   status: boolean| string; 
 }
 export interface convert {

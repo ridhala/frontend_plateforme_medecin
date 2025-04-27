@@ -76,105 +76,119 @@ await ajoutpatient(patient);
       {isFormOpen ? (
         <div className="bg-white shadow-md rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Ajouter un nouveau patient</h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            
-            <div>
-              <label htmlFor="cin" className="block text-sm font-medium text-gray-700">CIN</label>
-              <input
-                id="cin"
-                name="cin_patient"
-                value={patient.cin_patient}
-                onChange={handleChange}
-                type="number"
-                required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              />
-            </div>
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  
+  <div>
+    <label className="block text-sm font-medium text-gray-700">
+      CIN
+    </label>
+    <input
+      type="number"
+      name="cin_patient"
+      id="cin"
+      value={patient.cin_patient}
+      onChange={handleChange}
+      required
+      className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+    />
+  </div>
 
-            <div>
-              <label htmlFor="nom" className="block text-sm font-medium text-gray-700">Nom</label>
-              <input
-                id="nom_patient"
-                name="nom_patient"
-                value={patient.nom_patient}
-                onChange={handleChange}
-                type="text"
-                required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              />
-            </div>
+  <div>
+    <label className="block text-sm font-medium text-gray-700">
+      Téléphone
+    </label>
+    <input
+      type="number"
+      name="telephone"
+      id="telephone"
+      value={patient.telephone}
+      onChange={handleChange}
+      required
+      className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+    />
+  </div>
 
-            <div>
-              <label htmlFor="prenom" className="block text-sm font-medium text-gray-700">Prénom</label>
-              <input
-                id="prenom_patient"
-                name="prenom_patient"
-                value={patient.prenom_patient}
-                onChange={handleChange}
-                type="text"
-                required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              />
-            </div>
+  <div>
+    <label className="block text-sm font-medium text-gray-700">
+      Nom
+    </label>
+    <input
+      type="text"
+      name="nom_patient"
+      id="nom_patient"
+      value={patient.nom_patient}
+      onChange={handleChange}
+      required
+      className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+    />
+  </div>
 
-            <div>
-              <label htmlFor="sex" className="block text-sm font-medium text-gray-700">Sexe</label>
-              <select
-                id="sex"
-                name="sex"
-                value={patient.sex}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              >
-                <option value="">Sélectionner</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
+  <div>
+    <label className="block text-sm font-medium text-gray-700">
+      Prénom
+    </label>
+    <input
+      type="text"
+      name="prenom_patient"
+      id="prenom_patient"
+      value={patient.prenom_patient}
+      onChange={handleChange}
+      required
+      className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+    />
+  </div>
 
-            <div>
-              <label htmlFor="date_naissance" className="block text-sm font-medium text-gray-700">Date de Naissance</label>
-              <input
-                id="date_naissance"
-                name="date_naissance"
-                value={patient.date_naissance}
-                onChange={handleChange}
-                type="date"
-                required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              />
-            </div>
+  <div>
+    <label className="block text-sm font-medium text-gray-700">
+      Sexe
+    </label>
+    <select
+      name="sex"
+      id="sex"
+      value={patient.sex}
+      onChange={handleChange}
+      required
+      className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm bg-white focus:ring-teal-500 focus:border-teal-500"
+    >
+      <option value="">Sélectionner</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select>
+  </div>
 
-            <div>
-              <label htmlFor="telephone" className="block text-sm font-medium text-gray-700">Téléphone</label>
-              <input
-                id="telephone"
-                name="telephone"
-                value={patient.telephone}
-                onChange={handleChange}
-                type="number"
-                required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              />
-            </div>
+  <div>
+    <label className="block text-sm font-medium text-gray-700">
+      Date de Naissance
+    </label>
+    <input
+      type="date"
+      name="date_naissance"
+      id="date_naissance"
+      value={patient.date_naissance}
+      onChange={handleChange}
+      required
+      className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+    />
+  </div>
 
-            <div className="flex justify-end space-x-4">
-              <button
-                type="button"
-                onClick={handleCloseForm}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100"
-              >
-                Annuler
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors"
-              >
-                Ajouter
-              </button>
-            </div>
-          </form>
+  <div className="flex items-end justify-end gap-4 md:col-span-2">
+    <button
+      type="button"
+      onClick={handleCloseForm}
+      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 transition"
+    >
+      Annuler
+    </button>
+    <button
+      type="submit"
+      className="px-6 py-2 bg-teal-600 text-white rounded-xl hover:bg-teal-700 transition shadow"
+    >
+      Ajouter
+    </button>
+  </div>
+
+</form>
+
         </div>
       ) : (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Consultation, Consultations } from '../../types/consultationtype';
-import { postconsultation } from '../../services/serviceshome/consultationservice';
+import { deleteconsultation, postconsultation, updateconsultation } from '../../services/serviceshome/consultationservice';
 import { Modal } from "./pop-up/modal";
 import { CalendarDays, FileText, User, ClipboardList, Stethoscope } from "lucide-react"
+import { ConfirmModal } from './pop-up/deletemodal';
 
 
 export default function ConsultationsList() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [iddelete, setiddelete] = useState<string | null>("");
+
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [currentConsultation, setCurrentConsultation] = useState<Consultations>({
     
@@ -18,12 +22,12 @@ export default function ConsultationsList() {
     ordonnance: "",
     type_consultation: "",
     date: "",
+    telephone: null
   });
   const [selectedConsultation, setSelectedConsultation] = useState<Consultation | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formConsultation, setFormConsultation] = useState<Consultation | null>(null);
-  const handleSave = async () => { setSelectedConsultation(null);
-    window.location.reload();}
+  
   useEffect(() => {
     if (selectedConsultation) {
       setFormConsultation(selectedConsultation);
@@ -34,7 +38,15 @@ export default function ConsultationsList() {
     const { name, value } = e.target;
     setFormConsultation((prev) => prev ? { ...prev, [name]: value } : prev);
   };
+ const handleSubmits = async (e: React.FormEvent) => {
+        e.preventDefault();
+      if(formConsultation){
 
+    await updateconsultation(formConsultation._id, formConsultation)
+setIsFormOpen(false)
+window.location.reload()
+      }
+      }
 
 
   useEffect(() => {
@@ -70,7 +82,6 @@ console.log(currentConsultation)
         window.location.reload()
 
   };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement >) => {
     const { name, value } = e.target;
     setCurrentConsultation(prev => ({
@@ -78,6 +89,13 @@ console.log(currentConsultation)
       [name]: value
     }));
   };
+  const deletebutton=async(elementdeleted: string | null)=>{  console.log()
+
+ if (elementdeleted){
+    await deleteconsultation((elementdeleted));
+  window.location.reload();
+  }
+  }
 
   return (
     <>
@@ -111,6 +129,18 @@ console.log(currentConsultation)
           className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
         />
       </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          <User className="inline w-4 h-4 mr-1" /> Telephone
+        </label>
+        <input
+          type="number"
+          name="telephone"
+          value={currentConsultation.telephone || ''}
+          onChange={handleInputChange}
+          className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+        />
+      </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700">Prénom du Patient</label>
@@ -133,7 +163,18 @@ console.log(currentConsultation)
           className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
         />
       </div>
-
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          <CalendarDays className="inline w-4 h-4 mr-1" /> Date de Consultation
+        </label>
+        <input
+          type="date"
+          name="date"
+          value={currentConsultation.date || ''}
+          onChange={handleInputChange}
+          className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
+        />
+      </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">
           <ClipboardList className="inline w-4 h-4 mr-1" /> Type de Consultation
@@ -176,18 +217,7 @@ console.log(currentConsultation)
           className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500 resize-none"
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          <CalendarDays className="inline w-4 h-4 mr-1" /> Date de Consultation
-        </label>
-        <input
-          type="date"
-          name="date"
-          value={currentConsultation.date || ''}
-          onChange={handleInputChange}
-          className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
-        />
-      </div>
+     
 
       <div className="flex items-end justify-end gap-4 md:col-span-2">
         <button
@@ -241,8 +271,8 @@ console.log(currentConsultation)
                   consultations.map((consultation) => (
                     <tr 
                       key={consultation._id} 
-                      className="hover:bg-gray-300 transition-colors duration-100 cursor-pointer"
-                      onClick={() => setSelectedConsultation(consultation)}
+                      className="hover:bg-gray-300 transition-colors duration-100 "
+                    //  onClick={() => setSelectedConsultation(consultation)}
                     >
                       <td className="px-4 py-2 text-left font-bold text-gray-900 break-words">
                         {consultation.cin_patient}
@@ -295,11 +325,18 @@ console.log(currentConsultation)
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button 
-                          className=" w-10 text-teal-600 hover:text-black mr-2"
+                          className=" bg-teal-600 w-17 text-lg rounded-xl hover:text-black cursor-pointer mr-1"
                           onClick={() => setSelectedConsultation(consultation)}
                         >
                           Voir
                         </button>
+                        <button onClick={()=>{
+                          setIsConfirmOpen(true)
+                          setiddelete(consultation._id)
+                          }}
+                    className="bg-red-600 rounded-xl text-lg hover:text-black cursor-pointer">
+                        Supprimer
+                      </button>
                       
                       </td>
                     </tr>
@@ -317,6 +354,20 @@ console.log(currentConsultation)
           </div>
         )}
       </div>
+
+      {/**prop for suppression */}
+
+      <ConfirmModal
+      open={isConfirmOpen}
+      onClose={() => setIsConfirmOpen(false)}
+      onConfirm={() => {deletebutton(iddelete)
+        console.log("Item supprimé !");
+        setIsConfirmOpen(false);
+      }}
+      message="Tu veux supprimer cette consultation ?"
+    />
+
+
       <Modal open={!!selectedConsultation} onclose={() => setSelectedConsultation(null)}>
   <div className="rounded-xl p-4 max-w-2xl w-full max-h-[80vh] overflow-auto">
     <div className="flex justify-between items-center mb-4 bg-white">
@@ -335,128 +386,138 @@ console.log(currentConsultation)
     {formConsultation && (
   <div className="bg-white p-6 rounded-2xl shadow-lg space-y-6">
     {isEditing ? (
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Prénom</label>
-          <input
-            type="text"
-            name="prenom_patient"
-            value={formConsultation.prenom_patient ?? ""}
-            onChange={handleFormChange}
-            className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
-          />
-        </div> 
+      <form         
+      onSubmit={handleSubmits} // À implémenter dans ton composant
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Nom</label>
-          <input
-            type="text"
-            name="nom_patient"
-            value={formConsultation.nom_patient ?? ""}
-            onChange={handleFormChange}
-            className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">CIN Patient</label>
-          <input
-            type="number"
-            name="cin_patient"
-            value={formConsultation.cin_patient ?? ""}
-            onChange={handleFormChange}
-            className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
-          />
-        </div>
-       
-        <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-700">Type de consultation</label>
-          <select
-            name="type_consultation"
-            value={formConsultation.type_consultation ?? ""}
-            onChange={handleFormChange}
-            className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500"
-          >
-            <option value="">Sélectionner</option>
-            <option value="visite">Visite</option>
-            <option value="control">Contrôle</option>
-          </select>
-        </div>
-
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Diagnostic</label>
-          <textarea
-            name="diagnostic"
-            rows={3}
-            value={formConsultation.diagnostic ?? ""}
-            onChange={handleFormChange}
-            className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500 resize-none"
-          />
-        </div>
-
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Ordonnance</label>
-          <textarea
-            name="ordonnance"
-            rows={2}
-            value={formConsultation.ordonnance ?? ""}
-            onChange={handleFormChange}
-            className="mt-1 w-full border border-gray-300 rounded-xl px-3 py-2 shadow-sm focus:ring-teal-500 focus:border-teal-500 resize-none"
-          />
-        </div>
-
-       
-
-        <div className="md:col-span-2 flex justify-end gap-4 pt-4">
-          <button
-            type="button"
-            onClick={() => setIsEditing(false)}
-            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-xl hover:bg-gray-300 transition"
-          >
-            Annuler
-          </button>
-          <button
-            type="button"
-            onClick={handleSave}
-            className="px-6 py-2 bg-teal-600 text-white rounded-xl hover:bg-teal-700 transition shadow"
-          >
-            Sauvegarder
-          </button>
-        </div>
-      </form>
-    ) : (
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <h4 className="text-sm font-semibold text-gray-600">CIN</h4>
-            <p className="mt-1 text-base text-gray-900">{formConsultation.cin_patient}</p>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold text-gray-600">Patient</h4>
-            <p className="mt-1 text-base text-gray-900">
-              {formConsultation.prenom_patient} {formConsultation.nom_patient}
-            </p>
-          </div>
-        </div>
-
-        <div>{/**line-clamp-2 overflow-hidden text-ellipsis break-words */}
-          <h4 className="text-sm font-semibold text-gray-600">Diagnostic</h4>
-          <p className="mt-1ine-clamp-2 overflow-hidden text-ellipsis break-words ">
-            {formConsultation.diagnostic}
-            </p>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-gray-600">Ordonnance</h4>
-          <p className="mt-1 mt-1ine-clamp-2 overflow-hidden text-ellipsis break-words">{formConsultation.ordonnance}</p>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-gray-600">Date</h4>
-          <p className="mt-1 text-base text-gray-900">
-            {formConsultation.date ? new Date(formConsultation.date).toLocaleDateString() : "Non disponible"}
-          </p>
-        </div>
+       className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Prénom</label>
+        <input
+          type="text"
+          name="prenom_patient"
+          value={formConsultation.prenom_patient ?? ""}
+          onChange={handleFormChange}
+          className="mt-1 w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm focus:ring-teal-500 focus:border-teal-500 transition duration-200"
+        />
       </div>
+    
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Nom</label>
+        <input
+          type="text"
+          name="nom_patient"
+          value={formConsultation.nom_patient ?? ""}
+          onChange={handleFormChange}
+          className="mt-1 w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm focus:ring-teal-500 focus:border-teal-500 transition duration-200"
+        />
+      </div>
+    
+      <div>
+        <label className="block text-sm font-medium text-gray-700">CIN Patient</label>
+        <input
+          type="number"
+          name="cin_patient"
+          value={formConsultation.cin_patient ?? ""}
+          onChange={handleFormChange}
+          className="mt-1 w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm focus:ring-teal-500 focus:border-teal-500 transition duration-200"
+        />
+      </div>
+    
+      <div className="md:col-span-1">
+        <label className="block text-sm font-medium text-gray-700">Type de consultation</label>
+        <select
+          name="type_consultation"
+          value={formConsultation.type_consultation ?? ""}
+          onChange={handleFormChange}
+          className="mt-1 w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm focus:ring-teal-500 focus:border-teal-500 transition duration-200"
+        >
+          <option value="">Sélectionner</option>
+          <option value="visite">Visite</option>
+          <option value="control">Contrôle</option>
+        </select>
+      </div>
+    
+      <div className="md:col-span-2">
+        <label className="block text-sm font-medium text-gray-700">Diagnostic</label>
+        <textarea
+          name="diagnostic"
+          rows={3}
+          value={formConsultation.diagnostic ?? ""}
+          onChange={handleFormChange}
+          className="mt-1 w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm focus:ring-teal-500 focus:border-teal-500 resize-none transition duration-200"
+        />
+      </div>
+    
+      <div className="md:col-span-2">
+        <label className="block text-sm font-medium text-gray-700">Ordonnance</label>
+        <textarea
+          name="ordonnance"
+          rows={2}
+          value={formConsultation.ordonnance ?? ""}
+          onChange={handleFormChange}
+          className="mt-1 w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm focus:ring-teal-500 focus:border-teal-500 resize-none transition duration-200"
+        />
+      </div>
+    
+      <div className="md:col-span-2 flex justify-end gap-4 pt-6">
+        <button
+          type="button"
+          onClick={() => setIsEditing(false)}
+          className="px-6 py-3 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-200 focus:outline-none"
+        >
+          Annuler
+        </button>
+        <button
+          type="submit"
+          className="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 focus:outline-none transition duration-200 shadow-lg"
+        >
+          Sauvegarder
+        </button>
+      </div>
+    </form>
+    
+    ) : (
+      <div className="space-y-6">
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div className="bg-white p-4 shadow-md rounded-lg">
+      <h4 className="text-sm font-semibold text-gray-600">CIN</h4>
+      <p className="mt-1 text-lg text-gray-900 font-medium">
+        {formConsultation.cin_patient || "Non disponible"}
+      </p>
+    </div>
+    <div className="bg-white p-4 shadow-md rounded-lg">
+      <h4 className="text-sm font-semibold text-gray-600">Patient</h4>
+      <p className="mt-1 text-lg text-gray-900 font-medium">
+        {formConsultation.prenom_patient} {formConsultation.nom_patient}
+      </p>
+    </div>
+  </div>
+  <div className="bg-gray-100 p-4 shadow-md rounded-lg">
+    <h4 className="text-sm font-semibold text-gray-600">Date</h4>
+    <p className="mt-1 text-base text-gray-900">
+      {formConsultation.date
+        ? new Date(formConsultation.date).toLocaleDateString()
+        : "Non disponible"}
+    </p>
+  </div>
+
+  <div className="bg-gray-100 p-4 shadow-md rounded-lg">
+    <h4 className="text-sm font-semibold text-gray-600">Diagnostic</h4>
+    <p className="mt-1 text-base text-gray-900 line-clamp-2 overflow-hidden text-ellipsis break-words">
+      {formConsultation.diagnostic || "creer votre diagnostic"}
+    </p>
+  </div>
+
+  <div className="bg-gray-100 p-4 shadow-md rounded-lg">
+    <h4 className="text-sm font-semibold text-gray-600">Ordonnance</h4>
+    <p className="mt-1 text-base text-gray-900 line-clamp-2 overflow-hidden text-ellipsis break-words">
+      {formConsultation.ordonnance || "creer votre ordonnance"}
+    </p>
+  </div>
+
+ 
+</div>
+
     )}
   </div>
 )}

@@ -61,6 +61,7 @@ export const postrendezvous = async (credentials:Appointments)=>{
 
   catch (error) {
     if (axios.isAxiosError(error)) {
+      console.error("Axios response error:", error.response?.data);
       throw new Error(
         error.response?.data?.message || 'Erreur lors de chargement de données.'
       );
@@ -89,3 +90,24 @@ export const updateRendezvous = async (_id: string, updateData: RendezvousUpdate
     throw error;
   }
 };
+
+export const deleterendezvous = async (id: string) => {
+  try {
+    const response = await axios.delete(`http://localhost:3000/rendezvous/delete/${id}` , {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      }
+    });
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message || 'probléme de suppression .'
+      );
+    } else {
+      throw new Error('Une erreur inconnue est survenue.');
+    }
+  }
+};
+

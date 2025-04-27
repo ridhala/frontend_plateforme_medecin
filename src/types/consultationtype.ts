@@ -1,5 +1,5 @@
 export interface Consultation {
-    _id: number | null;
+    _id: string | null;
     cin_patient: number | null;
     prenom_patient :string;
     nom_patient :string;
@@ -17,4 +17,5 @@ export interface Consultation {
     ordonnance: string;
     type_consultation: string;
     date: string;
+    telephone: number| null
   }
