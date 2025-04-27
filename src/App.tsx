@@ -14,6 +14,7 @@ import SalleAttente from './pages/SalleAttente';
 import ListeMedecins from './pages/ListeMedecins';
 import RegisterSecretaire from './pages/registerSecritaire';
 import DossierMedicale from './pages/DossierMedicale';
+import EspacePatient from './pages/EspacePatient';
 
 
 function App() {
@@ -53,6 +54,9 @@ function App() {
          <Route path="/register-secretaire" element={<RegisterSecretaire />} />
 
          <Route path="/dossier" element={<DossierMedicale />} />
+
+          {/* Espace Patient*/}
+          <Route path="/EspaceP" element={<EspacePatient />} />
       </Routes>
     </Router>
     
