@@ -1,6 +1,6 @@
 // DossierMedicale.tsx
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FiSearch, FiDownload, FiChevronDown, FiChevronUp, FiFile } from 'react-icons/fi';
 import { FaStethoscope } from 'react-icons/fa';
 
