@@ -1,16 +1,16 @@
 import axios from "axios";
 import { Consultation, Consultations } from "../../types/consultationtype";
 
-export const getconsultation = async()=>{
+export const getconsultation = async(credentials: String)=>{
     try {
-        const response = await axios.get('http://localhost:3000/consultation/', {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-          }
-        });
+      const response = await axios.post("http://localhost:3000/consultation/affichage",{credentials}, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
 
-       return response.data;
+       return response.data.consultations;
       }
       catch (error) {
         if (axios.isAxiosError(error)) {
@@ -22,6 +22,29 @@ export const getconsultation = async()=>{
         }
       }
 }
+export const getstatconsultation =async ()=>{
+  try{
+  
+      const response= await axios.get(`http://localhost:3000/consultation/stat` , {
+  withCredentials: true,
+  headers:{
+      Authorization:`bearer ${localStorage.getItem('accessToken')}`
+  }
+      })
+      return response.data}
+      catch(error){
+          if (axios.isAxiosError(error)){
+              throw new Error(
+                error.response?.data?.message || 'Erreur lors de chargement de données.'
+              );
+            } else {
+              throw new Error('Une erreur inconnue est survenue.');
+            }
+      }
+  }
+
+
+
 export const postconsultation = async (credentials:Consultations)=>{
   try{
 

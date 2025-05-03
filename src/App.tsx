@@ -22,6 +22,7 @@ import Sidebar from './components/home/Sidebar';
 import DateTimePicker from './components/home/calendar';
 import Calendar from './components/home/calendar';
 import CalendarComponent from './components/home/welcome';
+import AdminDashboard from './pages/dashboardadmin';
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 function App() {
@@ -61,6 +62,7 @@ function App() {
 
 
         <Route path="welcome" element={<DoctorDashboard />} />
+        <Route path="admindashboard" element={<AdminDashboard />} />
 
 
         <Route path='/sp' element={<SpecialtySelector />}/>

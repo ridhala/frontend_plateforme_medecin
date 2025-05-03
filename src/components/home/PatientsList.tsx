@@ -193,7 +193,7 @@ await ajoutpatient(patient);
       ) : (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-300">
+            <thead className="bg-blue-200">
               <tr>
               <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
               CIN
@@ -204,9 +204,7 @@ await ajoutpatient(patient);
                 <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                   Prénom
                 </th>
-                <th className="sticky top-0 px-4 py-3 w-5  text-left text-l font-medium text-black uppercase tracking-wider">
-                  Sexe
-                </th>
+               
                 <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                   Date de Naissance
                 </th>
@@ -235,9 +233,7 @@ await ajoutpatient(patient);
        <td className="px-4 py-2 whitespace-nowrap text-m text-gray-900">
        {patient.prenom_patient}
         </td>
-        <td className="px-4 py-2 w-5 whitespace-nowrap text-m text-gray-900">
-        {patient.sex}
-        </td>
+        
         <td className="px-4 py-2 whitespace-nowrap text-m text-gray-900">
  {moment(patient.date_naissance).format('DD/MM/YYYY')}
         </td>

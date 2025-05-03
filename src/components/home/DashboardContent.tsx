@@ -8,6 +8,7 @@ import Chat from '../Messagerie/Chat';
 import {  useParams } from 'react-router-dom';
 import Support from './support';
 import axios from 'axios';
+import SecretaireForm from './secretaire';
 
 interface DashboardProps {
   activeSection: string | null;
@@ -91,7 +92,11 @@ const [prenom, setprenom]= useState("")
             <AppointmentsList />
           </div>
         )}
-
+ {activeSection === "secretaire" && (
+          <div className="bg-white p-4 rounded-lg shadow-lg w-full">
+            <SecretaireForm />
+          </div>
+        )}
         {activeSection === "consultations" && (
           <div className="bg-white p-4 rounded-lg shadow-lg w-full">
             <ConsultationsList />

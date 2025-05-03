@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Consultation, Consultations } from '../../types/consultationtype';
-import { deleteconsultation, postconsultation, updateconsultation } from '../../services/serviceshome/consultationservice';
+import React, { useEffect, useState } from 'react';import { Consultation, Consultations } from '../../types/consultationtype';
+import { deleteconsultation, getconsultation, postconsultation, updateconsultation } from '../../services/serviceshome/consultationservice';
 import { Modal } from "./pop-up/modal";
 import { CalendarDays, FileText, User, ClipboardList, Stethoscope } from "lucide-react"
 import { ConfirmModal } from './pop-up/deletemodal';
@@ -11,7 +9,9 @@ export default function ConsultationsList() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [iddelete, setiddelete] = useState<string | null>("");
-
+  const today = new Date().toISOString().split('T')[0];
+  const [datechoisis, setdatechoisis ] = useState<string>(today);
+  
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [currentConsultation, setCurrentConsultation] = useState<Consultations>({
     
@@ -49,22 +49,17 @@ window.location.reload()
       }
 
 
-  useEffect(() => {
-    const fetchConsultations = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/consultation/', {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+      useEffect(() => {
+        const fetchConsultations = async () => {
+          if (datechoisis) {
+            const listconsultation = await getconsultation(datechoisis);
+            setConsultations(listconsultation);
           }
-        });
-        setConsultations(response.data.consultations || []);
-      } catch (error) {
-        console.error("Error fetching consultations:", error);
-      }
-    };
-    fetchConsultations();
-  }, []);
+        };
+        fetchConsultations();
+      }, [datechoisis]);
+      
+      
 
   const handleAddConsultation = () => {
     setIsFormOpen(true);
@@ -99,7 +94,7 @@ console.log(currentConsultation)
 
   return (
     <>
-      <div className="space-y-6 w-full">
+      <div className="space-y-4 w-full">
         <div className="flex justify-between items-center w-full">
           <h2 className="text-xl font-semibold text-gray-800">Historique des Consultations</h2>
           <button
@@ -109,6 +104,17 @@ console.log(currentConsultation)
             + Ajouter une consultation
           </button>
         </div>
+        <div className='flex justify-right items-center py-1'>
+            <div><h1 className='text-gray-500 text-lg w-30'>Consultation :</h1></div>
+      <input
+        type="date"
+        value={datechoisis}
+        onChange={async (e)=>{setdatechoisis(e.target.value)
+        console.log(datechoisis)
+        }}
+        className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+      />   
+</div>
 
         {isFormOpen ? (
   <div className="bg-white shadow-lg rounded-2xl p-4 w-6xl mx-auto">
@@ -239,8 +245,9 @@ console.log(currentConsultation)
 ) : (
           <div className="bg-white shadow-md rounded-lg overflow-hidden w-full">
             <div className='max-h-[70vh] overflow-y-auto'>
+           
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-300 sticky top-0 z-10">
+              <thead className="bg-blue-200 sticky top-0 z-10">
                 <tr>
                   <th className="sticky top-0 px-4 py-3   text-left text-l font-medium text-black uppercase tracking-wider">
                     CIN 
@@ -267,7 +274,7 @@ console.log(currentConsultation)
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-400">
-                {consultations.length > 0 ? (
+                {consultations?.length > 0 ? (
                   consultations.map((consultation) => (
                     <tr 
                       key={consultation._id} 
@@ -321,24 +328,30 @@ console.log(currentConsultation)
                       </span></td>
                     
                       <td 
-                        className="px-4 py-2 whitespace-nowrap text-sm font-medium"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <button 
-                          className=" bg-teal-600 w-17 text-lg rounded-xl hover:text-black cursor-pointer mr-1"
-                          onClick={() => setSelectedConsultation(consultation)}
-                        >
-                          Voir
-                        </button>
-                        <button onClick={()=>{
-                          setIsConfirmOpen(true)
-                          setiddelete(consultation._id)
-                          }}
-                    className="bg-red-600 rounded-xl text-lg hover:text-black cursor-pointer">
-                        Supprimer
-                      </button>
-                      
-                      </td>
+  className="px-4 py-2 whitespace-nowrap text-sm font-medium"
+  onClick={(e) => e.stopPropagation()}
+>
+  <div className="flex items-center space-x-3">
+    <button 
+      onClick={() => setSelectedConsultation(consultation)}
+      className="px-4 py-2 bg-teal-500 text-white text-sm font-semibold rounded-lg  cursor-pointer
+       shadow-md hover:bg-teal-600 hover:text-white transition duration-200"
+    >
+      Voir
+    </button>
+    <button 
+      onClick={() => {
+        setIsConfirmOpen(true);
+        setiddelete(consultation._id);
+      }}
+      className="px-4 py-2 bg-red-500 text-white text-sm font-semibold cursor-pointer
+       rounded-lg shadow-md hover:bg-red-600 hover:text-white transition duration-200"
+    >
+      Supprimer
+    </button>
+  </div>
+</td>
+
                     </tr>
                   ))
                 ) : (

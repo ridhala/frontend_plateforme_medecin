@@ -1,9 +1,9 @@
 import axios from "axios"
 import { Appointments, RendezvousUpdateData } from "../../types/rendezvoustype";
-export const getrendezvous =async ()=>{
+export const getrendezvous =async (date: string)=>{
 try{
 
-    const response= await axios.get("http://localhost:3000/rendezvous", {
+    const response= await axios.post("http://localhost:3000/rendezvous/affiche",{date}, {
 withCredentials: true,
 headers:{
     Authorization:`bearer ${localStorage.getItem('accessToken')}`
@@ -41,7 +41,27 @@ export const getrendezvousbydate =async (date :Date| string)=>{
             }
       }
   }
-  
+  export const getstatrendezvous =async ()=>{
+    try{
+    
+        const response= await axios.get(`http://localhost:3000/rendezvous/statrendezvous` , {
+    withCredentials: true,
+    headers:{
+        Authorization:`bearer ${localStorage.getItem('accessToken')}`
+    }
+        })
+        return response.data}
+        catch(error){
+            if (axios.isAxiosError(error)){
+                throw new Error(
+                  error.response?.data?.message || 'Erreur lors de chargement de données.'
+                );
+              } else {
+                throw new Error('Une erreur inconnue est survenue.');
+              }
+        }
+    }
+    
 
 
 

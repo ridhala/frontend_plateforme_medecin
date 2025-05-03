@@ -26,6 +26,8 @@ const closePopup = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [iddelete, setiddelete] = useState<string | null>("");
 
+  const today = new Date().toISOString().split('T')[0];
+  const [daterendez, sedaterendez] = useState<string>(today);
 
 
 const [selectedTime, setSelectedTime] = useState<Date | null>(null);
@@ -73,7 +75,7 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
           console.log("Rendez-vous mis à jour");
           
           // Refresh appointments
-          const updatedRendezvous = await getrendezvous();
+          const updatedRendezvous = await getrendezvous(daterendez);
           setrendezvous(updatedRendezvous);
       setIsPopupOpen(false)
           // Close form and reset
@@ -165,19 +167,26 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
       await postrendezvous(appointments);
     
       console.log("Form submitted" ,appointments); 
-      const updatedRendezvous = await getrendezvous();
+      const updatedRendezvous = await getrendezvous(daterendez);
       setrendezvous(updatedRendezvous); 
         setIsFormOpen("affichage");
        window.location.reload();
+    
     };
 //////////////////////////////////// useeffect for creat automatic patient//////////////////
-  useEffect(()=>{
-    const affichage =async()=>{
-    const datarendezvous= await getrendezvous();
-  setrendezvous(datarendezvous)
+useEffect(() => {
+  const affichage = async () => {
+    if (daterendez) {
+      const datarendezvous = await getrendezvous(daterendez);
+      setrendezvous(datarendezvous);
     }
-    affichage()
-  },[])
+  };
+  affichage();
+}, [daterendez]); // This will trigger the fetch when the date changes
+
+
+
+  
 
  const deletebutton=async(elementdeleted: string | null)=>{  console.log()
 
@@ -188,7 +197,7 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
   }
 
     return (
-      <div className="space-y-6 w-full">
+      <div className="space-y-2 w-full">
         <div className="flex justify-between items-center w-full">
       
             <h2 className="text-xl font-semibold text-gray-800">Rendez-vous à venir</h2>
@@ -201,7 +210,7 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
         </div>
 
         {isFormOpen==="ajout" && (
-          <div className="bg-white shadow-md rounded-lg p-6">
+          <div className="bg-white shadow-md rounded-lg ">
           <div className='flex '>
           <div className=" shadow-lg rounded-2xl p-3 w-4xl mx-auto">
   <h2 className="text-2xl font-bold text-teal-700 mb-6 border-b pb-2">
@@ -374,6 +383,7 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
       </button>
     );
   })}
+  
       </div>
     ) : (
       <p className="text-gray-500">No available times</p>
@@ -385,9 +395,22 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
         ) } {isFormOpen==="affichage"&& (
           <div className="bg-white shadow-md rounded-lg overflow-hidden w-full">
           <div className="max-h-[70vh] overflow-y-auto">
+
+            
+          <div className='flex justify-right items-center py-1'>
+            <div><h1 className='text-gray-500 text-lg w-30'>Rendez-vous :</h1></div>
+      <input
+        type="date"
+        value={daterendez}
+        onChange={async (e)=>{sedaterendez(e.target.value)
+        
+        }}
+        className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+      />   
+</div>
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="sticky top-0 z-10">
-                <tr className='bg-gray-300'>
+                <tr className='bg-blue-200'>
                   <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                     CIN 
                   </th>
@@ -456,26 +479,39 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
                       {moment(appointment.date_rendez_vous).format('HH:mm')}
                       </td>
                      
-                      <td className="px-2 py-2 font-medium space-x-1">
-                      <button 
-                    className="bg-blue-200 text-lg rounded-lg hover:text-black cursor-pointer"
-                      onClick={() => openEditPopup(appointment)}>
-                        Modifier
-                      </button>
-                      <button 
-                      onClick={()=>{ setIsConfirmOpen(true)
-                        setiddelete(appointment._id.toString())}}
-                    className="bg-red-600 text-lg rounded-lg hover:text-black cursor-pointer">
-                        Supprimer
-                      </button>
-                        <button className="bg-teal-500 text-lg rounded-lg hover:text-black cursor-pointer"
-                        onClick={()=>{convconsult._id = appointment._id;
-                          converttoconsultation(convconsult)
-                          window.location.reload();
-                        }}>
-                          entrer
-                        </button>
-                      </td></tr>               
+                      <td className="px-2 py-2 font-medium">
+  <div className="flex items-center space-x-2">
+    <button 
+      onClick={() => openEditPopup(appointment)}
+      className="px-4 py-2 bg-blue-500 text-white text-sm font-semibold cursor-pointer
+       rounded-lg shadow-md hover:bg-blue-600 hover:text-white transition duration-200"
+    >
+      Modifier
+    </button>
+    <button 
+      onClick={() => {
+        setIsConfirmOpen(true);
+        setiddelete(appointment._id.toString());
+      }}
+      className="px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-lg cursor-pointer
+       shadow-md hover:bg-red-600 hover:text-white transition duration-200"
+    >
+      Supprimer
+    </button>
+    <button 
+      onClick={() => {
+        convconsult._id = appointment._id;
+        converttoconsultation(convconsult);
+        window.location.reload();
+      }}
+      className="px-4 py-2 bg-teal-500 text-white text-sm font-semibold cursor-pointer
+       rounded-lg shadow-md hover:bg-teal-600 hover:text-white transition duration-200"
+    >
+      Entrer
+    </button>
+  </div>
+</td>
+</tr>               
                   ))
                 ) : (
                   <tr>

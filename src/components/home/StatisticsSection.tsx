@@ -11,6 +11,11 @@ import {
   Legend,
 } from 'chart.js';
 
+import { useEffect, useState } from 'react';
+import { getstatrendezvous } from '../../services/serviceshome/rendezvousservice';
+import { statrendez,statconsultation } from '../../types/statistiquetype';
+import { getstatconsultation } from '../../services/serviceshome/consultationservice';
+
 // Register Chart.js components
 ChartJS.register(
   CategoryScale,
@@ -26,8 +31,55 @@ interface StatisticsSectionProps {
   activeSection: string | null;
 }
 
+
 export default function StatisticsSection({ activeSection }: StatisticsSectionProps) {
-  // Chart data for Patients, Consultations, and Appointments
+  const today = new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState<string>(today);
+  const [rendezstats, setrendezStats] = useState<statrendez>({
+    MounthRendezvous: 0,
+    rendezvousToday: 0,
+    rendezvousConfirmer: 0,
+    rendezvousensalle: 0,
+  });
+
+  const [consultationstats, setconsultationStats] = useState<statconsultation>({
+   Mounthconsultation: 0,
+  consultationToday: 0,
+  consultationcontrol: 0,
+  consultationvisite: 0
+  });
+
+  useEffect(() => {
+    const fetchrendezStats = async () => {
+      try {
+        const data = await getstatrendezvous();
+        setrendezStats(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchrendezStats();
+  }, [selectedDate]);
+
+
+  useEffect(() => {
+    const fetchconsultationStats = async () => {
+      try {
+        const data = await getstatconsultation();
+        setconsultationStats(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchconsultationStats();
+  }, [selectedDate]);
+
+
+
+
+
   const chartData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // Months
     datasets: [
@@ -172,7 +224,7 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
             </div>
             <div>
               <p className="text-gray-500">Total Patients</p>
-              <h3 className="text-xl font-bold text-gray-800">120</h3>
+              <h3 className="text-xl font-bold text-gray-800"></h3>
             </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
@@ -181,7 +233,7 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
             </div>
             <div>
               <p className="text-gray-500">New This Month</p>
-              <h3 className="text-xl font-bold text-gray-800">15</h3>
+              <h3 className="text-xl font-bold text-gray-800"></h3>
             </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
@@ -190,7 +242,7 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
             </div>
             <div>
               <p className="text-gray-500">In Follow-up</p>
-              <h3 className="text-xl font-bold text-gray-800">85</h3>
+              <h3 className="text-xl font-bold text-gray-800"></h3>
             </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
@@ -199,7 +251,7 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
             </div>
             <div>
               <p className="text-gray-500">Active Consultations</p>
-              <h3 className="text-xl font-bold text-gray-800">30</h3>
+              <h3 className="text-xl font-bold text-gray-800"></h3>
             </div>
           </div>
         </div>
@@ -208,48 +260,55 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
   }
 
   if (activeSection === "rendez-vous") {
+    
+   
+  
     return (
-      <div className="space-y-6"> {/* Single parent div for Rendez-vous section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Total Appointments</p>
-              <h3 className="text-xl font-bold text-gray-800">50</h3>
-            </div>
+      <div className="space-y-6">
+       
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
+          <div className="bg-blue-100 p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-2xl" />
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Today</p>
-              <h3 className="text-xl font-bold text-gray-800">8</h3>
-            </div>
+          <div>
+            <p className="text-gray-500">Rendez-vous du mois</p>
+            <h3 className="text-xl font-bold text-gray-800">{rendezstats.MounthRendezvous}</h3>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Confirmed</p>
-              <h3 className="text-xl font-bold text-gray-800">35</h3>
-            </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
+          <div className="bg-blue-100 p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-2xl" />
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Pending</p>
-              <h3 className="text-xl font-bold text-gray-800">10</h3>
-            </div>
+          <div>
+            <p className="text-gray-500">Rendez-vous d'aujourd'hui</p>
+            <h3 className="text-xl font-bold text-gray-800">{rendezstats.rendezvousToday}</h3>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
+          <div className="bg-blue-100 p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-2xl" />
+          </div>
+          <div>
+            <p className="text-gray-500">Rendez-vous confirmés</p>
+            <h3 className="text-xl font-bold text-gray-800">{rendezstats.rendezvousConfirmer}</h3>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
+          <div className="bg-blue-100 p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-2xl" />
+          </div>
+          <div>
+            <p className="text-gray-500">En salle d'attente</p>
+            <h3 className="text-xl font-bold text-gray-800">{rendezstats.rendezvousensalle}</h3>
           </div>
         </div>
       </div>
-    );
+    </div>
+  );
   }
 
   if (activeSection === "consultations") {
@@ -261,8 +320,8 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
               <FaUserPlus className="text-blue-600 text-2xl" />
             </div>
             <div>
-              <p className="text-gray-500">Total Consultations</p>
-              <h3 className="text-xl font-bold text-gray-800">90</h3>
+              <p className="text-gray-500">Consultations du mois</p>
+              <h3 className="text-xl font-bold text-gray-800">{consultationstats.Mounthconsultation}</h3>
             </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
@@ -270,8 +329,8 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
               <FaUserPlus className="text-blue-600 text-2xl" />
             </div>
             <div>
-              <p className="text-gray-500">This Month</p>
-              <h3 className="text-xl font-bold text-gray-800">25</h3>
+              <p className="text-gray-500">Aujourd'hui</p>
+              <h3 className="text-xl font-bold text-gray-800">{consultationstats.consultationToday}</h3>
             </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
@@ -279,8 +338,8 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
               <FaUserPlus className="text-blue-600 text-2xl" />
             </div>
             <div>
-              <p className="text-gray-500">Completed</p>
-              <h3 className="text-xl font-bold text-gray-800">70</h3>
+              <p className="text-gray-500">Control</p>
+              <h3 className="text-xl font-bold text-gray-800">{consultationstats.consultationcontrol}</h3>
             </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
@@ -288,8 +347,8 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
               <FaUserPlus className="text-blue-600 text-2xl" />
             </div>
             <div>
-              <p className="text-gray-500">Urgent</p>
-              <h3 className="text-xl font-bold text-gray-800">15</h3>
+              <p className="text-gray-500">Visite</p>
+              <h3 className="text-xl font-bold text-gray-800">{consultationstats.consultationvisite}</h3>
             </div>
           </div>
         </div>
@@ -298,4 +357,8 @@ export default function StatisticsSection({ activeSection }: StatisticsSectionPr
   }
 
   return null; // For "Profil" or other sections
+}
+
+function getRendezvousStats(selectedDate: string) {
+  throw new Error('Function not implemented.');
 }

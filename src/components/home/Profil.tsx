@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import { update } from '../../services/serviceshome/profilservice';
 import { MedecinProfile } from '../../types/profilemedecin';
 import { profileformData } from '../../types/doctorregistertype';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilMedecin = () => {
   const [form, setForm] = useState<profileformData>({
@@ -20,10 +21,12 @@ const ProfilMedecin = () => {
   const [profileData, setProfileData] = useState<MedecinProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,6 +116,7 @@ const ProfilMedecin = () => {
   return (!stateprofil ? (
     <div className="max-w-4xl mx-auto my-8 bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="md:flex">
+   
         {/* Doctor Photo Section */}
         <div className="md:w-1/3 bg-gradient-to-b from-blue-50 to-blue-100 p-8 flex flex-col items-center">
           <div className="relative mb-6 w-full flex flex-col items-center">
@@ -139,13 +143,16 @@ const ProfilMedecin = () => {
               <div className="mt-6">
                 <button 
                   onClick={() => setstateprofil(true)}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
-                >
+                  className="cursor-pointer px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-teal-400 transition flex items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                   </svg>
                   Modifier le profil
                 </button>
+                <button onClick={() =>{navigate("/home/secretaire")}}
+                  className=" mt-4 px-9 py-2 bg-teal-400 text-white rounded-lg hover:bg-blue-600 transition flex items-center gap-2 cursor-pointer">
+            Espace Secretaire
+  </button>
               </div>
             </div>
           </div>
@@ -217,6 +224,8 @@ const ProfilMedecin = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
+        
+ 
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
