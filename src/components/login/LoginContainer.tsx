@@ -97,7 +97,7 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
         <button
               type="submit"
               disabled={isLoading} // Désactiver le bouton pendant le chargement
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-blue-700 hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+              className="cursor-pointer w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-md text-md font-semibold text-white bg-blue-700 hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
               {isLoading ? (
                 <Loader2 className="h-6 w-6 animate-spin text-white" />

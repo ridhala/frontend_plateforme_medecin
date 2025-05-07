@@ -9,6 +9,9 @@ import {  useParams } from 'react-router-dom';
 import Support from './support';
 import axios from 'axios';
 import SecretaireForm from './secretaire';
+import { Secretaire } from '../../types/secretairetype';
+import { getsecretaire } from '../../services/serviceshome/profilservice';
+
 
 interface DashboardProps {
   activeSection: string | null;
@@ -16,10 +19,27 @@ interface DashboardProps {
 }
 
 export default function DashboardContent({ activeSection, setActiveSection }: DashboardProps) {
+
   const params = useParams();
 const [profil, setprofil]= useState("");
 const [nom, setnom]= useState("")
 const [prenom, setprenom]= useState("")
+const [secprofil, setsecprofil]=useState<Secretaire>()
+// profil secretaire pour secretaire 
+ useEffect(() => {
+    const Profilesecretaire = async () => {
+      try {
+   const profil=  await getsecretaire()
+       setsecprofil(profil)
+      } catch (err) {
+        console.error('Erreur:', err);
+      } };
+      Profilesecretaire()
+  }, []);
+
+
+
+
 
   // Sync URL parameter with active section
   useEffect(() => {
@@ -58,7 +78,7 @@ const [prenom, setprenom]= useState("")
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
         <div className="flex items-center space-x-4">
         
-          <div className="flex items-center text-xl font-semibold space-x-2">
+        {profil &&  (  <div className="flex items-center text-xl font-semibold space-x-2">
             <span>Dr {nom} {prenom} </span>
             <div className="w-15 h-15 rounded-full overflow-hidden border-2 border-gray-400">
               <img
@@ -70,7 +90,19 @@ const [prenom, setprenom]= useState("")
            { /*<div>
               <Chat doctorId={''}/>
             </div>*/}
-          </div>
+          </div>)}
+          {!profil &&  (  <div className="flex items-center text-xl font-semibold space-x-2">
+            <span> {secprofil?.nom_secretaire} {secprofil?.prenom_secretaire}</span>
+            <div className="w-15 h-15 rounded-full overflow-hidden border-2 border-gray-400">
+              <img
+                src="https://static.vecteezy.com/system/resources/previews/014/809/732/non_2x/modeling-agent-female-line-icon-vector.jpg"
+                className="w-full h-full object-cover"
+              />
+            </div>
+           { /*<div>
+              <Chat doctorId={''}/>
+            </div>*/}
+          </div>)}
         </div>
       </div>
 

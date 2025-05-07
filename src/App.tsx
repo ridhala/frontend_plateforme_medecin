@@ -23,6 +23,7 @@ import DateTimePicker from './components/home/calendar';
 import Calendar from './components/home/calendar';
 import CalendarComponent from './components/home/welcome';
 import AdminDashboard from './pages/dashboardadmin';
+import AdminLogin from './pages/loginadmin';
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 function App() {
@@ -63,6 +64,7 @@ function App() {
 
         <Route path="welcome" element={<DoctorDashboard />} />
         <Route path="admindashboard" element={<AdminDashboard />} />
+                <Route path="loginadmin" element={<AdminLogin />} />
 
 
         <Route path='/sp' element={<SpecialtySelector />}/>

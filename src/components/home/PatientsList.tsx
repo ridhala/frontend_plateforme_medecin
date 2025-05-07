@@ -192,8 +192,10 @@ await ajoutpatient(patient);
         </div>
       ) : (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
+         <div className='max-h-[60vh] overflow-y-auto'>
+
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-blue-200">
+            <thead className="bg-blue-200  sticky top-0 z-10">
               <tr>
               <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
               CIN
@@ -213,7 +215,7 @@ await ajoutpatient(patient);
                   Téléphone
                 </th>
                 <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
-                  Actions
+                  Dossier
                 </th>
               </tr>
             </thead>
@@ -244,7 +246,7 @@ await ajoutpatient(patient);
         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
          
           <button className="text-indigo-600 hover:text-indigo-900">
-            Modifier
+            consulter
           </button>
         </td>
       </tr>
@@ -258,6 +260,7 @@ await ajoutpatient(patient);
   )}
 </tbody>
           </table>
+        </div>
         </div>
       )}
     </div>

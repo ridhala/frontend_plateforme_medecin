@@ -12,15 +12,18 @@ const [succes, setsuccess]= useState<string>("");
    if(role==="patient")
    { setsuccess("patient");}
 
+   if(role==="secretaire")
+    { navigate('/home/patients');}
+
     setTimeout(async() => {
       
       if(role==="medecin")
       {navigate('/home/patients');}
 
-    else if(role==="patient"){
+     if(role==="patient"){
       navigate('/sp');
-      
     }
+    
     }, ((3000)));
   };
 if(succes==="medecin") {

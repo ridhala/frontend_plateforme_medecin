@@ -3,14 +3,14 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 
 interface SupportForm {
-  nom: string;
+  cin: string;
   email: string;
   message: string;
 }
 
 const Support: React.FC = () => {
   const [form, setForm] = useState<SupportForm>({
-    nom: '',
+    cin: '',
     email: '',
     message: '',
   });
@@ -24,9 +24,9 @@ const Support: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('/api/support', form);
+      await axios.post('', form);
       setSuccess(true);
-      setForm({ nom: '', email: '', message: '' });
+      setForm({ cin: '', email: '', message: '' });
     } catch (error) {
       alert("Erreur lors de l'envoi du message.");
     }
@@ -43,24 +43,7 @@ const Support: React.FC = () => {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="nom"
-          placeholder="Votre nom"
-          className="w-full border p-2 rounded"
-          value={form.nom}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Votre email"
-          className="w-full border p-2 rounded"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
+      
         <textarea
           name="message"
           placeholder="Décrivez votre problème..."

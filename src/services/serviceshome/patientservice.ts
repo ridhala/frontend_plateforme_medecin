@@ -39,3 +39,22 @@ export const ajoutpatient = async (credentials: addpatient)=> {
       throw new Error(`probleme de connexion lors de création patient}`);
     }}
  
+    export const statistiquepatients= async()=> {
+try{
+
+  const response = await axios.get("http://localhost:3000/authpatient/statpatient", {
+    withCredentials:true,
+    headers:{  Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
+  })
+  return response.data
+}
+
+catch (error) {
+  if (axios.isAxiosError(error)) {
+    throw new Error(
+      error.response?.data?.message || 'probleme de connexion lors de chargement de données.'
+    );
+  } else {
+    throw new Error('Probleme de connexion.');
+  }
+}    }

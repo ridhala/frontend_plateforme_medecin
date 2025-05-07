@@ -1,5 +1,8 @@
+import { useState, useEffect } from 'react';
 import { logout } from '../../services/authentification/loginService';
 import { useNavigate, NavLink } from 'react-router-dom';
+import { getsecretaire } from '../../services/serviceshome/profilservice';
+import { Secretaire } from '../../types/secretairetype';
 
 type SidebarProps = {
   setActiveSection: (section: string) => void;
@@ -12,6 +15,33 @@ export default function Sidebar({ setActiveSection }: SidebarProps) {
      logout();
    await navigate('/login');
   };
+const [secprofil, setsecprofil]=useState<Secretaire>()
+// profil secretaire pour secretaire 
+ useEffect(() => {
+    const Profilesecretaire = async () => {
+      try {
+   const profil=  await getsecretaire()
+       setsecprofil(profil)
+      } catch (err) {
+        console.error('Erreur:', err);
+      } };
+      Profilesecretaire()
+  }, []);
+
+  const secretaryMenuItems = [
+    { 
+      title: "patients", 
+      path: "patients",
+      icon: "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" 
+    },
+    { 
+      title: "rendez-vous", 
+      path: "rendez-vous",
+      icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
+    }
+  ];
+
+
 
   const menuItems = [
     { 
@@ -57,8 +87,8 @@ export default function Sidebar({ setActiveSection }: SidebarProps) {
       {/* Navigation Menu */}
       <nav className="flex flex-col flex-grow">
         {/* Main Menu Items */}
-        <div className="space-y-2">
-          {menuItems.map((item, index) => (
+       {secprofil&&( <div className="space-y-2">
+          {  secretaryMenuItems.map((item, index) => (
             <NavLink
               key={index}
               to={`/home/${item.path}`}
@@ -88,7 +118,39 @@ export default function Sidebar({ setActiveSection }: SidebarProps) {
               <span>{item.title}</span>
             </NavLink>
           ))}
-        </div>
+        </div>)}
+        {!secprofil&&( <div className="space-y-2">
+          {  menuItems.map((item, index) => (
+            <NavLink
+              key={index}
+              to={`/home/${item.path}`}
+              onClick={() => setActiveSection(item.title)}
+              className={({ isActive }) => 
+                `flex items-center space-x-3 p-3 rounded-lg w-full transition-all duration-200 ${
+                  isActive 
+                    ? "bg-blue-600 text-white shadow-md" 
+                    : "hover:bg-blue-700"
+                }`
+              }
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d={item.icon}
+                />
+              </svg>
+              <span>{item.title}</span>
+            </NavLink>
+          ))}
+        </div>)}
 
         {/* Profile Section */}
         <div className="mt-auto">

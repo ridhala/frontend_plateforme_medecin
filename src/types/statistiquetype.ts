@@ -12,3 +12,9 @@ export interface statconsultation{
     consultationcontrol: number,
     consultationvisite: number
 }
+export interface statpatient{
+    tottalpatient: number
+    nouveauxdemois: number
+    nouveaudujournee: number,
+
+}

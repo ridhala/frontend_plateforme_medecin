@@ -75,7 +75,7 @@ export const fetchprofilmedecin= async()=>{
   }
 }
 
-//  affichage de compte secretaire 
+//  affichage de compte secretaire pour le medecin 
 export const profilSecretaire = async () => {
 
   try {
@@ -96,3 +96,26 @@ export const profilSecretaire = async () => {
     }
   }
 };
+
+//  affichage de compte secretaire pour le medecin 
+export const getsecretaire = async () => {
+
+  try {
+    const response = await axios.get('http://localhost:3000/authsecretaire/secretaire', {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    });
+    return response.data.profilsecretaire
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message || 'probleme de connexion lors de chargement de données.'
+      );
+    } else {
+      throw new Error('Probleme de connexion.');
+    }
+  }
+};
+

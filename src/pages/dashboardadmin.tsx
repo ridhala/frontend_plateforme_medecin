@@ -1,28 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Tab,
-  Tabs,
-  Toolbar,
-  Typography,
-  Card,
-  CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  AppBar,Box,CssBaseline,
+  Drawer,IconButton, List,
+  ListItem, ListItemButton,  ListItemIcon,
+  ListItemText, Tab, Tabs, Toolbar, Typography,
+ Card, CardContent, Table,
+  TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper,
 } from "@mui/material";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -91,7 +75,7 @@ const AdminDashboard: React.FC = () => {
   const drawer = (
     <div className="h-full bg-gradient-to-b from-blue-600 to-blue-400 text-white">
       <Toolbar>
-        <Typography variant="h6" className="mx-auto font-bold">Clinique Admin</Typography>
+        <Typography variant="h6" className="mx-auto font-bold">MEDPLAT</Typography>
       </Toolbar>
       <List>
         {[

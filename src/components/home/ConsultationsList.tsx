@@ -244,7 +244,7 @@ console.log(currentConsultation)
   </div>
 ) : (
           <div className="bg-white shadow-md rounded-lg overflow-hidden w-full">
-            <div className='max-h-[70vh] overflow-y-auto'>
+            <div className='max-h-[60vh] overflow-y-auto'>
            
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-blue-200 sticky top-0 z-10">

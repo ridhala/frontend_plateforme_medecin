@@ -203,7 +203,7 @@ useEffect(() => {
             <h2 className="text-xl font-semibold text-gray-800">Rendez-vous à venir</h2>
           <button
             onClick={handleAddAppointment}
-            className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-400 transition-colors"
+            className="cursor-pointer px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-400 transition-colors"
           >
             + Ajouter un rendez-vous
           </button>
@@ -333,7 +333,7 @@ useEffect(() => {
       </button>
       <button
         type="submit"
-        className="px-6 py-2 bg-teal-600 text-white rounded-xl hover:bg-teal-700 transition shadow"
+        className=" px-6 py-2 bg-teal-600 text-white rounded-xl hover:bg-teal-700 transition shadow cursor-pointer  "
       >
         Ajouter
       </button>
@@ -394,7 +394,7 @@ useEffect(() => {
           
         ) } {isFormOpen==="affichage"&& (
           <div className="bg-white shadow-md rounded-lg overflow-hidden w-full">
-          <div className="max-h-[70vh] overflow-y-auto">
+          <div className="max-h-[60vh] overflow-y-auto">
 
             
           <div className='flex justify-right items-center py-1'>
@@ -408,6 +408,7 @@ useEffect(() => {
         className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
       />   
 </div>
+
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="sticky top-0 z-10">
                 <tr className='bg-blue-200'>
