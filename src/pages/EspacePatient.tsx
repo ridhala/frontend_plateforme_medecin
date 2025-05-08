@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   UserCircleIcon,
   DocumentTextIcon,
@@ -8,14 +8,12 @@ import {
   Cog6ToothIcon,
   ArrowLeftOnRectangleIcon,
   HomeIcon,
-  HeartIcon,
-  UserGroupIcon,
   CalendarIcon,
-  ClipboardDocumentIcon,
   EyeIcon,
   PlusIcon,
   CloudArrowUpIcon
 } from '@heroicons/react/24/outline';
+import DossierMedicale from './DossierMedicale';
 
 // Mock data pour les spécialités
 const specialites = [
@@ -30,17 +28,50 @@ const specialites = [
   { id: 9, name: 'Psychiatry', icon: '🧘', doctors: 5 },
 ];
 
+
 const EspacePatient = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState('sp');
   const navigate = useNavigate();
+  const location = useLocation();
 
+  // Synchronisation automatique état/URL
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.endsWith('/dossier')) {
+      setSelectedMenuItem('dossier');
+    } else if (path.endsWith('/documents')) {
+      setSelectedMenuItem('documents');
+    } else if (path.endsWith('/chatbot')) {
+      setSelectedMenuItem('chatbot');
+    } else if (path.endsWith('/settings')) {
+      setSelectedMenuItem('settings');
+    } else {
+      setSelectedMenuItem('sp');
+    }
+  }, [location]);
+
+  // Navigation corrigée
   const handleMenuClick = (key: string) => {
     setSelectedMenuItem(key);
-    if (key === 'dossier') {
-      navigate('/dossier');
-    } else if (key === 'medecins') {
-      navigate('/liste-medecins');
+    switch (key) {
+      case 'sp':
+        navigate('/espace-patient');
+        break;
+      case 'dossier':
+        navigate('/espace-patient/dossier');
+        break;
+      case 'documents':
+        navigate('/espace-patient/documents');
+        break;
+      case 'chatbot':
+        navigate('/espace-patient/chatbot');
+        break;
+      case 'settings':
+        navigate('/espace-patient/settings');
+        break;
+      default:
+        navigate('/espace-patient');
     }
   };
 
@@ -69,7 +100,7 @@ const EspacePatient = () => {
       case 'sp':
         return <SpecialitesContent />;
       case 'dossier':
-        return <DossierMedicalContent />;
+        return <DossierMedicale />;
       case 'documents':
         return (
           <div className="p-6">
@@ -190,7 +221,6 @@ const EspacePatient = () => {
       </div>
     </div>
   );
-
 
   return (
     <div className="flex h-screen bg-gray-50">

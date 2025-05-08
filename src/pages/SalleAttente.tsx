@@ -615,8 +615,18 @@ export default function SalleAttente() {
                 </div>
                 
                 <form onSubmit={handleBookAppointment} style={{ padding: '24px' }}>
+
+                <TextField
+                    label="Cin "
+                    name="CIN"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    fullWidth
+                    margin="normal"
+                  />
                   <TextField
-                    label="Nom Complet"
+                    label="Nom "
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
@@ -624,7 +634,15 @@ export default function SalleAttente() {
                     fullWidth
                     margin="normal"
                   />
-                  
+                   <TextField
+                    label="prenom "
+                    name="prenom"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    fullWidth
+                    margin="normal"
+                  />
                   <TextField
                     label="Téléphone"
                     name="phone"
@@ -652,30 +670,10 @@ export default function SalleAttente() {
                       type="date"
                       InputLabelProps={{ shrink: true }}
                     />
-                    <TextField
-                      label="Heure"
-                      name="time"
-                      value={formData.time}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      type="time"
-                      InputLabelProps={{ shrink: true }}
-                    />
+                   
                   </div>
                   
-                  <TextField
-                    label="Motif de consultation"
-                    name="reason"
-                    value={formData.reason}
-                    onChange={handleInputChange}
-                    fullWidth
-                    margin="normal"
-                    multiline
-                    rows={4}
-                    sx={{ marginTop: '16px' }}
-                  />
-                  
+                
                   <div style={{ 
                     paddingTop: '32px', 
                     display: 'flex', 

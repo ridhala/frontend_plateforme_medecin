@@ -16,18 +16,16 @@ import RegisterSecretaire from './pages/registerSecritaire';
 import DossierMedicale from './pages/DossierMedicale';
 import EspacePatient from './pages/EspacePatient';
 
-
 function App() {
   return (
     <Router>
       <Routes>
         {/* Default route redirects to the home page */}
-
-        {/* Route for the home page */}
-      
+        <Route path="/" element={<Navigate to="/Acceuil" />} />
 
         {/* Route for the login page */}
         <Route path="/login" element={<Login />} />
+        
         {/* Route for the register Patient page */}
         <Route path="/registerpat" element={<RegisterPat />} />
 
@@ -37,29 +35,36 @@ function App() {
 
         {/* Route for the forgot password page */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        
+        {/* Fallback route for unknown paths */}
         <Route path="*" element={<Register />} />
+        
         <Route path='/sp' element={<SpecialtySelector />}/>
         
-         {/* Route pour la salle d'attente avec l'ID du médecin */}
-         <Route path="/salle-attente" element={<SalleAttente />} />
+        {/* Route pour la salle d'attente */}
+        <Route path="/salle-attente" element={<SalleAttente />} />
 
         <Route path='/Acceuil' element={<Accueil />}/>
-        {/* Fallback route for unknown paths (redirects to home) */}
-        <Route path="/" element={<Navigate to="/Acceuil" />} />
-
-       {/* Liste des medecins de chaque specialites */}
+        
+        {/* Liste des medecins de chaque specialites */}
         <Route path="/liste-medecins" element={<ListeMedecins />} />
 
-         {/* Route pour l'inscription des secrétaires */}
-         <Route path="/register-secretaire" element={<RegisterSecretaire />} />
+        {/* Route pour l'inscription des secrétaires */}
+        <Route path="/register-secretaire" element={<RegisterSecretaire />} />
 
-         <Route path="/dossier" element={<DossierMedicale />} />
+        {/* Dossier Medical */}
+        <Route path="/dossier" element={<DossierMedicale />} />
 
-          {/* Espace Patient*/}
-          <Route path="/EspaceP" element={<EspacePatient />} />
+         {/* Routes pour l'Espace Patient */}
+         <Route path="/espace-patient" element={<EspacePatient />}>
+          <Route index element={<EspacePatient />} />
+          <Route path="dossier" element={<EspacePatient />} />
+          <Route path="documents" element={<EspacePatient />} />
+          <Route path="chatbot" element={<EspacePatient />} />
+          <Route path="settings" element={<EspacePatient />} />
+        </Route>
       </Routes>
     </Router>
-    
   );
 }
 
