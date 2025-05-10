@@ -12,16 +12,13 @@ import Home from './pages/home';
 
 import Activationpage from './pages/verifemail';
 
-import DoctorDashboard from './components/home/welcome';
 import SpecialtySelector from './pages/specialite';
 import SalleAttente from './pages/SalleAttente';
 
 
 import DashboardContent from './components/home/DashboardContent';
 import Sidebar from './components/home/Sidebar';
-import DateTimePicker from './components/home/calendar';
 import Calendar from './components/home/calendar';
-import CalendarComponent from './components/home/welcome';
 import AdminDashboard from './pages/dashboardadmin';
 import AdminLogin from './pages/loginadmin';
 
@@ -62,7 +59,6 @@ function App() {
         <Route path="*" element={<Register />} />
 
 
-        <Route path="welcome" element={<DoctorDashboard />} />
         <Route path="admindashboard" element={<AdminDashboard />} />
                 <Route path="loginadmin" element={<AdminLogin />} />
 
@@ -74,7 +70,6 @@ function App() {
 
 
         <Route path='/Acceuil' element={<Accueil />}/>
-        <Route path='/welcome' element={<CalendarComponent />}/>
 
         <Route path="/" element={<Navigate to="/Acceuil" />} />
       </Routes>

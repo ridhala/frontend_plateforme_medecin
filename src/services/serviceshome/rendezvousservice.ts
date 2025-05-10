@@ -107,7 +107,7 @@ export const updateRendezvous = async (_id: string, updateData: RendezvousUpdate
     return response.data;
   } catch (error) {
     console.error('Error updating rendezvous:', error);
-    throw error;
+    throw error;  
   }
 };
 

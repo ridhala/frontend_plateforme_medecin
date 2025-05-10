@@ -6,7 +6,7 @@
   import "react-datepicker/dist/react-datepicker.css";
   import axios from 'axios';
 import { Modal } from './pop-up/modal';
-import { format } from 'date-fns';
+
 import { ConfirmModal } from './pop-up/deletemodal';
 
   export default function AppointmentsList() {
@@ -58,7 +58,6 @@ const[ dateupdates, setdateupdates] = useState<string | null>("")
         if (!selectedAppointment) return;
       
         try {
-          const fd =selectedDate?.toISOString().split('T')[0];
 
               const updateData: RendezvousUpdateData = {
             nom_patient: selectedAppointment.nom_patient ,

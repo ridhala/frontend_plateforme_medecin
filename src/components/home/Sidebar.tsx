@@ -19,12 +19,10 @@ const [secprofil, setsecprofil]=useState<Secretaire>()
 // profil secretaire pour secretaire 
  useEffect(() => {
     const Profilesecretaire = async () => {
-      try {
+      
    const profil=  await getsecretaire()
        setsecprofil(profil)
-      } catch (err) {
-        console.error('Erreur:', err);
-      } };
+        };
       Profilesecretaire()
   }, []);
 
@@ -60,8 +58,8 @@ const [secprofil, setsecprofil]=useState<Secretaire>()
       icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
     },
     { 
-      title: "support", 
-      path: "support",
+      title: "messagerie", 
+      path: "messagerie",
       icon: "M18.364 5.636a9 9 0 11-12.728 0M12 17v.01M12 13a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" 
     },
   ];
@@ -131,8 +129,7 @@ const [secprofil, setsecprofil]=useState<Secretaire>()
                     ? "bg-blue-600 text-white shadow-md" 
                     : "hover:bg-blue-700"
                 }`
-              }
-            >
+              }>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"

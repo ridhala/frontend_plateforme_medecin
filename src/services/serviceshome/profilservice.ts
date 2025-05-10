@@ -118,4 +118,25 @@ export const getsecretaire = async () => {
     }
   }
 };
-
+export const updatesecretaires = async (_id: string, updateData: Secretaire) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:3000/authmedecin/updatesecretaire/${_id}`, // Adjust endpoint if different
+      updateData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message || 'probleme de connexion lors de chargement de données.'
+      );
+    } else {
+      throw new Error('Probleme de connexion.');
+    }
+  }
+};

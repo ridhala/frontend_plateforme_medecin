@@ -6,11 +6,11 @@ import ConsultationsList from './ConsultationsList';
 import Profil from './Profil';
 import Chat from '../Messagerie/Chat';
 import {  useParams } from 'react-router-dom';
-import Support from './support';
 import axios from 'axios';
 import SecretaireForm from './secretaire';
 import { Secretaire } from '../../types/secretairetype';
 import { getsecretaire } from '../../services/serviceshome/profilservice';
+import Messagerie from './messagerie';
 
 
 interface DashboardProps {
@@ -78,31 +78,31 @@ const [secprofil, setsecprofil]=useState<Secretaire>()
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
         <div className="flex items-center space-x-4">
         
-        {profil &&  (  <div className="flex items-center text-xl font-semibold space-x-2">
-            <span>Dr {nom} {prenom} </span>
-            <div className="w-15 h-15 rounded-full overflow-hidden border-2 border-gray-400">
-              <img
-                src={profil}
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
-            </div>
-           { /*<div>
-              <Chat doctorId={''}/>
-            </div>*/}
-          </div>)}
-          {!profil &&  (  <div className="flex items-center text-xl font-semibold space-x-2">
-            <span> {secprofil?.nom_secretaire} {secprofil?.prenom_secretaire}</span>
-            <div className="w-15 h-15 rounded-full overflow-hidden border-2 border-gray-400">
-              <img
-                src="https://static.vecteezy.com/system/resources/previews/014/809/732/non_2x/modeling-agent-female-line-icon-vector.jpg"
-                className="w-full h-full object-cover"
-              />
-            </div>
-           { /*<div>
-              <Chat doctorId={''}/>
-            </div>*/}
-          </div>)}
+        {!profil ? (
+  <div className="flex items-center text-xl font-semibold space-x-2">
+    <span>{secprofil?.nom_secretaire} {secprofil?.prenom_secretaire}</span>
+    <div className="w-15 h-15 rounded-full overflow-hidden border-2 border-gray-400">
+      <img
+        src="https://static.vecteezy.com/system/resources/previews/014/809/732/non_2x/modeling-agent-female-line-icon-vector.jpg"
+        alt="Secretary Profile"
+        className="w-full h-full object-cover"
+      />
+    </div>
+    {/* <div><Chat doctorId={''}/></div> */}
+  </div>
+) :(
+  <div className="flex items-center text-xl font-semibold space-x-2">
+    <span>Dr {nom} {prenom}</span>
+    <div className="w-15 h-15 rounded-full overflow-hidden border-2 border-gray-400">
+      <img
+        src={profil}
+        alt="Profile"
+        className="w-full h-full object-cover"
+      />
+    </div>
+    {/* <div><Chat doctorId={''}/></div> */}
+  </div>
+) }
         </div>
       </div>
 
@@ -134,9 +134,11 @@ const [secprofil, setsecprofil]=useState<Secretaire>()
             <ConsultationsList />
           </div>
         )}
-         {activeSection === "support" && (
+         {activeSection === "messagerie" && (
           <div className="bg-white p-4 rounded-lg shadow-lg w-full">
-            <Support />
+           <Messagerie />
+
+
           </div>
         )}
 

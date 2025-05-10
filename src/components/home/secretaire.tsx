@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { createsecreteaire, fetchprofilmedecin, profilSecretaire } from '../../services/serviceshome/profilservice';
-import { Secretaire } from '../../types/secretairetype';
+import { createsecreteaire, fetchprofilmedecin, profilSecretaire, updatesecretaires } from '../../services/serviceshome/profilservice';
+import { Secretaire, Secretaires } from '../../types/secretairetype';
 import { MedecinProfilesec } from '../../types/profilemedecin';
 import { useNavigate } from 'react-router-dom';
 import { InfoField } from './infofield';
@@ -8,10 +8,13 @@ import { InfoField } from './infofield';
 const SecretaireForm = () => {
   const [profileData, setProfileData] = useState<MedecinProfilesec | null>(null);
   const [secretaire, setSecretaire] = useState<Secretaire | null>(null);
+  const [updatedsecretaire, setupdatedsecretaire] = useState<Secretaire>();
   const [formprofile, setFormprofile] = useState<Secretaire>();
   const navigate = useNavigate();
+  const [updatesecretaire, setupdate] = useState(false);
+
   const [loadingSecretary, setLoadingSecretary] = useState(true);
-  const [form, setForm] = useState<Secretaire>({
+  const [form, setForm] = useState<Secretaires>({
     cin_secretaire: null,
     nom_secretaire: '',
     prenom_secretaire: '',
@@ -50,6 +53,39 @@ const SecretaireForm = () => {
     profilsecretaire();
   }, []);
 
+
+  const updateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {if(formprofile?._id && updatedsecretaire ){
+      const secretaire = await updatesecretaires(formprofile?._id, updatedsecretaire);
+      setFormprofile(secretaire);
+      setMessage('Secrétaire updated avec succès !');
+      // Refresh secretary data after update
+      const updatedSecretaires = await profilSecretaire();
+      setFormprofile(updatedSecretaires);}
+    } catch (error) {
+      if (error instanceof Error) {
+        setMessage(` probleme:  ${error.message}`);
+      }
+      
+    } finally {
+      setIsSubmitting(false);
+      setupdate(false);
+    }
+  };
+  
+
+  const updateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setupdatedsecretaire(prev => ({
+      ...(prev as Secretaire), // Assertion
+      [name]: name === 'cin_secretaire' ? Number(value) : value
+    }));
+  };
+
+
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm(prevForm => ({
@@ -68,19 +104,120 @@ const SecretaireForm = () => {
       // Refresh secretary data after creation
       const updatedSecretaire = await profilSecretaire();
       setFormprofile(updatedSecretaire);
-    } catch (err) {
-      console.error(err);
-      setMessage("Erreur lors de la création de la secrétaire.");
+    } catch (error) {
+      if (error instanceof Error) {
+        setMessage(` probleme:  ${error.message}`);
+      }
+      
+    
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (updatesecretaire) return (
+    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Modifier le Profil</h2>
+      
+      <form onSubmit={updateSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">CIN</label>
+          <input
+            type="number"
+            name="cin_secretaire"
+            value={updatedsecretaire?.cin_secretaire?.toString()}
+
+           placeholder={formprofile?.cin_secretaire?.toString()}
+            onChange={updateChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            
+          />
+        </div>
+  
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Nom</label>
+            <input
+              type="text"
+              name="nom_secretaire"
+              value={updatedsecretaire?.nom_secretaire}
+              placeholder={formprofile?.nom_secretaire}
+              onChange={updateChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              
+            />
+          </div>
+  
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Prénom</label>
+            <input
+              type="text"
+              name="prenom_secretaire"
+              value={updatedsecretaire?.prenom_secretaire}
+
+              placeholder={formprofile?.prenom_secretaire}
+              onChange={updateChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              
+            />
+          </div>
+        </div>
+  
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={updatedsecretaire?.email}
+
+            placeholder={formprofile?.email}
+            onChange={updateChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            
+          />
+        </div>
+  
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Téléphone</label>
+          <input
+            type="tel"
+            name="telephone"
+            value={updatedsecretaire?.telephone}
+            placeholder={formprofile?.telephone}
+            onChange={updateChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            
+          />
+        </div>
+  
+      
+  
+  
+        <div className="flex justify-end space-x-3 pt-4">
+          <button
+            type="button"
+            onClick={() => setupdate(false)}
+            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+          >
+            {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
+    <div className="max-w-220 mx-auto p-2 bg-white rounded-xl shadow-lg">
       <button 
         onClick={() => navigate(-1)}
-        className="mb-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition flex items-center shadow-sm"
+        className="mb-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition flex items-center shadow-sm"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
@@ -143,7 +280,9 @@ const SecretaireForm = () => {
                   isPhone 
                 />  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                
-                <button className="mt-3 sm:mt-0 px-4 py-2 bg-gray-200 text-teal-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                <button className="mt-3 sm:mt-0 px-4 py-2 bg-gray-200 text-teal-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                onClick={()=>{setupdate(true)}}
+                >
                  Modifier compte
                 </button>
               </div>
