@@ -34,8 +34,7 @@ interface StatisticsSectionProps {
 
 
 export default function StatisticsSection({ activeSection }: StatisticsSectionProps) {
-  const today = new Date().toISOString().split('T')[0];
-  const [selectedDate, setSelectedDate] = useState<string>(today);
+
   const [rendezstats, setrendezStats] = useState<statrendez>({
     MounthRendezvous: 0,
     rendezvousToday: 0,
@@ -176,209 +175,187 @@ catch (error) {
   };
 
   if (!activeSection || activeSection === "Dashboard") {
-    return (
-      <div className="space-y-6"> {/* Single parent div to wrap all elements */}
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">New Patients</p>
-              <h3 className="text-xl font-bold text-gray-800">45</h3>
-            </div>
+  return (
+    <div className="space-y-4 md:space-y-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserMd className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Our Doctor</p>
-              <h3 className="text-xl font-bold text-gray-800">23</h3>
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaHeartbeat className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Operation</p>
-              <h3 className="text-xl font-bold text-gray-800">14</h3>
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaDollarSign className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Income</p>
-              <h3 className="text-xl font-bold text-gray-800">$5728</h3>
-            </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">New Patients</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">45</h3>
           </div>
         </div>
-
-        {/* Chart Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="col-span-2 bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Statistics Overview</h3>
-            <div className="h-64">
-              <Line data={chartData} options={chartOptions} />
-            </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserMd className="text-blue-600 text-xl sm:text-2xl" />
           </div>
-         
-            
-          
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">Our Doctor</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">23</h3>
+          </div>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaHeartbeat className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">Operation</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">14</h3>
+          </div>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaDollarSign className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">Income</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">$5728</h3>
+          </div>
         </div>
       </div>
-    );
-  }
 
-  if (activeSection === "patients") {
-    return (
-      <div className="space-y-6"> {/* Single parent div for Patients section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">toutes les Patients</p>
-              <h3 className="text-xl font-bold text-gray-800">{patientsatat.tottalpatient}</h3>
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">nouveaux dans ce mois</p>
-              <h3 className="text-xl font-bold text-gray-800">{patientsatat.nouveauxdemois}</h3>
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">nouveau aujourd'hui</p>
-              <h3 className="text-xl font-bold text-gray-800">{patientsatat.nouveaudujournee}</h3>
-            </div>
-          </div>
-        { /* <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-            <p className="text-gray-500">nouveau aujourd'hui</p>
-            <h3 className="text-xl font-bold text-gray-800">{patientsatat.nouveaudujournee}</h3>
-            </div>
-          </div>*/}
-        </div>
-      </div>
-    );
-  }
-
-  if (activeSection === "rendez-vous") {
-    
-   
-  
-    return (
-      <div className="space-y-6">
-       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-          <div className="bg-blue-100 p-3 rounded-full">
-            <FaUserPlus className="text-blue-600 text-2xl" />
-          </div>
-          <div>
-            <p className="text-gray-500">Rendez-vous du mois</p>
-            <h3 className="text-xl font-bold text-gray-800">{rendezstats.MounthRendezvous}</h3>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-          <div className="bg-blue-100 p-3 rounded-full">
-            <FaUserPlus className="text-blue-600 text-2xl" />
-          </div>
-          <div>
-            <p className="text-gray-500">Rendez-vous d'aujourd'hui</p>
-            <h3 className="text-xl font-bold text-gray-800">{rendezstats.rendezvousToday}</h3>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-          <div className="bg-blue-100 p-3 rounded-full">
-            <FaUserPlus className="text-blue-600 text-2xl" />
-          </div>
-          <div>
-            <p className="text-gray-500">Rendez-vous confirmés</p>
-            <h3 className="text-xl font-bold text-gray-800">{rendezstats.rendezvousConfirmer}</h3>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-          <div className="bg-blue-100 p-3 rounded-full">
-            <FaUserPlus className="text-blue-600 text-2xl" />
-          </div>
-          <div>
-            <p className="text-gray-500">En salle d'attente</p>
-            <h3 className="text-xl font-bold text-gray-800">{rendezstats.rendezvousensalle}</h3>
+      {/* Chart Section */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
+        <div className="col-span-1 lg:col-span-2 bg-white p-4 sm:p-6 rounded-lg shadow-md">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">Statistics Overview</h3>
+          <div className="h-48 sm:h-64">
+            <Line data={chartData} options={chartOptions} />
           </div>
         </div>
       </div>
     </div>
   );
-  }
+}
 
-  if (activeSection === "consultations") {
-    return (
-      <div className="space-y-6"> {/* Single parent div for Consultations section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Consultations du mois</p>
-              <h3 className="text-xl font-bold text-gray-800">{consultationstats.Mounthconsultation}</h3>
-            </div>
+if (activeSection === "patients") {
+  return (
+    <div className="space-y-4 md:space-y-6">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Aujourd'hui</p>
-              <h3 className="text-xl font-bold text-gray-800">{consultationstats.consultationToday}</h3>
-            </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">toutes les Patients</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{patientsatat.tottalpatient}</h3>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Control</p>
-              <h3 className="text-xl font-bold text-gray-800">{consultationstats.consultationcontrol}</h3>
-            </div>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaUserPlus className="text-blue-600 text-2xl" />
-            </div>
-            <div>
-              <p className="text-gray-500">Visite</p>
-              <h3 className="text-xl font-bold text-gray-800">{consultationstats.consultationvisite}</h3>
-            </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">nouveaux dans ce mois</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{patientsatat.nouveauxdemois}</h3>
+          </div>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">nouveau aujourd'hui</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{patientsatat.nouveaudujournee}</h3>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+if (activeSection === "rendez-vous") {
+  return (
+    <div className="space-y-4 md:space-y-6">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">Rendez-vous du mois</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{rendezstats.MounthRendezvous}</h3>
+          </div>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">Rendez-vous d'aujourd'hui</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{rendezstats.rendezvousToday}</h3>
+          </div>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">Rendez-vous confirmés</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{rendezstats.rendezvousConfirmer}</h3>
+          </div>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">En salle d'attente</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{rendezstats.rendezvousensalle}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+if (activeSection === "consultations") {
+  return (
+    <div className="space-y-4 md:space-y-6">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">Consultations du mois</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{consultationstats.Mounthconsultation}</h3>
+          </div>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">Aujourd'hui</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{consultationstats.consultationToday}</h3>
+          </div>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">Control</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{consultationstats.consultationcontrol}</h3>
+          </div>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex items-center space-x-3 sm:space-x-4">
+          <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+            <FaUserPlus className="text-blue-600 text-xl sm:text-2xl" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500">Visite</p>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{consultationstats.consultationvisite}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
   return null; // For "Profil" or other sections
 }
 
-function getRendezvousStats(selectedDate: string) {
-  throw new Error('Function not implemented.');
-}

@@ -1,8 +1,6 @@
 // services/messagerieService.ts
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/messagerie";
-
 export interface Message {
   _id?: string;
   senderId: string;
@@ -32,6 +30,15 @@ export const sendMessage = async (data: {
 
 export const fetchmedecin=async () => {
   const res = await axios.get(`http://localhost:3000/authmedecin/all`, {
+  });
+  return res.data;
+};
+
+
+export const fetchdiscussion = async () => {
+  const res = await axios.get(`http://localhost:3000/messagerie/discussion`, {
+    withCredentials: true,
+    headers:{  Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
   });
   return res.data;
 };

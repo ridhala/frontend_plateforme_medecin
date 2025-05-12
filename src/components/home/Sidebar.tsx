@@ -15,6 +15,8 @@ export default function Sidebar({ setActiveSection }: SidebarProps) {
      logout();
    await navigate('/login');
   };
+  const [open, setOpen] = useState(false); // pour gérer l’ouverture sur mobile
+
 const [secprofil, setsecprofil]=useState<Secretaire>()
 // profil secretaire pour secretaire 
  useEffect(() => {
@@ -73,11 +75,28 @@ const [secprofil, setsecprofil]=useState<Secretaire>()
   
 
   return (
-    <div className="bg-blue-800 text-white w-64 p-6 flex flex-col h-full">
+  <>
+    {/* Toggle button for mobile */}
+    <div className="md:hidden bg-blue-800 text-white p-4 flex justify-between items-center">
+     { /*<NavLink to="/home" className="text-xl font-semibold">MP</NavLink>*/}
+      <button onClick={() => setOpen(!open)} className="focus:outline-none">
+        ☰
+      </button>
+    </div>
+
+    {/* Sidebar */}
+    <div
+      className={`
+        fixed md:static top-0 left-0 z-40 bg-blue-800 text-white w-64 h-full p-6 flex flex-col transform
+        transition-transform duration-300 ease-in-out
+        ${open ? "translate-x-0" : "-translate-x-full"} 
+        md:translate-x-0
+      `}
+    >
       {/* Logo/Title */}
       <NavLink 
         to="/home" 
-        className="text-2xl font-bold mb-8 cursor-pointer hover:text-blue-200 transition-colors duration-200"
+        className="text-2xl font-bold mb-8 cursor-pointer hover:text-blue-200 transition-colors duration-200 hidden md:block"
       >
         MEDPLAT
       </NavLink>
@@ -85,75 +104,66 @@ const [secprofil, setsecprofil]=useState<Secretaire>()
       {/* Navigation Menu */}
       <nav className="flex flex-col flex-grow">
         {/* Main Menu Items */}
-       {secprofil&&( <div className="space-y-2">
-          {  secretaryMenuItems.map((item, index) => (
-            <NavLink
-              key={index}
-              to={`/home/${item.path}`}
-              onClick={() => setActiveSection(item.title)}
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg w-full transition-all duration-200 ${
-                  isActive 
-                    ? "bg-blue-600 text-white shadow-md" 
-                    : "hover:bg-blue-700"
-                }`
-              }
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+        {secprofil ? (
+          <div className="space-y-2">
+            {secretaryMenuItems.map((item, index) => (
+              <NavLink
+                key={index}
+                to={`/home/${item.path}`}
+                onClick={() => {
+                  setActiveSection(item.title);
+                  setOpen(false);
+                }}
+                className={({ isActive }) => 
+                  `flex items-center space-x-3 p-3 rounded-lg w-full transition-all duration-200 ${
+                    isActive 
+                      ? "bg-blue-600 text-white shadow-md" 
+                      : "hover:bg-blue-700"
+                  }`
+                }
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d={item.icon}
-                />
-              </svg>
-              <span>{item.title}</span>
-            </NavLink>
-          ))}
-        </div>)}
-        {!secprofil&&( <div className="space-y-2">
-          {  menuItems.map((item, index) => (
-            <NavLink
-              key={index}
-              to={`/home/${item.path}`}
-              onClick={() => setActiveSection(item.title)}
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg w-full transition-all duration-200 ${
-                  isActive 
-                    ? "bg-blue-600 text-white shadow-md" 
-                    : "hover:bg-blue-700"
-                }`
-              }>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={item.icon} />
+                </svg>
+                <span>{item.title}</span>
+              </NavLink>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {menuItems.map((item, index) => (
+              <NavLink
+                key={index}
+                to={`/home/${item.path}`}
+                onClick={() => {
+                  setActiveSection(item.title);
+                  setOpen(false);
+                }}
+                className={({ isActive }) => 
+                  `flex items-center space-x-3 p-3 rounded-lg w-full transition-all duration-200 ${
+                    isActive 
+                      ? "bg-blue-600 text-white shadow-md" 
+                      : "hover:bg-blue-700"
+                  }`
+                }
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d={item.icon}
-                />
-              </svg>
-              <span>{item.title}</span>
-            </NavLink>
-          ))}
-        </div>)}
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={item.icon} />
+                </svg>
+                <span>{item.title}</span>
+              </NavLink>
+            ))}
+          </div>
+        )}
 
         {/* Profile Section */}
         <div className="mt-auto">
           <NavLink
             to={`/home/${profileItem.path}`}
-            onClick={() => setActiveSection(profileItem.title)}
+            onClick={() => {
+              setActiveSection(profileItem.title);
+              setOpen(false);
+            }}
             className={({ isActive }) => 
               `flex items-center space-x-3 p-3 rounded-lg w-full transition-all duration-200 border-t border-blue-700 ${
                 isActive 
@@ -162,7 +172,6 @@ const [secprofil, setsecprofil]=useState<Secretaire>()
               }`
             }
           >
-            {/* Avatar Placeholder */}
             <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
               <span className="text-sm font-semibold">Dr</span>
             </div>
@@ -176,11 +185,13 @@ const [secprofil, setsecprofil]=useState<Secretaire>()
 
       {/* Logout Button */}
       <button 
-        className="mt-4 text-white hover:bg-blue-700 p-2 rounded-lg w-full text-left"
+        className="mt-4 text-white hover:bg-blue-700 p-2 rounded-lg w-full text-left flex  "
         onClick={Logout}
       >
-        Logout
+         Logout
       </button>
     </div>
-  );
+  </>
+);
+
 }
