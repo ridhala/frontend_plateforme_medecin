@@ -16,12 +16,15 @@
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@heroicons/react": "^2.2.0",
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.0.2",
+    "@react-google-maps/api": "^2.20.6",
     "@tailwindcss/vite": "^4.0.4",
     "axios": "^1.9.0",
     "chart.js": "^4.4.8",
     "date-fns": "^4.1.0",
+    "dotenv": "^16.5.0",
     "fr": "^1.2.2",
     "framer-motion": "^12.6.3",
     "js-cookie": "^3.0.5",
@@ -36,6 +39,7 @@
     "react-router-dom": "^7.3.0",
     "react-toastify": "^11.0.5",
     "socket.io-client": "^4.8.1",
+    "tabbable": "^6.2.0",
     "tailwind": "^4.0.0"
   },
   "devDependencies": {

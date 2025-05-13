@@ -119,7 +119,7 @@ const formphoto= new FormData()
           {/* Title with Doctor Icon */}
           <h2 className="text-2xl font-bold text-center text-gray-900 flex items-center justify-center gap-3 mb-4">
             <FaUserMd className="text-indigo-600 text-3xl" />
-            Create a Doctor Account
+            Créer votre Cabinet numérique
           </h2>
 
           {/* Display error message */}
@@ -244,7 +244,7 @@ const formphoto= new FormData()
               {isLoading ? (
                 <Loader2 className="h-6 w-6 animate-spin text-white" />
               ) : (
-                "Register"
+                "Sinscrire"
               )}
             </button>
           </form>
@@ -267,7 +267,7 @@ const formphoto= new FormData()
             htmlFor="photo_profil"
             className="block text-sm font-medium text-gray-700"
           >
-            Upload Profile Photo
+            Télécharger Photo
           </label>
           <input
             id="photo_profil"

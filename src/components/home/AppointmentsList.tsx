@@ -342,7 +342,7 @@ useEffect(() => {
 
 
   <div className="w-1/3 pl-6 border-l">
-    <h4 className="text-md font-medium text-gray-700 mb-3">Available Times</h4>
+    <h4 className="text-md font-medium text-gray-700 mb-3">Temps Disponibles</h4>
     {availableTimes.length > 0 || selectedDate ? (
       <div className="flex flex-wrap gap-2">
         {availableTimes.map((time, index) => {
@@ -385,7 +385,7 @@ useEffect(() => {
   
       </div>
     ) : (
-      <p className="text-gray-500">No available times</p>
+      <p className="text-gray-500">Pas de temps dissponibles</p>
     )}
   </div>
             </div>

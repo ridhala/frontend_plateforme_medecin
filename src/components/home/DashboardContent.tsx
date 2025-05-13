@@ -4,7 +4,6 @@ import PatientsList from './PatientsList';
 import AppointmentsList from './AppointmentsList';
 import ConsultationsList from './ConsultationsList';
 import Profil from './Profil';
-import Chat from '../Messagerie/Chat';
 import {  useParams } from 'react-router-dom';
 import axios from 'axios';
 import SecretaireForm from './secretaire';

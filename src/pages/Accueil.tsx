@@ -6,8 +6,9 @@ function Accueil() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Section Hero + Navbar dans la même zone */}
-      <section
+      
+    {/* Section Hero + Navbar dans la même zone */}
+    <section
         className="relative bg-no-repeat bg-cover bg-center text-white"
         style={{
           backgroundImage:
@@ -181,7 +182,6 @@ function Accueil() {
             </div>
           )}
         </header>
-
         {/* Contenu "Hero" au-dessus du background */}
 <div
   className="container mx-auto px-4 py-20 flex flex-col items-center justify-center text-center text-white mt-10"
@@ -202,11 +202,11 @@ function Accueil() {
 
   {/* Bouton emmene au register */}
   <Link
-    to="/RegisterPat"
+    to="/sp"
     className="border border-white text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 
                hover:bg-red-800 hover:border-red-800"
   >
-    Patients, commencez ici
+    Reserver votre RDV
   </Link>
 </div>
 

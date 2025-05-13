@@ -58,14 +58,14 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
           )}
       {/* Titre du formulaire */}
       <h2 className="mt-2 text-center text-2xl font-bold tracking-tight text-gray-800">
-        Sign in to your account
+        Connectez-vous à votre compte
       </h2>
 
       {/* Formulaire de connexion */}
       <form onSubmit={handleSubmit} className="space-y-6 mt-6">
         {/* Champ CIN Médecin */}
         <InputField
-          label="cin"
+          label="Cin"
           type="text"
           name="cin"
           value={formData.cin}
@@ -75,7 +75,7 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
 
         {/* Champ Mot de passe */}
         <InputField
-          label="Password"
+          label="Mot de passe"
           type="password"
           name="password"
           value={formData.password}
@@ -89,7 +89,7 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
             to="/forgot-password"
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
-            Forgot password?
+           Mot de passe oublié
           </Link>
         </div>
 
@@ -102,7 +102,7 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
               {isLoading ? (
                 <Loader2 className="h-6 w-6 animate-spin text-white" />
               ) : (
-                "Sign in"
+                "Connexion"
               )}
             </button>
 

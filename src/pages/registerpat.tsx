@@ -125,7 +125,7 @@ const RegisterPatient = () => {
             <div className='text-indigo-600 text-2xl font-bold mb-2'>
               <h1 className="flex items-center justify-center gap-3 mb-4">
               <HiUser className="text-indigo-600 text-3xl" />
-            Register Patient</h1></div>
+            Créer votre compte Patient</h1></div>
             <form onSubmit={handleSubmit} className="space-y-3 ">
             {error&& (
             <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-400 text-red-700 rounded-md">
@@ -310,7 +310,7 @@ const RegisterPatient = () => {
                  { isLoading ?(
                     <Loader2 className='h-6 w-6 animate-spin text-white text-semifont'/>
                   ): 
-                 ( "Register")}
+                 ( "Sinscrire")}
                 </button>
               </div>
               
@@ -318,9 +318,9 @@ const RegisterPatient = () => {
 
             {/* Lien pour retourner à la page de connexion */}
             <p className="mt-6 text-center text-sm text-gray-500">
-              Already have an account?{' '}
+              Vous avez déjà un compte ?{' '}
               <a href="/login" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                Sign in
+                connexion
               </a>
             </p>
           </div>
