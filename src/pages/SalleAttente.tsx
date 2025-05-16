@@ -1,38 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MedicalServices as DossierIcon,CalendarToday,
-  AccessTime,Emergency,Phone,Info,Description,} from '@mui/icons-material';
+  Emergency,Phone,Info,Description,} from '@mui/icons-material';
 
-import {Typography,Paper,Avatar,  Button,Chip, TextField, InputAdornment, Table, 
-  TableBody, TableCell, TableContainer, TableHead,  TableRow,IconButton,} from '@mui/material';
+import {Typography,Paper,Avatar,  Button,IconButton,} from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MedecinProfile } from '../types/profilemedecin';
-import { Mail, MapPin, PhoneIcon } from 'lucide-react';
 
-interface Availability {
-  id: number;
-  date: string;
-  time: string;
-  status: 'available' | 'reserved' | 'passed';
-}
-
-interface Doctor {
-  name: string;
-  specialty: string;
-  avatar: string;
-  consultationDuration: string;
-  nextAvailableSlot: string;
-  location: string;
-  rating: number;
-}
-
-
+import { ArrowLeft, Mail, MapPin } from 'lucide-react';
+import axios from 'axios';
+import { Calendar } from 'react-big-calendar';
+import DatePicker from 'react-datepicker';
 
 
 
 const SalleAttente = () => {
     const location = useLocation();
   const medecin = location.state?.medecin;
+   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+    const [availableTimes, setAvailableTimes] = useState<Date[]>([]);
+
+ useEffect(() => {
+    const fetchAvailableTimes = async () => {
+      if (!selectedDate) return;
+
+      const dateString = selectedDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  console.log(dateString)
+      try {
+       const medecinId=medecin._id
+        const response = await axios.post(
+          `http://localhost:3000/rendezvous/disponible`,{ _id:medecinId, date: dateString },
+         
+        );
+        const formattedTimes = response.data.map((isoDate: string) =>
+          new Date(isoDate)
+        );
+        setAvailableTimes(formattedTimes); 
+        console.log(formattedTimes)
+      
+      } catch (error) {
+        console.error('Erreur lors du chargement des horaires disponiblses :', error);
+      }
+    };
+    fetchAvailableTimes();
+  }, [selectedDate]);
 
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(15);
@@ -69,7 +80,9 @@ const SalleAttente = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6 max-w-6xl mx-auto">
       {/* Doctor Section */}
-      <button onClick={()=>navigate(-1)}>Retour</button>
+      <button           className="mr-4 p-2 rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition-colors"
+
+       onClick={()=>navigate(-1)}>      <ArrowLeft className="h-5 w-5" /></button>
       <motion.div
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
@@ -156,8 +169,63 @@ const SalleAttente = () => {
           </div>
         </div>
       </motion.div>
+<div className="mb-6">
+  <label className="block text-xl font-bold text-gray-700 mb-1">
+    Sélectionner une date :
+  </label>
+  <DatePicker
+    selected={selectedDate}
+    onChange={(date: Date | null) => {  if (date) {
+            const tunisianDateStr = date.toLocaleDateString('fr-TN', {
+              timeZone: 'Africa/Tunis',
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit'
+            });
+            const [day, month, year] = tunisianDateStr.split('/');
+            const correctedDate = new Date(`${year}-${month}-${day}T12:00:00`);
+            setSelectedDate(correctedDate);
+          } else {
+            setSelectedDate(null);
+          }}}
+    className="border border-gray-300 rounded-md px-3 py-2 w-full"
+    placeholderText="Choisir une date"
+    dateFormat="yyyy-MM-dd"
+    minDate={new Date()}
+  />
+</div>
 
-  
+
+  {/*affivhage  Available Times Section */}
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, delay: 0.2 }}
+  className="bg-white rounded-xl shadow-md p-3 mb-3"
+>
+  <Typography variant="h6" className="font-bold mb-4">
+    Horaires disponibles le {selectedDate ? selectedDate.toLocaleDateString() : '...'}
+  </Typography>
+
+  {availableTimes.length > 0 ? (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+      {availableTimes.map((time, index) => (
+        <button
+          key={index}
+          onClick={()=>console.log(time)}
+          className="bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-2 px-4 rounded-lg border border-blue-200 shadow-sm transition duration-200 ease-in-out"
+        >
+          {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12:false })}
+        </button>
+      ))}
+    </div>
+  ) : (
+    <Typography variant="body2" className="text-gray-500">
+      Aucune disponibilité pour cette date.
+    </Typography>
+  )}
+</motion.div>
+
 
       {/* Queue Section */}
       <motion.div
@@ -215,7 +283,8 @@ const SalleAttente = () => {
         >
           {isReady ? 'Prêt pour la consultation' : 'Confirmer ma présence'}
         </Button>
-        <Button variant="outlined" color="error" startIcon={<Emergency />} className="py-4">
+        <Button variant="outlined" color="error" startIcon={<Emergency />} className="py-4"
+         onClick={()=> {console.log(availableTimes, selectedDate, medecin._id)}}>
           Signaler une urgence
         </Button>
       </motion.div>
@@ -278,98 +347,6 @@ const SalleAttente = () => {
     </div>
   );
 };
-
-const AvailabilityBlock: React.FC<{ doctor: Doctor }> = ({ doctor }) => {
-  const [selectedDate, setSelectedDate] = useState('');
-  const [filteredAvailabilities, setFilteredAvailabilities] = useState<Availability[]>([]);
-
-  useEffect(() => {
-    setFilteredAvailabilities([]
-    );
-  }, [selectedDate]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-white rounded-xl shadow-md p-6 mb-6"
-    >
-      <div className="flex justify-between items-center mb-6">
-        <Typography variant="h6" className="font-bold flex items-center gap-2">
-          <AccessTime color="primary" /> Disponibilités du Dr. {doctor.name.split(' ')[1]}
-        </Typography>
-        <TextField
-          type="date"
-          size="small"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <CalendarToday fontSize="small" color="primary" />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </div>
-
-      {filteredAvailabilities.length > 0 ? (
-        <TableContainer component={Paper} className="border border-gray-200">
-          <Table size="small">
-            <TableHead>
-              <TableRow className="bg-gray-50">
-                <TableCell className="font-bold">Date</TableCell>
-                <TableCell className="font-bold">Heure</TableCell>
-                <TableCell className="font-bold">Statut</TableCell>
-                <TableCell className="font-bold">Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredAvailabilities.map((availability) => (
-                <TableRow key={availability.id} hover>
-                  <TableCell>{new Date(availability.date).toLocaleDateString('fr-FR')}</TableCell>
-                  <TableCell>{availability.time}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={availability.status === 'available' ? 'Disponible' : 'Réservé'}
-                      size="small"
-                      color={availability.status === 'available' ? 'success' : 'default'}
-                      variant="outlined"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      disabled={availability.status !== 'available'}
-                      onClick={() => console.log('Book', availability)}
-                      startIcon={<CalendarToday fontSize="small" />}
-                    >
-                      Réserver
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      ) : (
-        <Paper className="p-4 text-center bg-gray-50">
-          <Typography color="textSecondary">Aucune disponibilité trouvée pour cette date</Typography>
-        </Paper>
-      )}
-
-      <div className="mt-6 flex justify-end">
-        <Button variant="contained" startIcon={<CalendarToday />} className="rounded-lg">
-          Voir plus de créneaux
-        </Button>
-      </div>
-    </motion.div>
-  );
-};
-
 
 
 export default SalleAttente;
