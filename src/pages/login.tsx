@@ -21,7 +21,7 @@ const [succes, setsuccess]= useState<string>("");
       {navigate('/home/patients');}
 
      if(role==="patient"){
-      navigate('/espace-patient');
+      navigate('/espace-patient/specialite');
     }
     
     }, ((3000)));

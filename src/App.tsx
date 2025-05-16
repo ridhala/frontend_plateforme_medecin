@@ -19,7 +19,6 @@ import SalleAttente from './pages/SalleAttente';
 
 import DashboardContent from './components/home/DashboardContent';
 import Sidebar from './components/home/Sidebar';
-import Calendar from './components/home/calendar';
 import AdminDashboard from './pages/dashboardadmin';
 import AdminLogin from './pages/loginadmin';
 
@@ -29,10 +28,13 @@ import ListeMedecins from './pages/ListeMedecins';
 import RegisterSecretaire from './pages/registerSecritaire';
 import DossierMedicale from './pages/DossierMedicale';
 import EspacePatient from './pages/EspacePatient';
+import { MedecinProfile } from './types/profilemedecin';
+import { SpecialitesContent } from './components/espacepatient/choixspecialite';
 
 
 function App() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
+ 
 
   return (
     <Router>
@@ -40,7 +42,7 @@ function App() {
 
       
         <Route path="/login" element={<Login />} />
-        <Route path="/calendar" element={<Calendar />} />
+      
                 {/* Default route redirects to the home page */}
         <Route path="/" element={<Navigate to="/Acceuil" />} />
 
@@ -83,7 +85,6 @@ function App() {
         <Route path='/sp' element={<SpecialtySelector />}/>
         
         {/* Route pour la salle d'attente */}
-        <Route path="/salle-attente" element={<SalleAttente />} />
 
 
         <Route path='/Acceuil' element={<Accueil />}/>
@@ -102,14 +103,12 @@ function App() {
         <Route path="/dossier" element={<DossierMedicale />} />
 
          {/* Routes pour l'Espace Patient */}
-         <Route path="/espace-patient" element={<EspacePatient />}>
-          <Route index element={<EspacePatient />} />
-          <Route path="dossier" element={<EspacePatient />} />
-          <Route path="documents" element={<EspacePatient />} />
-          <Route path="chatbot" element={<EspacePatient />} />
-          <Route path="settings" element={<EspacePatient />} />
+        <Route path="/espace-patient" element={<EspacePatient />}>
+          <Route path="specialite" element={<SpecialitesContent />} />
+          <Route path="dossier" element={<DossierMedicale />} />
+          <Route path="specialite/salleAttente" element={<SalleAttente />} />
         </Route>
-
+<Route  path="/espace-patient/specialite/salleAttente" element={<SalleAttente />}/>
       </Routes>
     </Router>
   );
