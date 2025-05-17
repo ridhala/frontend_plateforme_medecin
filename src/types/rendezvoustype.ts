@@ -6,7 +6,7 @@ export interface Appointment {
   cin_patient: number|""; 
   telephone: number| ""; 
   type: string;
-  specialite: string; 
+  nom_specialite: string; 
   medecin: string; 
   status: boolean|string
 }
@@ -30,4 +30,21 @@ export interface Appointments {
 }
 export interface convert {
   _id: number | ""
+}
+// for patient
+export interface Appointmente {
+  _id: number|""; 
+  date_rendez_vous: string;
+  prenom_patient: string; 
+  nom_patient: string; 
+  cin_patient: number|""; 
+  telephone: number| ""; 
+  type: string;
+  status: boolean|string;
+  medecin: {
+    _id: string;
+    nom: string;
+    prenom: string;
+    nom_specialite: string
+  };
 }

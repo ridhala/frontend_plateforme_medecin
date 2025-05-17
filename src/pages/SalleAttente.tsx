@@ -2,14 +2,12 @@ import  { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MedicalServices as DossierIcon,CalendarToday,
   Emergency,Phone,Info,Description,} from '@mui/icons-material';
-
 import {Typography,Paper,Avatar,  Button,IconButton,} from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-
 import { ArrowLeft, Mail, MapPin } from 'lucide-react';
 import axios from 'axios';
-import { Calendar } from 'react-big-calendar';
 import DatePicker from 'react-datepicker';
+
 
 
 
@@ -19,6 +17,9 @@ const SalleAttente = () => {
    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
     const [availableTimes, setAvailableTimes] = useState<Date[]>([]);
+  
+
+
 
  useEffect(() => {
     const fetchAvailableTimes = async () => {
@@ -29,7 +30,7 @@ const SalleAttente = () => {
       try {
        const medecinId=medecin._id
         const response = await axios.post(
-          `http://localhost:3000/rendezvous/disponible`,{ _id:medecinId, date: dateString },
+          `http://localhost:3000/rendezvous/disponible`,{ _id: medecinId, date: dateString },
          
         );
         const formattedTimes = response.data.map((isoDate: string) =>
@@ -63,7 +64,7 @@ const SalleAttente = () => {
       setTimeLeft((prev) => {
         if (prev <= 0) {
           
-          navigate('/consultation');
+          navigate('/espace-patient/specialite');
           return 0;
         }
         return prev - 1;
@@ -78,11 +79,10 @@ const SalleAttente = () => {
   
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gray-100  max-w-6xl mx-auto">
       {/* Doctor Section */}
-      <button           className="mr-4 p-2 rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition-colors"
-
-       onClick={()=>navigate(-1)}>      <ArrowLeft className="h-5 w-5" /></button>
+      <button className="mr-4 p-2 rounded-md border  border-gray-300 bg-white hover:bg-gray-50 transition-colors"
+       onClick={()=>navigate(-1)}><ArrowLeft className="h-5 w-5" /></button>
       <motion.div
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
@@ -170,8 +170,8 @@ const SalleAttente = () => {
         </div>
       </motion.div>
 <div className="mb-6">
-  <label className="block text-xl font-bold text-gray-700 mb-1">
-    Sélectionner une date :
+  <label className="block text-2xl font-bold text-gray-900 mb-1">
+    Consulter les dates disponibles  :
   </label>
   <DatePicker
     selected={selectedDate}
@@ -187,8 +187,9 @@ const SalleAttente = () => {
             setSelectedDate(correctedDate);
           } else {
             setSelectedDate(null);
-          }}}
-    className="border border-gray-300 rounded-md px-3 py-2 w-full"
+          }}
+        }
+    className="border border-black text-black font-bold rounded-md px-3 py-2 w-full"
     placeholderText="Choisir une date"
     dateFormat="yyyy-MM-dd"
     minDate={new Date()}
@@ -208,12 +209,12 @@ const SalleAttente = () => {
   </Typography>
 
   {availableTimes.length > 0 ? (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3">
       {availableTimes.map((time, index) => (
         <button
           key={index}
           onClick={()=>console.log(time)}
-          className="bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-2 px-4 rounded-lg border border-blue-200 shadow-sm transition duration-200 ease-in-out"
+          className="bg-blue-50 hover:bg-blue-100 w-2/3 text-blue-700 font-medium py-2 px-4 rounded-lg border border-blue-200 shadow-sm transition duration-200 ease-in-out"
         >
           {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12:false })}
         </button>

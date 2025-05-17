@@ -30,6 +30,7 @@ import DossierMedicale from './pages/DossierMedicale';
 import EspacePatient from './pages/EspacePatient';
 import { MedecinProfile } from './types/profilemedecin';
 import { SpecialitesContent } from './components/espacepatient/choixspecialite';
+import Chatbot from './components/espacepatient/chatbot';
 
 
 function App() {
@@ -107,6 +108,8 @@ function App() {
           <Route path="specialite" element={<SpecialitesContent />} />
           <Route path="dossier" element={<DossierMedicale />} />
           <Route path="specialite/salleAttente" element={<SalleAttente />} />
+          <Route path="chatbot" element={<Chatbot />} />
+
         </Route>
 <Route  path="/espace-patient/specialite/salleAttente" element={<SalleAttente />}/>
       </Routes>

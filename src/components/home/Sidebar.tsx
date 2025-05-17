@@ -87,7 +87,7 @@ const [secprofil, setsecprofil]=useState<Secretaire>()
     {/* Sidebar */}
     <div
       className={`
-        fixed md:static top-0 left-0 z-40 bg-blue-800 text-white w-64 h-full p-6 flex flex-col transform
+        fixed md:static top-0 left-0 z-40 bg-blue-700 text-white w-64 h-full p-6 flex flex-col transform
         transition-transform duration-300 ease-in-out
         ${open ? "translate-x-0" : "-translate-x-full"} 
         md:translate-x-0
