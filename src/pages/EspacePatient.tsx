@@ -25,7 +25,7 @@ const EspacePatient: React.FC = () => {
     { key: 'sp', icon: HomeIcon, label: 'Accueil', path: '/espace-patient/specialite' },
     { key: 'dossier', icon: DocumentTextIcon, label: 'Dossier Médical', path: '/espace-patient/dossier' },
     { key: 'chatbot', icon: ChatBubbleLeftRightIcon, label: 'AI Chatbot', path: '/espace-patient/chatbot' },
-    { key: 'settings', icon: Cog6ToothIcon, label: 'Paramètres', path: '/espace-patient/settings' },
+    { key: 'Profil', icon: Cog6ToothIcon, label: 'Profil', path: '/espace-patient/' },
   ];
 
   const handleMenuClick = (path: string) => {

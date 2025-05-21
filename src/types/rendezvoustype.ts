@@ -33,7 +33,7 @@ export interface convert {
 }
 // for patient
 export interface Appointmente {
-  _id: number|""; 
+  _id: string|""; 
   date_rendez_vous: string;
   prenom_patient: string; 
   nom_patient: string; 

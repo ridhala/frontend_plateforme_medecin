@@ -13,7 +13,7 @@ import Home from './pages/home';
 import Activationpage from './pages/verifemail';
 
 import SpecialtySelector from './pages/specialite';
-import SalleAttente from './pages/SalleAttente';
+import SalleAttente from './components/espacepatient/SalleAttente';
 
 
 
@@ -28,7 +28,6 @@ import ListeMedecins from './pages/ListeMedecins';
 import RegisterSecretaire from './pages/registerSecritaire';
 import DossierMedicale from './pages/DossierMedicale';
 import EspacePatient from './pages/EspacePatient';
-import { MedecinProfile } from './types/profilemedecin';
 import { SpecialitesContent } from './components/espacepatient/choixspecialite';
 import Chatbot from './components/espacepatient/chatbot';
 

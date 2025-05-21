@@ -7,6 +7,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, MapPin } from 'lucide-react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
+import { createrendezvous } from '../../services/servicedashpatient/servicepatient';
+import { ConfirmationModal } from './pop-up/confirmerrdv';
 
 
 
@@ -15,9 +17,31 @@ const SalleAttente = () => {
     const location = useLocation();
   const medecin = location.state?.medecin;
    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+   const [selectedtime, setSelectedtime] = useState<string>("")
 
     const [availableTimes, setAvailableTimes] = useState<Date[]>([]);
-  
+  const [successMessage, setSuccessMessage] = useState('');
+
+
+const addrendezvous = async () => {
+  try {
+    const response = await createrendezvous(selectedtime, medecin._id);
+    if (response) {
+      console.log("✅ Rendez-vous créé :", response);
+      setSuccessMessage('✅ Rendez-vous pris avec succès ! consulter votre Rendez_vous dans la liste des rendez-vous ');
+
+ setSelectedtime("");
+ setSelectedDate(null);
+ setAvailableTimes([])
+
+
+  setTimeout(() => {setSuccessMessage("") ;setAvailableTimes([])}, 4000); // Masquer après 4s  
+    }else setSuccessMessage(response.message);
+  } catch (error) {
+    console.error("❌ Erreur lors de la création du RDV", error);
+    alert("Erreur inconnue");
+  }
+};
 
 
 
@@ -26,31 +50,32 @@ const SalleAttente = () => {
       if (!selectedDate) return;
 
       const dateString = selectedDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-  console.log(dateString)
+  
       try {
        const medecinId=medecin._id
         const response = await axios.post(
           `http://localhost:3000/rendezvous/disponible`,{ _id: medecinId, date: dateString },
          
-        );
+        );        console.log(medecinId, dateString)
+
         const formattedTimes = response.data.map((isoDate: string) =>
           new Date(isoDate)
         );
         setAvailableTimes(formattedTimes); 
-        console.log(formattedTimes)
+       
       
       } catch (error) {
         console.error('Erreur lors du chargement des horaires disponiblses :', error);
       }
     };
     fetchAvailableTimes();
-  }, [selectedDate]);
+  }, [ addrendezvous, selectedDate]);
 
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(15);
   const [isReady, setIsReady] = useState(false);
   const [currentPosition, setCurrentPosition] = useState(3);
-  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   const queueStats = [
@@ -148,15 +173,22 @@ const SalleAttente = () => {
         {/* Boutons d'action */}
         <div className="bg-gray-50 px-6 md:px-8 py-4 border-t border-gray-200">
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<CalendarToday />}
-              className="flex-1 py-3 shadow-sm hover:shadow-md transition-shadow"
-              fullWidth
-            >
-              Prendre Rendez-vous
-            </Button>
+          <Button
+  onClick={()=>setIsModalOpen(true)}
+  variant="contained"
+  color="primary"
+  startIcon={<CalendarToday />}
+  className="flex-1 py-3 shadow-sm hover:shadow-md transition-shadow"
+  fullWidth
+  disabled={!selectedtime} // empêche clic sans heure sélectionnée
+>
+  Prendre Rendez-vous
+</Button> <ConfirmationModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={addrendezvous}
+      />
+
             <Button 
               variant="outlined" 
               color="primary"
@@ -169,6 +201,12 @@ const SalleAttente = () => {
           </div>
         </div>
       </motion.div>
+      {successMessage && (
+  <div className="mb-4 px-4 py-2 w-full h-full bg-green-100 border border-green-400 text-green-800 rounded-md text-lg font-semibold">
+    {successMessage}
+  </div>
+)}
+
 <div className="mb-6">
   <label className="block text-2xl font-bold text-gray-900 mb-1">
     Consulter les dates disponibles  :
@@ -211,13 +249,20 @@ const SalleAttente = () => {
   {availableTimes.length > 0 ? (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3">
       {availableTimes.map((time, index) => (
-        <button
-          key={index}
-          onClick={()=>console.log(time)}
-          className="bg-blue-50 hover:bg-blue-100 w-2/3 text-blue-700 font-medium py-2 px-4 rounded-lg border border-blue-200 shadow-sm transition duration-200 ease-in-out"
-        >
-          {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12:false })}
-        </button>
+        
+    <button
+  key={index}
+  onClick={() => setSelectedtime(time.toISOString())}
+  disabled={selectedtime === time.toISOString()}
+  className={`w-2/3 py-2 px-4 rounded-lg border text-sm font-medium transition
+    ${selectedtime === time.toISOString() 
+      ? 'bg-blue-400 text-black cursor-not-allowed border-gray-300'
+      : 'bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200 shadow-sm'}
+  `}
+>
+  {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12:false })}
+</button>
+
       ))}
     </div>
   ) : (
@@ -235,7 +280,7 @@ const SalleAttente = () => {
         transition={{ duration: 0.5, delay: 0.1 }}
         className="bg-white rounded-xl shadow-md p-6 mb-6"
       >
-        <Typography variant="h6" className="font-bold mb-6">Votre position dans la file d'attente</Typography>
+        <Typography variant="h6" className="font-bold mb-6">Votre position dans la file d'attente aujourd'hui</Typography>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {queueStats.map((stat, index) => (
             <Paper key={index} className="p-4 bg-blue-50 rounded-lg">
@@ -284,67 +329,12 @@ const SalleAttente = () => {
         >
           {isReady ? 'Prêt pour la consultation' : 'Confirmer ma présence'}
         </Button>
-        <Button variant="outlined" color="error" startIcon={<Emergency />} className="py-4"
-         onClick={()=> {console.log(availableTimes, selectedDate, medecin._id)}}>
+        <Button variant="outlined" color="error" startIcon={<Emergency />} className="py-4">
           Signaler une urgence
         </Button>
       </motion.div>
 
-      {/* Resources */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        className="bg-white rounded-xl shadow-md p-6"
-      >
-        <Typography variant="h6" className="font-bold mb-6">En attendant votre tour</Typography>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { icon: <DossierIcon />, label: 'Dossier Médical', action: () => navigate('/dossier') },
-            { icon: <Description />, label: 'Documents', action: () => {} },
-            { icon: <Info />, label: 'Infos pratiques', action: () => {} },
-          ].map((item, index) => (
-            <Button
-              key={index}
-              onClick={item.action}
-              variant="text"
-              className="flex flex-col items-center p-4 hover:bg-blue-50"
-            >
-              <Avatar className="w-12 h-12 bg-blue-50 mb-2">{item.icon}</Avatar>
-              <Typography variant="caption" className="font-medium text-center">{item.label}</Typography>
-            </Button>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Booking Form */}
-      <AnimatePresence>
-        {showBookingForm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-          >
-            <motion.div
-              initial={{ scale: 0.95, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 20 }}
-              className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto"
-            >
-              <div className="p-6 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white z-10">
-                <Typography variant="h6" className="font-bold">Nouveau rendez-vous</Typography>
-                <IconButton onClick={() => setShowBookingForm(false)}>
-                  <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </IconButton>
-              </div>
-           
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+   
     </div>
   );
 };

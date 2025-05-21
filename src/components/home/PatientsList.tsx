@@ -65,12 +65,12 @@ await ajoutpatient(patient);
     <div className="space-y-6 w-full">
       <div className="flex justify-between items-center w-full">
         <h2 className="text-xl font-semibold text-gray-800">Liste des Patients</h2>
-        <button
+        {/*<button
           onClick={handleAddPatient}
           className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
         >
           + Ajouter un patient
-        </button>
+        </button>*/}
       </div>
 
       {isFormOpen ? (

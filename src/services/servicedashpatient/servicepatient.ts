@@ -15,3 +15,21 @@ export const listrendezvousprise = async () => {
   });
   return res.data;
 };
+
+
+export const createrendezvous = async (date_rendez_vous: string, medecin:string) => {
+  try {
+    const response = await axios.post(
+      'http://localhost:3000/rendezvous/addrdvpatient',
+      { date_rendez_vous, medecin }, 
+      {
+        withCredentials: true, 
+        headers:{  Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Erreur lors de la création du rendez-vous :', error.response?.data || error.message);
+    throw error;
+  }
+};

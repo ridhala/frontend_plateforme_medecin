@@ -92,7 +92,7 @@ export const postrendezvous = async (credentials:Appointments)=>{
 
 
 
-
+// for medecin
 export const updateRendezvous = async (_id: string, updateData: RendezvousUpdateData) => {
   try {
     const response = await axios.put(
@@ -130,4 +130,24 @@ export const deleterendezvous = async (id: string) => {
     }
   }
 };
-
+// for patient 
+// In your rendezvousservice.ts
+export const updateRendezvouspatient = async (id: string, newDate: Date) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:3000/rendezvous/updatepatient/${id}`,
+      { 
+        date_rendez_vous: newDate.toISOString() // Ensure proper date format
+      },
+      {
+        headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating rendezvous:', error);
+    throw error;
+  }
+};
