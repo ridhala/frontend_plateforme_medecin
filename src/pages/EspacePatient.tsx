@@ -7,6 +7,8 @@ import {
   Cog6ToothIcon,
   ArrowLeftOnRectangleIcon,
   HomeIcon,
+  CalendarDaysIcon,
+  FolderOpenIcon,
 } from '@heroicons/react/24/outline';
 
 interface MenuItem {
@@ -20,13 +22,13 @@ const EspacePatient: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
-  const menuItems: MenuItem[] = [
-    { key: 'sp', icon: HomeIcon, label: 'Accueil', path: '/espace-patient/specialite' },
-    { key: 'dossier', icon: DocumentTextIcon, label: 'Dossier Médical', path: '/espace-patient/dossier' },
-    { key: 'chatbot', icon: ChatBubbleLeftRightIcon, label: 'AI Chatbot', path: '/espace-patient/chatbot' },
-    { key: 'Profil', icon: Cog6ToothIcon, label: 'Profil', path: '/espace-patient/' },
-  ];
+const menuItems: MenuItem[] = [
+  { key: 'accueil', icon: HomeIcon, label: 'Accueil', path: '/espace-patient/specialite' },
+  { key: 'dossier', icon: FolderOpenIcon, label: 'Dossier Médical', path: '/espace-patient/dossier' },
+  { key: 'chatbot', icon: ChatBubbleLeftRightIcon, label: 'AI Chatbot', path: '/espace-patient/chatbot' },
+  { key: 'rendezvous', icon: CalendarDaysIcon, label: 'Mes Rendez-vous', path: '/espace-patient/rendez-vous' },
+  { key: 'profil', icon: UserCircleIcon, label: 'Profil', path: '/espace-patient/profil' },
+];
 
   const handleMenuClick = (path: string) => {
     if (location.pathname !== path) {
@@ -43,6 +45,10 @@ const EspacePatient: React.FC = () => {
     if (location.pathname.includes('/dossier')) return 'Dossier Médical Complet';
     if (location.pathname.includes('/chatbot')) return 'Assistant Médical';
     if (location.pathname.includes('/settings')) return 'Paramètres du Compte';
+        if (location.pathname.includes('/rendez-vous')) return 'Liste des rendez-vous Prises';
+        if (location.pathname.includes("profil")) return 'Profil';
+
+
     return '';
   };
 
@@ -80,7 +86,7 @@ const EspacePatient: React.FC = () => {
             </div>
             {!collapsed && (
               <>
-                <h3 className="font-medium text-white">John Doe</h3>
+                <h3 className="font-medium text-white">khadhraoui oumayma</h3>
                 <p className="text-xs text-blue-200">Patient</p>
               </>
             )}

@@ -1,8 +1,8 @@
 import  { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MedicalServices as DossierIcon,CalendarToday,
-  Emergency,Phone,Info,Description,} from '@mui/icons-material';
-import {Typography,Paper,Avatar,  Button,IconButton,} from '@mui/material';
+import { motion } from 'framer-motion';
+import { MedicalServices as CalendarToday,
+  Emergency,Phone,} from '@mui/icons-material';
+import {Typography,Paper,  Button,} from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, MapPin } from 'lucide-react';
 import axios from 'axios';

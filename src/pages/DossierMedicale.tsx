@@ -33,7 +33,7 @@ const DossierMedicale: React.FC = () => {
       type: 'consultation',
       titre: 'Suivi diabète',
       details: 'Contrôle glycémique satisfaisant sous traitement. HbA1c à 6.2%. Adaptation des doses d\'insuline : réduire la dose du soir de 2 unités. Prochain contrôle dans 3 mois.',
-      medecin: 'Dr Laurent Diab',
+      medecin: 'Dr Kassar Salim',
       fichiers: [
         { nom: 'rapport_diabete.pdf', type: 'rapport' },
         { nom: 'ordonnance_diabete.pdf', type: 'ordonnance' },
@@ -47,7 +47,7 @@ const DossierMedicale: React.FC = () => {
       type: 'consultation',
       titre: 'Bilan annuel',
       details: 'Le patient signale des maux de tête occasionnels. Tension artérielle légèrement élevée.',
-      medecin: 'Dr Sophie Martin',
+      medecin: 'Dr Marwen zayani',
       fichiers: [
         { nom: 'bilan_annuel.pdf', type: 'rapport' },
         { nom: 'analyses_sanguines.pdf', type: 'autre' }
@@ -60,7 +60,7 @@ const DossierMedicale: React.FC = () => {
       type: 'consultation',
       titre: 'Consultation dermatologique',
       details: "Examen d'une lésion cutanée suspecte sur l'épaule gauche. Diagnostic : kératose séborrhéique bénigne. Pas de traitement nécessaire mais surveillance annuelle recommandée.",
-      medecin: 'Dr Emma Dermat',
+      medecin: 'Dr Emna ben omar',
       fichiers: [
         { nom: 'compte_rendu_dermatologie.pdf', type: 'rapport' },
         { nom: 'photos_lesion.pdf', type: 'autre' }
@@ -73,7 +73,7 @@ const DossierMedicale: React.FC = () => {
       type: 'consultation',
       titre: 'Suivi génerale',
       details: 'Contrôle géneral satisfaisant sous traitement. HbA1c à 6.2%. Adaptation des doses d\'insuline : réduire la dose du soir de 2 unités. Prochain contrôle dans 3 mois.',
-      medecin: 'Dr Jhon Paul',
+      medecin: 'Dr karim chedhli',
       fichiers: [
         { nom: 'rapport_diabete.pdf', type: 'rapport' },
         { nom: 'ordonnance_diabete.pdf', type: 'ordonnance' },
@@ -263,7 +263,7 @@ const DossierMedicale: React.FC = () => {
                     </button>
                   </div>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-700">{dossier.medecin}</p>
+                    <p className="text-lg text-gray-700">{dossier.medecin}</p>
                     <span className="inline-block mt-1 px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
                       Consultation
                     </span>

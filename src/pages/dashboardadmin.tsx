@@ -1,117 +1,159 @@
 import React, { useEffect, useState } from "react";
 import {
-  AppBar,Box,CssBaseline,
-  Drawer,IconButton, List,
-  ListItem, ListItemButton,  ListItemIcon,
-  ListItemText, Tab, Tabs, Toolbar, Typography,
- Card, CardContent, Table,
-  TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper,
+  AppBar, Toolbar, Typography, Box, CssBaseline, Drawer,
+  IconButton, List, ListItem, ListItemButton, ListItemIcon,
+  ListItemText, Tabs, Tab, Card, CardContent, Table,
+  TableHead, TableRow, TableCell, TableBody, Paper,
+  TableContainer,
 } from "@mui/material";
+import {
+  Dashboard as DashboardIcon, People as PeopleIcon, LocalHospital as LocalHospitalIcon,
+  AssignmentInd as AssignmentIndIcon, Menu as MenuIcon
+} from "@mui/icons-material";
+import {
+  getPatients,
+  getMedecins,
+  getSecretaires,
+} from "../services/admin/adminservice";
 
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PeopleIcon from "@mui/icons-material/People";
-import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
-import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
-import MenuIcon from "@mui/icons-material/Menu";
 
-interface User {
-  id: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  role: "patient" | "medecin" | "secretaire";
-}
-
-const drawerWidth = 250;
+const drawerWidth = 240;
 
 const AdminDashboard: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [tabValue, setTabValue] = useState(0);
+  const [patients, setPatients] = useState<any[]>([]);
+  const [medecins, setMedecins] = useState<any[]>([]);
+  const [secretaires, setSecretaires] = useState<any[]>([]);
+  const [tab, setTab] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const toggleDrawer = () => setMobileOpen(!mobileOpen);
+
   useEffect(() => {
-    setTimeout(() => {
-      setUsers([
-        { id: "1", fullName: "Ahmed Ben Ali", email: "ahmed@gmail.com", phone: "+216 98 123 456", role: "patient" },
-        { id: "2", fullName: "Dr. Sana Maatoug", email: "sana@hopital.tn", phone: "+216 23 456 789", role: "medecin" },
-        { id: "3", fullName: "Nadia Ferjani", email: "nadia@admin.tn", phone: "+216 29 654 321", role: "secretaire" },
-        { id: "4", fullName: "Walid Jemni", email: "walid@gmail.com", phone: "+216 56 987 123", role: "patient" },
-      ]);
-    }, 500);
+    const fetchData = async () => {
+      try {
+        const [resPatients, resMedecins, resSecretaires] = await Promise.all([
+          getPatients(),
+          getMedecins(),
+          getSecretaires(),
+        ]);
+        setPatients(resPatients);
+        setMedecins(resMedecins);
+        setSecretaires(resSecretaires);
+      } catch (error) {
+        console.error("Erreur lors du chargement des utilisateurs:", error);
+      }
+    };
+    fetchData();
   }, []);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
-
-  const renderTable = (role: User["role"]) => (
-    <TableContainer component={Paper} className="shadow-md">
-      <Table>
-        <TableHead sx={{ backgroundColor: "#e0f7fa" }}>
-          <TableRow>
-            <TableCell><strong>Nom Complet</strong></TableCell>
-            <TableCell><strong>Email</strong></TableCell>
-            <TableCell><strong>Téléphone</strong></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {users.filter((user) => user.role === role).map((user) => (
-            <TableRow key={user.id} hover>
-              <TableCell>{user.fullName}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.phone}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-
   const drawer = (
-    <div className="h-full bg-gradient-to-b from-blue-600 to-blue-400 text-white">
+    <Box>
       <Toolbar>
-        <Typography variant="h6" className="mx-auto font-bold">MEDPLAT</Typography>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>MEDPLAT</Typography>
       </Toolbar>
       <List>
-        {[
-          { text: "Dashboard", icon: <DashboardIcon /> },
-          { text: "Patients", icon: <PeopleIcon /> },
-          { text: "Médecins", icon: <LocalHospitalIcon /> },
-          { text: "Secrétaires", icon: <AssignmentIndIcon /> },
-        ].map((item, index) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton onClick={() => setTabValue(index === 0 ? 0 : index - 1)}>
-              <ListItemIcon className="text-white">{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} className="text-white font-semibold" />
+        {["Dashboard", "Patients", "Médecins", "Secrétaires"].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton onClick={() => setTab(index)}>
+              <ListItemIcon>
+                {[<DashboardIcon />, <PeopleIcon />, <LocalHospitalIcon />, <AssignmentIndIcon />][index]}
+              </ListItemIcon>
+              <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
         ))}
       </List>
-    </div>
+    </Box>
   );
+
+ const renderDashboard = () => (
+  <Box sx={{
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 3, // spacing between cards
+    justifyContent: 'center', // centers cards on larger screens
+  }}>
+    {/* Patient Card */}
+    <Card sx={{ 
+      flex: '1 1 300px', // grows, shrinks, min-width 300px
+      maxWidth: '100%',
+      backgroundColor: '#e3f2fd'
+    }}>
+      <CardContent>
+        <Typography variant="h6">Patients</Typography>
+        <Typography variant="h4">{patients.length}</Typography>
+      </CardContent>
+    </Card>
+
+    {/* Doctor Card */}
+    <Card sx={{ 
+      flex: '1 1 300px',
+      maxWidth: '100%',
+      backgroundColor: '#f3e5f5'
+    }}>
+      <CardContent>
+        <Typography variant="h6">Médecins</Typography>
+        <Typography variant="h4">{medecins.length}</Typography>
+      </CardContent>
+    </Card>
+
+    {/* Secretary Card */}
+    <Card sx={{ 
+      flex: '1 1 300px',
+      maxWidth: '100%',
+      backgroundColor: '#e8f5e9'
+    }}>
+      <CardContent>
+        <Typography variant="h6">Secrétaires</Typography>
+        <Typography variant="h4">{secretaires.length}</Typography>
+      </CardContent>
+    </Card>
+  </Box>
+);
+  const renderTable = () => {
+    const roles = [patients, medecins, secretaires];
+    const labels = ["Patients", "Médecins", "Secrétaires"];
+    const roleData = roles[tab - 1];
+    const roleLabel = labels[tab - 1];
+
+    return (
+      <TableContainer component={Paper} sx={{ mt: 2 }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell colSpan={4} sx={{ fontWeight: "bold", fontSize: 18 }}>{roleLabel}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Nom</TableCell>
+              <TableCell>CIN</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Téléphone</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {roleData.map((user) => (
+              <TableRow key={user._id}>
+                <TableCell>{`${user.nom || user.nom_patient || user.nom_secretaire} ${user.prenom || user.prenom_patient|| user.prenom_secretaire}`}</TableCell>
+                <TableCell>{user.cin_patient || user.cin_medecin || user.cin_secretaire}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.telephone_cabinet || user.telephone}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: 1201, bgcolor: "#0288d1" }}>
+      <AppBar position="fixed" sx={{ zIndex: 1201 }}>
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
+          <IconButton edge="start" color="inherit" onClick={toggleDrawer} sx={{ mr: 2, display: { sm: "none" } }}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-          MedPlat Admin Dashboard 
-          </Typography>
+          <Typography variant="h6">Admin Dashboard</Typography>
         </Toolbar>
       </AppBar>
 
@@ -119,9 +161,8 @@ const AdminDashboard: React.FC = () => {
         variant="permanent"
         sx={{
           width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
           display: { xs: "none", sm: "block" },
+          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" }
         }}
         open
       >
@@ -131,38 +172,28 @@ const AdminDashboard: React.FC = () => {
       <Drawer
         variant="temporary"
         open={mobileOpen}
-        onClose={handleDrawerToggle}
+        onClose={toggleDrawer}
         sx={{
           display: { xs: "block", sm: "none" },
-          [`& .MuiDrawer-paper`]: { width: drawerWidth },
+          [`& .MuiDrawer-paper`]: { width: drawerWidth }
         }}
       >
         {drawer}
       </Drawer>
 
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, bgcolor: "#f0f4f8", minHeight: "100vh" }}
-      >
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        <Card className="shadow-xl">
+        <Card>
           <CardContent>
-            <Tabs
-              value={tabValue}
-              onChange={handleTabChange}
-              textColor="primary"
-              indicatorColor="secondary"
-              variant="fullWidth"
-              className="mb-6"
-            >
+            <Tabs value={tab} onChange={(_, val) => setTab(val)} centered>
+              <Tab label="Dashboard" />
               <Tab label="Patients" />
               <Tab label="Médecins" />
               <Tab label="Secrétaires" />
             </Tabs>
-
-            {tabValue === 0 && renderTable("patient")}
-            {tabValue === 1 && renderTable("medecin")}
-            {tabValue === 2 && renderTable("secretaire")}
+            <Box sx={{ mt: 2 }}>
+              {tab === 0 ? renderDashboard() : renderTable()}
+            </Box>
           </CardContent>
         </Card>
       </Box>
