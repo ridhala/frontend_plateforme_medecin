@@ -4,10 +4,10 @@ import { MedicalServices as CalendarToday,
   Emergency,Phone,} from '@mui/icons-material';
 import {Typography,Paper,  Button,} from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Mail, MapPin } from 'lucide-react';
+import { ArrowLeft, Mail, MapPin, Users2 } from 'lucide-react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
-import { createrendezvous } from '../../services/servicedashpatient/servicepatient';
+import { createrendezvous, nbsalle } from '../../services/servicedashpatient/servicepatient';
 import { ConfirmationModal } from './pop-up/confirmerrdv';
 
 
@@ -18,6 +18,8 @@ const SalleAttente = () => {
   const medecin = location.state?.medecin;
    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
    const [selectedtime, setSelectedtime] = useState<string>("")
+      const [nbs, setnbs] = useState<number>()
+
 
     const [availableTimes, setAvailableTimes] = useState<Date[]>([]);
   const [successMessage, setSuccessMessage] = useState('');
@@ -101,7 +103,16 @@ const addrendezvous = async () => {
     return () => clearInterval(timer);
   }, [currentPosition, navigate]);
 
-  
+
+///////////
+  useEffect(()=>{const salle=async ()=> {
+    const response= await nbsalle(medecin._id)
+console.log(response)
+setnbs(response)
+  }
+
+    salle()
+  }, [medecin])
 
   return (
     <div className="min-h-screen bg-gray-100  max-w-6xl mx-auto">
@@ -247,7 +258,7 @@ const addrendezvous = async () => {
   </Typography>
 
   {availableTimes.length > 0 ? (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
       {availableTimes.map((time, index) => (
         
     <button
@@ -271,7 +282,27 @@ const addrendezvous = async () => {
     </Typography>
   )}
 </motion.div>
-
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, delay: 0.1 }}
+  className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-6 flex items-center justify-between hover:shadow-md transition-shadow"
+>
+  <div className="flex items-center gap-4">
+    <div className="bg-blue-100 text-blue-600 rounded-xl p-3">
+      <Users2 className="w-7 h-7" />
+    </div>
+    <div>
+      <h3 className="text-xl font-semibold text-gray-800">Salle d’attente maintenant</h3>
+      <p className="text-sm text-gray-500">Patients actuellement présents</p>
+    </div>
+  </div>
+  <div className="flex items-center gap-2">
+    <span className="text-3xl font-bold text-blue-700">{nbs}</span>
+      
+    <span className="text-sm text-gray-600">patients</span>
+  </div>
+</motion.div>
 
       {/* Queue Section */}
       <motion.div

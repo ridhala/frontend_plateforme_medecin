@@ -33,3 +33,14 @@ export const createrendezvous = async (date_rendez_vous: string, medecin:string)
     throw error;
   }
 };
+export const nbsalle = async (id: string) => {
+  const res = await axios.get(`http://localhost:3000/rendezvous/ensalle/${id}`, {
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    },
+  });
+  return res.data.count; 
+};
+
+

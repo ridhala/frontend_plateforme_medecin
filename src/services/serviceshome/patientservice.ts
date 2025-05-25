@@ -1,5 +1,5 @@
 import axios from "axios"
-import { addpatient, Patient } from "../../types/patienttype";
+import { addpatient } from "../../types/patienttype";
 
 export const fetchpatient= async()=>{
 try{

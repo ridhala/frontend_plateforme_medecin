@@ -8,6 +8,9 @@ import { Deletemodal } from "./pop-up/deleterdv";
 import { UpdateModal } from "./pop-up/updaterdv";
 import DatePicker from "react-datepicker";
 import axios from "axios";
+import { Modal } from "../home/pop-up/modal";
+import { Typography, Paper } from "@mui/material";
+import { motion } from "framer-motion";
 
 
 
@@ -22,12 +25,19 @@ const [selectedtime, setSelectedtime] = useState<string>("")
 
     const [availableTimes, setAvailableTimes] = useState<Date[]>([]);
   const [rendezvousprise, setrendezvousprise]= useState<Appointmente[]>([])
+  //rendezvous selecté 
     const [selectedrendez, setselectedrendez]= useState<Appointmente |null>()
 
   const [choisimed, setchoisimed]=useState<boolean>(false)
+
+  // specialite
   const[sp, setsp]=useState<string>("")
 
+  //for modal position
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+//
 const [listmedecin,setlistmedecin]=useState<MedecinProfile[]>([])
+//affichage de list medecin par specialité
 useEffect(() => {
   const fetchData = async () => {
     if (sp) {
@@ -39,6 +49,20 @@ useEffect(() => {
   fetchData();
 }, [sp]); 
 
+//position 
+  const [timeLeft, setTimeLeft] = useState(15);
+  const [currentPosition, setCurrentPosition] = useState(3);
+const closePopup = () => {
+  setIsPopupOpen(false);
+  setselectedrendez(null);
+};
+  const queueStats = [
+    { label: 'Temps moyen d\'attente', value: '18 min' },
+    { label: 'Patients aujourd\'hui', value: '24' },
+    { label: 'Votre attente estimée', value: `${timeLeft} min` },
+  ];
+/////
+// listes des rendezvous deja prise
 useEffect(() => {
   const fetchlisterendezvousprise = async () => {
     try {
@@ -138,6 +162,12 @@ return (
       className="px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-lg cursor-pointer
        shadow-md hover:bg-red-600 hover:text-white transition duration-200">
       Annuler RDV
+    </button> 
+    <button 
+    onClick={()=>setIsPopupOpen(true)}
+      className="px-4 py-2 bg-teal-500 text-white text-sm font-semibold rounded-lg cursor-pointer
+       shadow-md hover:bg-teal-600 hover:text-white transition duration-200">
+      Position
     </button>
    <Deletemodal
          open={isConfirmOpen}
@@ -214,6 +244,43 @@ return (
       Modifier</button></div>
   </div>
   </UpdateModal>
+<Modal open={isPopupOpen} onclose={closePopup}>    {/* Queue Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="bg-white rounded-xl shadow-md p-6 mb-6"
+      >
+        <Typography variant="h6" className="font-bold mb-6">Votre position dans la file d'attente aujourd'hui</Typography>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {queueStats.map((stat, index) => (
+            <Paper key={index} className="p-4 bg-blue-50 rounded-lg">
+              <Typography variant="caption" className="font-medium text-blue-600">{stat.label}</Typography>
+              <Typography variant="h4" className="font-bold">{stat.value}</Typography>
+            </Paper>
+          ))}
+        </div>
+        <div className="mb-6">
+          <div className="flex justify-between">
+            <Typography variant="caption" className="text-gray-600">Début</Typography>
+            <Typography variant="caption" className="text-gray-600">Progression</Typography>
+            <Typography variant="caption" className="text-gray-600">Votre tour</Typography>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-3 mt-2 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-blue-600 to-green-600"
+              style={{ width: `${100 - ((currentPosition / (currentPosition + 5)) * 100)}%` }}
+            />
+          </div>
+        </div>
+        <Typography className="text-center text-gray-600">
+          {currentPosition === 1
+            ? 'Vous êtes le prochain ! Préparez-vous'
+            : currentPosition <= 3
+            ? `Plus que ${currentPosition - 1} patient(s) devant vous`
+            : `Environ ${timeLeft} minutes d'attente`}
+        </Typography>
+      </motion.div></Modal>
   </div>
   
 </div>
