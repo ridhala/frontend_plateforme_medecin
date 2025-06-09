@@ -7,18 +7,12 @@ import {
   EnvelopeIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { addpatient } from '../../types/patienttype';
+import { useLocation } from 'react-router-dom';
 
 const ProfilPatient: React.FC = () => {
-  const [patient, setPatient] = useState<addpatient | null>(null);
-
-  useEffect(() => {
-    const storedPatient = localStorage.getItem('patient');
-    if (storedPatient) {
-      setPatient(JSON.parse(storedPatient));
-    }
-  }, []);
-
+const location = useLocation();
+  const account = location.state.account
+console.log(account)
   return (
     <div className="max-w-6xl mx-auto p-12 bg-white rounded-2xl shadow-2xl mt-6">
       {/* Header */}
@@ -36,37 +30,40 @@ const ProfilPatient: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-base text-gray-700">
         <div className="flex items-center space-x-4">
           <IdentificationIcon className="h-6 w-6 text-blue-500" />
-          <span><strong>CIN :</strong> {patient?.cin_patient}</span>
+          <span className='text-xl'><strong>CIN :</strong> {account?.cin_patient}</span>
         </div>
 
         <div className="flex items-center space-x-4">
           <UserIcon className="h-6 w-6 text-blue-500" />
-          <span><strong>Nom :</strong> {patient?.nom_patient}</span>
+          <span className='text-xl'><strong>Nom :</strong> {account?.nom_patient}</span>
         </div>
 
         <div className="flex items-center space-x-4">
           <UserIcon className="h-6 w-6 text-blue-500" />
-          <span><strong>Prénom :</strong> {patient?.prenom_patient}</span>
+          <span className='text-xl'><strong>Prénom :</strong> {account?.prenom_patient}</span>
         </div>
 
         <div className="flex items-center space-x-4">
           <UserIcon className="h-6 w-6 text-blue-500" />
-          <span><strong>Sexe :</strong> {patient?.sex}</span>
+          <span className='text-xl'><strong>Sexe :</strong> {account?.sex ?(account?.sex) :
+           (<p>Le sexe n'a pas encore ajouté.</p>)}</span>
         </div>
 
         <div className="flex items-center space-x-4">
           <CalendarIcon className="h-6 w-6 text-blue-500" />
-          <span><strong>Date de naissance :</strong> {<div>15/06/2001</div>}</span>
+          <span className='text-xl'><strong>Date de naissance :</strong> {account?.date_naissance ? (account?.date_naissance): 
+          (<p>Le date de naissance n'a pas encore ajouté.</p>)}</span>
         </div>
 
         <div className="flex items-center space-x-4">
           <PhoneIcon className="h-6 w-6 text-blue-500" />
-          <span><strong>Téléphone :</strong> {patient?.telephone}</span>
+          <span className='text-xl'><strong>Téléphone :</strong> {account?.telephone}</span>
         </div>
 
         <div className="flex items-center space-x-4 md:col-span-2">
           <EnvelopeIcon className="h-6 w-6 text-blue-500" />
-          <span><strong>Email :</strong> {patient?.email}</span>
+          <span className='text-xl'><strong>Email :</strong> {account?.email ? (account?.email) : 
+          (<p>L'Email n'a pas encore ajouté.</p>)}</span>
         </div>
       </div>
     </div>

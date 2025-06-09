@@ -5,6 +5,15 @@ export const fetchspecialite = async (credential: string) => {
     credential: credential
   });
   return res.data.listmedecin;
+
+};export const fetchaccount = async () => {
+  const res = await axios.get("http://localhost:3000/update/profilepatient", {
+        withCredentials:true,
+
+       headers:{  Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
+
+  });
+  return res.data.utilisateur;
 };
 
 // affichage de la liste des rendezvous prises

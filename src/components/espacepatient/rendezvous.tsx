@@ -9,8 +9,9 @@ import { UpdateModal } from "./pop-up/updaterdv";
 import DatePicker from "react-datepicker";
 import axios from "axios";
 import { Modal } from "../home/pop-up/modal";
-import { Typography, Paper } from "@mui/material";
+import { Typography, Paper, Button } from "@mui/material";
 import { motion } from "framer-motion";
+import { Emergency } from "@mui/icons-material";
 
 
 
@@ -27,6 +28,7 @@ const [selectedtime, setSelectedtime] = useState<string>("")
   const [rendezvousprise, setrendezvousprise]= useState<Appointmente[]>([])
   //rendezvous selecté 
     const [selectedrendez, setselectedrendez]= useState<Appointmente |null>()
+  const[rendezdelete, setrendezdelete]=useState<string>("")
 
   const [choisimed, setchoisimed]=useState<boolean>(false)
 
@@ -50,6 +52,8 @@ useEffect(() => {
 }, [sp]); 
 
 //position 
+  const [isReady, setIsReady] = useState(false);
+
   const [timeLeft, setTimeLeft] = useState(15);
   const [currentPosition, setCurrentPosition] = useState(3);
 const closePopup = () => {
@@ -148,7 +152,8 @@ return (
               <td className="px-6 py-4 "><h2 className="bg-teal-200 text-lg rounded-xl text-gray-800 font-bold text-center">{rdv.type}</h2></td>
      <td className="px-6 py-4 text-sm text-gray-800 font-semibold"> <div className="flex items-center space-x-2">
     <button 
-      onClick={() =>{setselectedrendez(rdv);
+      onClick={() =>{setselectedrendez(rdv)
+        console.log(rdv.medecin.nom);
        // setSelectedDate(new Date(rdv.date_rendez_vous))
       }}
       className="px-4 py-2 bg-blue-500 text-white text-sm font-semibold cursor-pointer
@@ -157,7 +162,8 @@ return (
       Modifier RDV
     </button>
     <button 
-      onClick={() => {setIsConfirmOpen(true);
+      onClick={() => {setIsConfirmOpen(true)
+        setrendezdelete(rdv._id)
       }}
       className="px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-lg cursor-pointer
        shadow-md hover:bg-red-600 hover:text-white transition duration-200">
@@ -171,9 +177,10 @@ return (
     </button>
    <Deletemodal
          open={isConfirmOpen}
-         onClose={() => setIsConfirmOpen(false)}
-         onConfirm={() => {
-          deleterendezvous(rdv._id)
+         onClose={ () => setIsConfirmOpen(false)}
+         onConfirm={async() => {
+         await  deleterendezvous(rendezdelete)
+          
         
            setIsConfirmOpen(false);
          }}
@@ -280,7 +287,29 @@ return (
             ? `Plus que ${currentPosition - 1} patient(s) devant vous`
             : `Environ ${timeLeft} minutes d'attente`}
         </Typography>
-      </motion.div></Modal>
+      </motion.div>
+       <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
+            >
+              <Button
+                onClick={() => setIsReady(!isReady)}
+                variant={isReady ? 'contained' : 'outlined'}
+                color={isReady ? 'success' : 'primary'}
+                startIcon={<svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>}
+                className="py-4"
+              >
+                {isReady ? 'Prêt pour la consultation' : 'Confirmer ma présence'}
+              </Button>
+              <Button variant="outlined" color="error" startIcon={<Emergency />} className="py-4">
+                Signaler une urgence
+              </Button>
+            </motion.div>
+      </Modal>
   </div>
   
 </div>

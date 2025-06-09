@@ -39,7 +39,7 @@ function LoginContainer({ onLoginSuccess }: LoginContainerProps) {
     } catch (error) {
 
       if (error instanceof Error) {
-        setErrorMessage(`Échec de l'authentification: ${error.message}`);
+        setErrorMessage(` ${error.message}`);
       } else {
         setErrorMessage('Une erreur inconnue est survenue lors de la connexion.');
       }

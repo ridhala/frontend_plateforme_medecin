@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   UserCircleIcon,
-  DocumentTextIcon,
   ChatBubbleLeftRightIcon,
-  Cog6ToothIcon,
   ArrowLeftOnRectangleIcon,
   HomeIcon,
   CalendarDaysIcon,
   FolderOpenIcon,
 } from '@heroicons/react/24/outline';
+import { fetchaccount } from '../services/servicedashpatient/servicepatient';
+import { logout } from '../services/authentification/loginService';
+import { addpatient } from '../types/patienttype';
 
 interface MenuItem {
   key: string;
@@ -20,6 +21,9 @@ interface MenuItem {
 
 const EspacePatient: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [account, setaccount] = useState<addpatient>();
+
+
   const navigate = useNavigate();
   const location = useLocation();
 const menuItems: MenuItem[] = [
@@ -32,11 +36,31 @@ const menuItems: MenuItem[] = [
 
   const handleMenuClick = (path: string) => {
     if (location.pathname !== path) {
-      navigate(path);
+      navigate(path, { state: { account: account } });
+      console.log(account)
     }
   };
+useEffect(() => {
+  const affichage = async () => {
+    const res = await fetchaccount();
+    
+    const processedAccount: addpatient = {
+      cin_patient: res.cin_patient ?? "",
+      nom_patient: res.nom_patient ?? "",
+      prenom_patient: res.prenom_patient ?? "",
+      sex: res.sex ?? "",
+      date_naissance: res.date_naissance ?? "",
+      email: res.email ?? "",
+      telephone: typeof res.telephone === 'number' ? res.telephone : "", // Ensure number or ""
+    };
+
+    setaccount(processedAccount);
+  };
+  affichage();
+}, []);
 
   const handleLogout = () => {
+  logout()
     navigate('/login');
   };
 
@@ -86,8 +110,8 @@ const menuItems: MenuItem[] = [
             </div>
             {!collapsed && (
               <>
-                <h3 className="font-medium text-white">khadhraoui oumayma</h3>
-                <p className="text-xs text-blue-200">Patient</p>
+                <h3 className="font-medium text-white">{account?.nom_patient}</h3>
+                <p className="font-medium text-white">{account?.prenom_patient}</p>
               </>
             )}
           </div>
