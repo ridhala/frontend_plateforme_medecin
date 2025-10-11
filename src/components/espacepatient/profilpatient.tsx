@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-  IdentificationIcon,
-  UserIcon,
-  CalendarIcon,
-  PhoneIcon,
-  EnvelopeIcon,
-  UserCircleIcon,
+  IdentificationIcon,UserIcon,CalendarIcon,
+  PhoneIcon,EnvelopeIcon,UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { useLocation } from 'react-router-dom';
 

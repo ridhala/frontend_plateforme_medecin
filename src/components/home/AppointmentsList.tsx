@@ -411,6 +411,9 @@ useEffect(() => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="sticky top-0 z-10">
                 <tr className='bg-blue-200'>
+                   <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
+                    № 
+                  </th>
                   <th className="sticky top-0 px-4 py-3  text-left text-l font-medium text-black uppercase tracking-wider">
                     CIN 
                   </th>
@@ -441,8 +444,11 @@ useEffect(() => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-400">
                 {rendezvous.length > 0 ? (
-                  rendezvous.map((appointment) => (
+                  rendezvous.map((appointment,index) => (
                     <tr key={appointment._id} className="hover:bg-gray-100 transition-colors duration-200">
+                      <td className="px-4 py-4 whitespace-nowrap text-m font-bold text-gray-900">
+                        { index+1 }
+                      </td>
                       <td className="px-4 py-4 whitespace-nowrap text-m font-bold text-gray-900">
                         {appointment.cin_patient}
                       </td>

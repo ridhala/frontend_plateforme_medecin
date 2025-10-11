@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   AppBar, Toolbar, Typography, Box, CssBaseline, Drawer,
   IconButton, List, ListItem, ListItemButton, ListItemIcon,
   ListItemText, Tabs, Tab, Card, CardContent, Table,
   TableHead, TableRow, TableCell, TableBody, Paper,
-  TableContainer, Divider, CircularProgress, Alert
+  TableContainer, Divider, CircularProgress, Alert,
+  Chip, Button, Snackbar
 } from "@mui/material";
 import {
   Dashboard as DashboardIcon, People as PeopleIcon, LocalHospital as LocalHospitalIcon,
   AssignmentInd as AssignmentIndIcon, Menu as MenuIcon,
+  CheckCircle as CheckCircleIcon, Cancel as CancelIcon
 } from "@mui/icons-material";
 import {
   getPatients,
@@ -17,36 +19,121 @@ import {
   activerMedecin,
   desactiverMedecin,
 } from "../services/admin/adminservice";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../services/authentification/loginService";
 
 const drawerWidth = 260;
 
+interface Patient {
+  _id: string;
+  nom_patient?: string;
+  nom?: string;
+  prenom_patient?: string;
+  prenom?: string;
+  cin_patient?: string;
+  email?: string;
+  telephone?: string;
+}
+
+interface Medecin {
+  _id: string;
+  nom?: string;
+  prenom?: string;
+  cin_medecin?: string;
+  email?: string;
+  telephone_cabinet?: string;
+  telephone?: string;
+  verification: boolean;
+}
+
+interface Secretaire {
+  _id: string;
+  nom_secretaire?: string;
+  nom?: string;
+  prenom_secretaire?: string;
+  prenom?: string;
+  cin_secretaire?: string;
+  email?: string;
+  telephone?: string;
+}
+
 const AdminDashboard: React.FC = () => {
-  const [patients, setPatients] = useState<any[]>([]);
-  const [medecins, setMedecins] = useState<any[]>([]);
-  const [secretaires, setSecretaires] = useState<any[]>([]);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [medecins, setMedecins] = useState<Medecin[]>([]);
+  const [secretaires, setSecretaires] = useState<Secretaire[]>([]);
   const [tab, setTab] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error';
+  }>({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
 
   const toggleDrawer = () => setMobileOpen(!mobileOpen);
-const handleActivation = async (id:string) => {
-  try {
-    const result = await activerMedecin(id);
-    console.log('Médecin activé:', result);
-  } catch (err) {
-    console.error("probleme d'activation");
-  }
-};
 
-const handleDesactivation = async (id: string) => {
-  try {
-    const result = await desactiverMedecin(id);
-    console.log('Médecin désactivé:', result);
-  } catch (err) {
-    console.error("probleme de désactivation");
-  }
-};
+  const showSnackbar = (message: string, severity: 'success' | 'error') => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const closeSnackbar = () => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+  };
+const navigate= useNavigate();
+  // Optimisation: Mise à jour immédiate de l'état local
+  const updateMedecinVerification = useCallback((id: string, verification: boolean) => {
+    setMedecins(prevMedecins => 
+      prevMedecins.map(medecin => 
+        medecin._id === id 
+          ? { ...medecin, verification } 
+          : medecin
+      )
+    );
+  }, []);
+
+  const handleActivation = async (id: string) => {
+    setActionLoading(id);
+    try {
+      // Mise à jour immédiate de l'UI (optimistic update)
+      updateMedecinVerification(id, true);
+      
+      const result = await activerMedecin(id);
+      console.log('Médecin activé:', result);
+      showSnackbar('Médecin activé avec succès', 'success');
+    } catch (err) {
+      console.error("Problème d'activation:", err);
+      // Rollback en cas d'erreur
+      updateMedecinVerification(id, false);
+      showSnackbar("Erreur lors de l'activation", 'error');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleDesactivation = async (id: string) => {
+    setActionLoading(id);
+    try {
+      // Mise à jour immédiate de l'UI (optimistic update)
+      updateMedecinVerification(id, false);
+      
+      const result = await desactiverMedecin(id);
+      console.log('Médecin désactivé:', result);
+      showSnackbar('Médecin désactivé avec succès', 'success');
+    } catch (err) {
+      console.error("Problème de désactivation:", err);
+      // Rollback en cas d'erreur
+      updateMedecinVerification(id, true);
+      showSnackbar("Erreur lors de la désactivation", 'error');
+    } finally {
+      setActionLoading(null);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,7 +176,11 @@ const handleDesactivation = async (id: string) => {
               mb: 1,
               borderRadius: 1,
               '&:hover': { bgcolor: '#e0e0e0' },
-              ...(tab === index && { bgcolor: '#1976d2', '& .MuiListItemText-primary': { color: 'white' }, '& .MuiSvgIcon-root': { color: 'white' } }),
+              ...(tab === index && { 
+                bgcolor: '#1976d2', 
+                '& .MuiListItemText-primary': { color: 'white' }, 
+                '& .MuiSvgIcon-root': { color: 'white' } 
+              }),
             }}
           >
             <ListItemButton onClick={() => setTab(index)} sx={{ py: 1.5 }}>
@@ -106,14 +197,23 @@ const handleDesactivation = async (id: string) => {
       </List>
       <Divider />
       <Box sx={{ p: 2, textAlign: 'center' }}>
+        
+        <Typography color="blue">
+      <button onClick={()=>{navigate("/loginadmin") ;logout()} } className="cursor-pointer"
+        >Deconnexion</button>   
+        </Typography>
+      </Box>
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+
         <Typography variant="caption" color="text.secondary">
           © 2025 MEDPLAT
         </Typography>
       </Box>
+      
     </Box>
   );
 
-  // Dashboard with summary cards
+  // Dashboard with summary cards - Optimisé avec useMemo
   const renderDashboard = () => (
     <Box sx={{
       display: 'flex',
@@ -131,6 +231,9 @@ const handleDesactivation = async (id: string) => {
         <CardContent>
           <Typography variant="h6" color="secondary">Médecins</Typography>
           <Typography variant="h4">{medecins.length}</Typography>
+          <Typography variant="caption" color="text.secondary">
+            {medecins.filter(m => m.verification).length} actifs
+          </Typography>
         </CardContent>
       </Card>
       <Card sx={{ flex: '1 1 300px', maxWidth: '100%', bgcolor: '#e8f5e9', borderRadius: 2, boxShadow: 3 }}>
@@ -142,14 +245,14 @@ const handleDesactivation = async (id: string) => {
     </Box>
   );
 
-  // Patients Table
+  // Patients Table - Optimisé
   const renderPatientsTable = () => (
     <TableContainer component={Paper} sx={{ mt: 2, borderRadius: 2, boxShadow: 2 }}>
       <Table>
         <TableHead sx={{ bgcolor: '#f5f5f5' }}>
           <TableRow>
             <TableCell colSpan={4} sx={{ fontWeight: 'bold', fontSize: '1.2rem', py: 2 }}>
-              Patients
+              Patients ({patients.length})
             </TableCell>
           </TableRow>
           <TableRow>
@@ -181,14 +284,14 @@ const handleDesactivation = async (id: string) => {
     </TableContainer>
   );
 
-  // Médecins Table
+  // Médecins Table - Complètement optimisé
   const renderMedecinsTable = () => (
     <TableContainer component={Paper} sx={{ mt: 2, borderRadius: 2, boxShadow: 2 }}>
       <Table>
         <TableHead sx={{ bgcolor: '#f5f5f5' }}>
           <TableRow>
             <TableCell colSpan={6} sx={{ fontWeight: 'bold', fontSize: '1.2rem', py: 2 }}>
-              Médecins
+              Médecins ({medecins.length})
             </TableCell>
           </TableRow>
           <TableRow>
@@ -196,10 +299,8 @@ const handleDesactivation = async (id: string) => {
             <TableCell sx={{ fontWeight: 'medium' }}>CIN</TableCell>
             <TableCell sx={{ fontWeight: 'medium' }}>Email</TableCell>
             <TableCell sx={{ fontWeight: 'medium' }}>Téléphone</TableCell>
-            <TableCell sx={{ fontWeight: 'medium' }}>vérification</TableCell>
-                        <TableCell sx={{ fontWeight: 'medium' }}>Etat</TableCell>
-
-            
+            <TableCell sx={{ fontWeight: 'medium' }}>Actions</TableCell>
+            <TableCell sx={{ fontWeight: 'medium' }}>État</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -210,21 +311,57 @@ const handleDesactivation = async (id: string) => {
                 <TableCell>{medecin.cin_medecin || '-'}</TableCell>
                 <TableCell>{medecin.email || '-'}</TableCell>
                 <TableCell>{medecin.telephone_cabinet || medecin.telephone || '-'}</TableCell>
-                
-                <TableCell>{ <div className="space-x-3"><button onClick={()=>{handleActivation(medecin._id)}}
-                 className="bg-green-600 rounded-sm cursor-pointer">activer</button>
-
-                <button onClick={()=>{handleDesactivation(medecin._id)}}
-                 className="bg-red-600 rounded-sm cursor-pointer">desactiver</button>
-                </div>}</TableCell>
-                <TableCell>{medecin.verification ? <h2 className="text-green-500 rounded-xl font-semibold">Activé</h2>:
-                <h2 className="text-red-500 font-semibold">Desactivé</h2>}</TableCell>
-
+                <TableCell>
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    {!medecin.verification ? (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        color="success"
+                        startIcon={<CheckCircleIcon />}
+                        onClick={() => handleActivation(medecin._id)}
+                        disabled={actionLoading === medecin._id}
+                        sx={{ minWidth: 100 }}
+                      >
+                        {actionLoading === medecin._id ? (
+                          <CircularProgress size={16} color="inherit" />
+                        ) : (
+                          'Activer'
+                        )}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        color="error"
+                        startIcon={<CancelIcon />}
+                        onClick={() => handleDesactivation(medecin._id)}
+                        disabled={actionLoading === medecin._id}
+                        sx={{ minWidth: 100 }}
+                      >
+                        {actionLoading === medecin._id ? (
+                          <CircularProgress size={16} color="inherit" />
+                        ) : (
+                          'Désactiver'
+                        )}
+                      </Button>
+                    )}
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    label={medecin.verification ? 'Activé' : 'Désactivé'}
+                    color={medecin.verification ? 'success' : 'error'}
+                    variant="filled"
+                    size="small"
+                    sx={{ fontWeight: 'medium' }}
+                  />
+                </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={4} sx={{ textAlign: 'center', py: 3 }}>
+              <TableCell colSpan={6} sx={{ textAlign: 'center', py: 3 }}>
                 Aucun médecin trouvé.
               </TableCell>
             </TableRow>
@@ -234,14 +371,14 @@ const handleDesactivation = async (id: string) => {
     </TableContainer>
   );
 
-  // Secrétaires Table
+  // Secrétaires Table - Optimisé
   const renderSecretairesTable = () => (
     <TableContainer component={Paper} sx={{ mt: 2, borderRadius: 2, boxShadow: 2 }}>
       <Table>
         <TableHead sx={{ bgcolor: '#f5f5f5' }}>
           <TableRow>
             <TableCell colSpan={4} sx={{ fontWeight: 'bold', fontSize: '1.2rem', py: 2 }}>
-              Secrétaires
+              Secrétaires ({secretaires.length})
             </TableCell>
           </TableRow>
           <TableRow>
@@ -297,7 +434,12 @@ const handleDesactivation = async (id: string) => {
         sx={{
           width: drawerWidth,
           display: { xs: 'none', sm: 'block' },
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box', borderRight: 'none', boxShadow: '2px 0 5px rgba(0,0,0,0.1)' },
+          [`& .MuiDrawer-paper`]: { 
+            width: drawerWidth, 
+            boxSizing: 'border-box', 
+            borderRight: 'none', 
+            boxShadow: '2px 0 5px rgba(0,0,0,0.1)' 
+          },
         }}
         open
       >
@@ -324,7 +466,14 @@ const handleDesactivation = async (id: string) => {
               value={tab}
               onChange={(_, val) => setTab(val)}
               centered
-              sx={{ mb: 2, '& .MuiTab-root': { fontWeight: 'medium', textTransform: 'none', fontSize: '1rem' } }}
+              sx={{ 
+                mb: 2, 
+                '& .MuiTab-root': { 
+                  fontWeight: 'medium', 
+                  textTransform: 'none', 
+                  fontSize: '1rem' 
+                } 
+              }}
             >
               <Tab label="Dashboard" />
               <Tab label="Patients" />
@@ -351,6 +500,22 @@ const handleDesactivation = async (id: string) => {
           </CardContent>
         </Card>
       </Box>
+
+      {/* Snackbar pour les notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={closeSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={closeSnackbar} 
+          severity={snackbar.severity} 
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -8,6 +8,8 @@ const AdminLogin: React.FC = () => {
     username: "",
     password: "",
   });
+  const [honeypot, setHoneypot] = useState("");
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -81,6 +83,14 @@ const AdminLogin: React.FC = () => {
             disabled={loading}
           />
         </div>
+{/* Champ Honeypot invisible pour piège à bots */}
+<input
+  type="text"
+  name="honeypot"
+  value={honeypot}
+  onChange={(e) => setHoneypot(e.target.value)}
+  className="hidden"
+/>
 
         <button
           type="submit"

@@ -32,6 +32,7 @@ import { SpecialitesContent } from './components/espacepatient/choixspecialite';
 import Chatbot from './components/espacepatient/chatbot';
 import { RendezvousTable } from './components/espacepatient/rendezvous';
 import ProfilPatient from './components/espacepatient/profilpatient';
+import { CertificateGenerator } from './components/espacepatient/certaficat';
 
 
 function App() {
@@ -80,6 +81,7 @@ function App() {
         
         {/* Fallback route for unknown paths */}
         <Route path="*" element={<Register />} />
+        <Route path="/cert" element={<CertificateGenerator />} />
 
         <Route path="admindashboard" element={<AdminDashboard />} />
                 <Route path="loginadmin" element={<AdminLogin />} />
