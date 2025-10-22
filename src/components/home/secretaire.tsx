@@ -25,7 +25,7 @@ const SecretaireForm = () => {
 
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+console.log(secretaire)
   useEffect(() => {
     const ProfileData = async () => {
       try {

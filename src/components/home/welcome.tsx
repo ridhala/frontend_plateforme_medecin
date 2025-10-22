@@ -31,7 +31,7 @@ interface MessagingInterfaceProps {
   userRole: 'admin' | 'medecin';
 }
 
-const MessagingInterface: React.FC<MessagingInterfaceProps> = ({ userId, userRole }) => {
+const MessagingInterface: React.FC<MessagingInterfaceProps> = ({ userId }) => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [message, setMessage] = useState('');
@@ -130,7 +130,7 @@ const MessagingInterface: React.FC<MessagingInterfaceProps> = ({ userId, userRol
           Authorization: `Bearer ${token}`
         }
       });
-      
+      initConversation
       fetchConversations();
       setSelectedConversation(response.data);
     } catch (err: any) {

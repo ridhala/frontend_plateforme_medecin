@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { HiUser } from 'react-icons/hi';
 
@@ -80,7 +80,7 @@ const RegisterPatient = () => {
         date_naissance: new Date(formData.date_naissance).toISOString(),
         sex: formData.sex
       });
-
+        console.log(response)
       setSuccess(true);
       setTimeout(() => navigate('/login'), 3000);
     } catch (err) {

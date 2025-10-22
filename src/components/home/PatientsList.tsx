@@ -35,7 +35,7 @@ export default function PatientsList() {
   const handleAddPatient = () => {
     setIsFormOpen(true);
   };
-
+console.log(handleAddPatient)
   const handleCloseForm = () => {
     setIsFormOpen(false);
   };

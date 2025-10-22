@@ -1,5 +1,3 @@
-import React from 'react';
-import { FaUserPlus, FaCalendarCheck } from 'react-icons/fa';
 import { Line, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,

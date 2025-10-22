@@ -33,7 +33,7 @@ const [selectedtime, setSelectedtime] = useState<string>("")
   const [choisimed, setchoisimed]=useState<boolean>(false)
 
   // specialite
-  const[sp, setsp]=useState<string>("")
+  const[sp]=useState<string>("")
 
   //for modal position
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -54,8 +54,8 @@ useEffect(() => {
 //position 
   const [isReady, setIsReady] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState(15);
-  const [currentPosition, setCurrentPosition] = useState(3);
+  const [timeLeft] = useState(15);
+  const [currentPosition] = useState(3);
 const closePopup = () => {
   setIsPopupOpen(false);
   setselectedrendez(null);
