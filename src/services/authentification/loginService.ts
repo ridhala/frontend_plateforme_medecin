@@ -5,7 +5,7 @@ import { LoginForm, LoginFormadmin } from '../../types/logintype';
 
 export const login = async (credentials:  LoginForm) => {
   try {
-    const response = await axios.post('http://localhost:3000/loginuser/login', credentials,{
+    const response = await axios.post('https://backend-plateforme-medecin.fly.dev/loginuser/login', credentials,{
       withCredentials: true, // Pour envoyer les cookies
       headers: {
         'Content-Type': 'application/json',
